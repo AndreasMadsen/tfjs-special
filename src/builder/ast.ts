@@ -17,6 +17,10 @@ export abstract class Node {
 
     abstract exportAsCode(): string;
 
+    children(): Node[] {
+        return [];
+    }
+
     protected assertEmpty(nodes: Node[]): Node[] {
         if (nodes.length !== 0) {
             throw new Error(
@@ -106,6 +110,13 @@ class Decl extends Node {
         }
     }
 
+    children(): Node[] {
+        if (this.init !== null) {
+            return [this.init, this.type];
+        }
+        return [this.type];
+    }
+
     exportAsCode(): string {
         const stroage = this.storage.join(' ');
         const type = this.type.exportAsCode();
@@ -134,6 +145,13 @@ class FuncDecl extends Node {
         this.type = new TypeDecl(node.type as Node);
     }
 
+    children(): Node[] {
+        if (this.args !== null) {
+            return [this.args, this.type];
+        }
+        return [this.type];
+    }
+
     exportAsCode() {
         let args = '()';
         if (this.args !== null) {
@@ -158,6 +176,10 @@ class TypeDecl extends Node {
         this.declname = node.declname;
         this.quals = this.assertEmpty(node.quals);
         this.type = new IdentifierType(node.type);
+    }
+
+    children(): Node[] {
+        return [this.type];
     }
 
     getType(): string {
@@ -195,6 +217,13 @@ class ArrayDecl extends Node {
         this.type = new TypeDecl(node.type as Node);
     }
 
+    children(): Node[] {
+        if (this.dim !== null) {
+            return [this.dim, this.type];
+        }
+        return [this.type];
+    }
+
     exportAsCode(): string {
         const type = this.type.exportAsCode();
         return `${type}[${this.dim === null ? '' : this.dim.exportAsCode()}]`;
@@ -215,6 +244,10 @@ class PtrDecl extends Node {
         this.type = new TypeDecl(node.type as Node);
     }
 
+    children(): Node[] {
+        return [this.type];
+    }
+
     exportAsCode() {
         return `${this.type.getType()}* ${this.type.getName()}`;
     }
@@ -230,6 +263,10 @@ class InitList extends Node {
         const node = json as InitList;
 
         this.exprs = node.exprs.map((node: Node) => expression(node));
+    }
+
+    children(): Node[] {
+        return this.exprs;
     }
 
     exportAsCode(): string {
@@ -280,6 +317,10 @@ class ParamList extends Node {
         );
     }
 
+    children(): Node[] {
+        return this.params;
+    }
+
     exportAsCode(): string {
         const params = this.params
             .map((param) => param.exportAsCode()).join(', ');
@@ -313,6 +354,10 @@ class Typename extends Node {
         }
     }
 
+    children(): Node[] {
+        return [this.type];
+    }
+
     exportAsCode(): string {
         return this.type.exportAsCode();
     }
@@ -340,6 +385,13 @@ class FuncDef extends Node {
             this.param_decls = node.param_decls
                 .map((node: Node) => new Decl(node));
         }
+    }
+
+    children(): Node[] {
+        if (this.param_decls !== null) {
+            return [this.body, this.decl, ...this.param_decls];
+        }
+        return [this.body, this.decl];
     }
 
     exportAsCode(): string {
@@ -371,6 +423,10 @@ class Cast extends Node {
         this.to_type = new Typename(node.to_type as Node);
     }
 
+    children(): Node[] {
+        return [this.expr, this.to_type];
+    }
+
     exportAsCode(): string {
         return `(${this.to_type.exportAsCode()})${this.expr.exportAsCode()}`;
     }
@@ -388,6 +444,10 @@ class UnaryOp extends Node {
 
         this.expr = expression(node.expr as Node);
         this.op = this.assertString(node.op);
+    }
+
+    children(): Node[] {
+        return [this.expr];
     }
 
     exportAsCode(): string {
@@ -418,6 +478,10 @@ class BinaryOp extends Node {
         this.right = expression(node.right as Node);
     }
 
+    children(): Node[] {
+        return [this.left, this.right];
+    }
+
     exportAsCode(): string {
         const left = this.left.exportAsCode();
         const right = this.right.exportAsCode();
@@ -439,6 +503,10 @@ class TernaryOp extends Node {
         this.cond = expression(node.cond as Node);
         this.iffalse = expression(node.iffalse as Node);
         this.iftrue = expression(node.iftrue as Node);
+    }
+
+    children(): Node[] {
+        return [this.cond, this.iffalse, this.iftrue];
     }
 
     exportAsCode(): string {
@@ -502,6 +570,10 @@ class StructRef extends Node {
         this.type = node.type;
     }
 
+    children(): Node[] {
+        return [this.field, this.name];
+    }
+
     exportAsCode(): string {
         return `${this.name.exportAsCode()}.${this.field.exportAsCode()}`;
     }
@@ -531,6 +603,10 @@ class ArrayRef extends Node {
         this.subscript = expression(node.subscript as Node);
     }
 
+    children(): Node[] {
+        return [this.name, this.subscript];
+    }
+
     exportAsCode(): string {
         return `${this.name.exportAsCode()}[${this.subscript.exportAsCode()}]`;
     }
@@ -553,6 +629,13 @@ class FuncCall extends Node {
         } else {
             this.args = new ExprList(node.args as Node);
         }
+    }
+
+    children(): Node[] {
+        if (this.args !== null) {
+            return [this.name, this.args];
+        }
+        return [this.name];
     }
 
     exportAsCode(): string {
@@ -682,6 +765,10 @@ class Label extends Node {
         this.stmt = block(node.stmt as Node);
     }
 
+    children(): Node[] {
+        return [this.stmt];
+    }
+
     exportAsCode(): string {
         return `${this.name}: ${this.stmt.exportAsCode()}`;
     }
@@ -719,6 +806,10 @@ class Compound extends Node {
             .map((node: Node) => compoundItem(node));
     }
 
+    children(): Node[] {
+        return this.block_items;
+    }
+
     exportAsCode(): string {
         const items = this.block_items.map((item) => (
             indentCode(item.exportAsCode()) +
@@ -746,6 +837,10 @@ class While extends Node {
         this.stmt = block(node.stmt as Node);
     }
 
+    children(): Node[] {
+        return [this.cond, this.stmt];
+    }
+
     exportAsCode(): string {
         const cond = this.cond.exportAsCode();
         const stmt = this.stmt.exportAsCode();
@@ -754,7 +849,6 @@ class While extends Node {
 }
 
 class DoWhile extends Node {
-    readonly neverSimicolon: boolean = true;
     readonly _nodetype: 'DoWhile';
 
     readonly cond: Expression;
@@ -768,10 +862,14 @@ class DoWhile extends Node {
         this.stmt = block(node.stmt as Node);
     }
 
+    children(): Node[] {
+        return [this.cond, this.stmt];
+    }
+
     exportAsCode(): string {
         const cond = this.cond.exportAsCode();
         const stmt = this.stmt.exportAsCode();
-        return `do ${stmt} while(${cond})\n`;
+        return `do ${stmt} while(${cond})`;
     }
 }
 
@@ -792,6 +890,10 @@ class For extends Node {
         this.next = expression(node.next as Node);
         this.cond = expression(node.cond as Node);
         this.stmt = block(node.stmt as Node);
+    }
+
+    children(): Node[] {
+        return [this.init, this.next, this.cond, this.stmt];
     }
 
     exportAsCode(): string {
@@ -818,6 +920,10 @@ class Switch extends Node {
         this.stmt = new Compound(node.stmt as Node);
     }
 
+    children(): Node[] {
+        return [this.cond, this.stmt];
+    }
+
     exportAsCode(): string {
         const cond = this.cond.exportAsCode();
         const stmt = this.stmt.exportAsCode();
@@ -838,6 +944,14 @@ class Default extends Node {
             this.stmts = null;
         } else {
             this.stmts = node.stmts.map((node: Node) => compoundItem(node));
+        }
+    }
+
+    children(): Node[] {
+        if (this.stmts !== null) {
+            return this.stmts;
+        } else {
+            return [];
         }
     }
 
@@ -872,6 +986,14 @@ class Case extends Node {
             this.stmts = null;
         } else {
             this.stmts = node.stmts.map((node: Node) => compoundItem(node));
+        }
+    }
+
+    children(): Node[] {
+        if (this.stmts !== null) {
+            return [this.expr, ...this.stmts];
+        } else {
+            return [this.expr];
         }
     }
 
@@ -936,6 +1058,14 @@ class If extends Node {
         this.iftrue = block(node.iftrue);
     }
 
+    children(): Node[] {
+        if (this.iffalse !== null) {
+            return [this.cond, this.iffalse, this.iftrue];
+        } else {
+            return [this.cond, this.iftrue];
+        }
+    }
+
     exportAsCode(): string {
         const cond = this.cond.exportAsCode();
 
@@ -966,6 +1096,10 @@ class ExprList extends Node {
         const node = json as ExprList;
 
         this.exprs = node.exprs.map((node: Node) => expression(node));
+    }
+
+    children(): Node[] {
+        return this.exprs;
     }
 
     exportAsCode(): string {
@@ -1006,6 +1140,10 @@ class Assignment extends Node {
         this.rvalue = expression(node.rvalue as Node);
     }
 
+    children(): Node[] {
+        return [this.lvalue, this.rvalue];
+    }
+
     exportAsCode(): string {
         const lvalue = this.lvalue.exportAsCode();
         const rvalue = this.rvalue.exportAsCode();
@@ -1023,6 +1161,10 @@ class Return extends Node {
         const node = json as Return;
 
         this.expr = expression(node.expr as Node);
+    }
+
+    children(): Node[] {
+        return [this.expr];
     }
 
     exportAsCode(): string {
@@ -1052,6 +1194,10 @@ class FileAST extends Node {
                 }
             }
         );
+    }
+
+    children(): Node[] {
+        return this.ext;
     }
 
     exportAsCode(): string {
