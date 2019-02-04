@@ -1,4 +1,6 @@
 
+declare type TransformFunc = <T extends Node>(child: T) => T;
+
 export abstract class Node {
     readonly abstract _nodetype: string;
     readonly neverSimicolon: boolean = false;
@@ -17,9 +19,7 @@ export abstract class Node {
 
     abstract exportAsCode(): string;
 
-    children(): Node[] {
-        return [];
-    }
+    abstract transformChildren(transform: TransformFunc): Node;
 
     protected assertEmpty(nodes: Node[]): Node[] {
         if (nodes.length !== 0) {
@@ -49,16 +49,18 @@ export abstract class Node {
     }
 }
 
-class Decl extends Node {
+declare type AllDecl = Decl | TypeDecl | FuncDecl | ArrayDecl | PtrDecl;
+
+export class Decl extends Node {
     readonly _nodetype: 'Decl';
 
     readonly bitsize: null;
     readonly funcspec: Node[];
-    readonly init: InitList | Constant | UnaryOp | null;
+    init: InitList | Constant | UnaryOp | null;
     readonly name: string;
     readonly quals: Node[];
     readonly storage: string[];
-    readonly type: Decl | TypeDecl | FuncDecl | ArrayDecl | PtrDecl;
+    type: AllDecl;
 
     constructor(json: Node) {
         super(json, 'Decl');
@@ -110,11 +112,13 @@ class Decl extends Node {
         }
     }
 
-    children(): Node[] {
+    transformChildren(transform: TransformFunc): Decl {
         if (this.init !== null) {
-            return [this.init, this.type];
+            this.init = transform(this.init);
         }
-        return [this.type];
+        this.type = transform(this.type);
+
+        return this;
     }
 
     exportAsCode(): string {
@@ -126,11 +130,11 @@ class Decl extends Node {
     }
 }
 
-class FuncDecl extends Node {
+export class FuncDecl extends Node {
     readonly _nodetype: 'FuncDecl';
 
-    readonly args: ParamList | null;
-    readonly type: TypeDecl;
+    args: ParamList | null;
+    type: TypeDecl;
 
     constructor(json: Node) {
         super(json, 'FuncDecl');
@@ -145,11 +149,13 @@ class FuncDecl extends Node {
         this.type = new TypeDecl(node.type as Node);
     }
 
-    children(): Node[] {
+    transformChildren(transform: TransformFunc): FuncDecl {
         if (this.args !== null) {
-            return [this.args, this.type];
+            this.args = transform(this.args);
         }
-        return [this.type];
+        this.type = transform(this.type);
+
+        return this;
     }
 
     exportAsCode() {
@@ -162,12 +168,12 @@ class FuncDecl extends Node {
     }
 }
 
-class TypeDecl extends Node {
+export class TypeDecl extends Node {
     readonly _nodetype: 'TypeDecl';
 
     readonly declname: string | null;
     readonly quals: Node[];
-    readonly type: IdentifierType;
+    type: IdentifierType;
 
     constructor(json: Node) {
         super(json, 'TypeDecl');
@@ -178,8 +184,9 @@ class TypeDecl extends Node {
         this.type = new IdentifierType(node.type);
     }
 
-    children(): Node[] {
-        return [this.type];
+    transformChildren(transform: TransformFunc): TypeDecl {
+        this.type = transform(this.type);
+        return this;
     }
 
     getType(): string {
@@ -195,13 +202,13 @@ class TypeDecl extends Node {
     }
 }
 
-class ArrayDecl extends Node {
+export class ArrayDecl extends Node {
     readonly _nodetype: 'ArrayDecl';
 
-    readonly dim: Constant | null;
+    dim: Constant | null;
     // tslint:disable-next-line:variable-name
     readonly dim_quals: Node[];
-    readonly type: TypeDecl;
+    type: TypeDecl;
 
     constructor(json: Node) {
         super(json, 'ArrayDecl');
@@ -217,11 +224,12 @@ class ArrayDecl extends Node {
         this.type = new TypeDecl(node.type as Node);
     }
 
-    children(): Node[] {
+    transformChildren(transform: TransformFunc): ArrayDecl {
         if (this.dim !== null) {
-            return [this.dim, this.type];
+            this.dim = transform(this.dim);
         }
-        return [this.type];
+        this.type = transform(this.type);
+        return this;
     }
 
     exportAsCode(): string {
@@ -230,11 +238,11 @@ class ArrayDecl extends Node {
     }
 }
 
-class PtrDecl extends Node {
+export class PtrDecl extends Node {
     readonly _nodetype: 'PtrDecl';
 
     readonly quals: Node[];
-    readonly type: TypeDecl;
+    type: TypeDecl;
 
     constructor(json: Node) {
         super(json, 'PtrDecl');
@@ -244,8 +252,9 @@ class PtrDecl extends Node {
         this.type = new TypeDecl(node.type as Node);
     }
 
-    children(): Node[] {
-        return [this.type];
+    transformChildren(transform: TransformFunc): PtrDecl {
+        this.type = transform(this.type);
+        return this;
     }
 
     exportAsCode() {
@@ -253,7 +262,7 @@ class PtrDecl extends Node {
     }
 }
 
-class InitList extends Node {
+export class InitList extends Node {
     readonly _nodetype: 'InitList';
 
     exprs: Expression[];
@@ -265,8 +274,9 @@ class InitList extends Node {
         this.exprs = node.exprs.map((node: Node) => expression(node));
     }
 
-    children(): Node[] {
-        return this.exprs;
+    transformChildren(transform: TransformFunc): InitList {
+        this.exprs = this.exprs.map(transform);
+        return this;
     }
 
     exportAsCode(): string {
@@ -275,7 +285,7 @@ class InitList extends Node {
     }
 }
 
-class IdentifierType extends Node {
+export class IdentifierType extends Node {
     readonly _nodetype: 'IdentifierType';
 
     readonly names: string[];
@@ -287,15 +297,19 @@ class IdentifierType extends Node {
         this.names = node.names;
     }
 
+    transformChildren(transform: TransformFunc): IdentifierType {
+        return this;
+    }
+
     exportAsCode(): string {
         return this.names.join(' ');
     }
 }
 
-class ParamList extends Node {
+export class ParamList extends Node {
     readonly _nodetype: 'ParamList';
 
-    readonly params: Array<Typename | Decl | ID>;
+    params: Array<Typename | Decl | ID>;
 
     constructor(json: Node) {
         super(json, 'ParamList');
@@ -317,8 +331,9 @@ class ParamList extends Node {
         );
     }
 
-    children(): Node[] {
-        return this.params;
+    transformChildren(transform: TransformFunc): ParamList {
+        this.params = this.params.map(transform);
+        return this;
     }
 
     exportAsCode(): string {
@@ -328,12 +343,12 @@ class ParamList extends Node {
     }
 }
 
-class Typename extends Node {
+export class Typename extends Node {
     readonly _nodetype: 'Typename';
 
     readonly name: null;
     readonly quals: Node[];
-    readonly type: TypeDecl | PtrDecl;
+    type: TypeDecl | PtrDecl;
 
     constructor(json: Node) {
         super(json, 'Typename');
@@ -354,8 +369,9 @@ class Typename extends Node {
         }
     }
 
-    children(): Node[] {
-        return [this.type];
+    transformChildren(transform: TransformFunc): Typename {
+        this.type = transform(this.type);
+        return this;
     }
 
     exportAsCode(): string {
@@ -363,14 +379,14 @@ class Typename extends Node {
     }
 }
 
-class FuncDef extends Node {
+export class FuncDef extends Node {
     readonly _nodetype: 'FuncDef';
-    readonly neverSimicolon: true;
+    readonly neverSimicolon: boolean = true;
 
-    readonly body: Compound;
-    readonly decl: Decl;
+    body: Compound;
+    decl: Decl;
     // tslint:disable-next-line:variable-name
-    readonly param_decls: Decl[] | null; // Old-style K&R C   :(
+    param_decls: Decl[] | null; // Old-style K&R C   :(
 
     constructor(json: Node) {
         super(json, 'FuncDef');
@@ -387,11 +403,13 @@ class FuncDef extends Node {
         }
     }
 
-    children(): Node[] {
+    transformChildren(transform: TransformFunc): FuncDef {
+        this.body = transform(this.body);
+        this.decl = transform(this.decl);
         if (this.param_decls !== null) {
-            return [this.body, this.decl, ...this.param_decls];
+            this.param_decls = this.param_decls.map(transform);
         }
-        return [this.body, this.decl];
+        return this;
     }
 
     exportAsCode(): string {
@@ -408,12 +426,12 @@ class FuncDef extends Node {
     }
 }
 
-class Cast extends Node {
+export class Cast extends Node {
     readonly _nodetype: 'Cast';
 
-    readonly expr: Expression;
+    expr: Expression;
     // tslint:disable-next-line:variable-name
-    readonly to_type: Typename;
+    to_type: Typename;
 
     constructor(json: Node) {
         super(json, 'Cast');
@@ -423,8 +441,10 @@ class Cast extends Node {
         this.to_type = new Typename(node.to_type as Node);
     }
 
-    children(): Node[] {
-        return [this.expr, this.to_type];
+    transformChildren(transform: TransformFunc): Cast {
+        this.expr = transform(this.expr);
+        this.to_type = transform(this.to_type);
+        return this;
     }
 
     exportAsCode(): string {
@@ -432,10 +452,10 @@ class Cast extends Node {
     }
 }
 
-class UnaryOp extends Node {
+export class UnaryOp extends Node {
     readonly _nodetype: 'UnaryOp';
 
-    readonly expr: Expression;
+    expr: Expression;
     readonly op: string;
 
     constructor(json: Node) {
@@ -446,8 +466,9 @@ class UnaryOp extends Node {
         this.op = this.assertString(node.op);
     }
 
-    children(): Node[] {
-        return [this.expr];
+    transformChildren(transform: TransformFunc): UnaryOp {
+        this.expr = transform(this.expr);
+        return this;
     }
 
     exportAsCode(): string {
@@ -462,12 +483,12 @@ class UnaryOp extends Node {
     }
 }
 
-class BinaryOp extends Node {
+export class BinaryOp extends Node {
     readonly _nodetype: 'BinaryOp';
 
-    readonly left: Expression;
+    left: Expression;
     readonly op: string;
-    readonly right: Expression;
+    right: Expression;
 
     constructor(json: Node) {
         super(json, 'BinaryOp');
@@ -478,8 +499,10 @@ class BinaryOp extends Node {
         this.right = expression(node.right as Node);
     }
 
-    children(): Node[] {
-        return [this.left, this.right];
+    transformChildren(transform: TransformFunc): BinaryOp {
+        this.left = transform(this.left);
+        this.right = transform(this.right);
+        return this;
     }
 
     exportAsCode(): string {
@@ -489,12 +512,12 @@ class BinaryOp extends Node {
     }
 }
 
-class TernaryOp extends Node {
+export class TernaryOp extends Node {
     readonly _nodetype: 'TernaryOp';
 
-    readonly cond: Expression;
-    readonly iffalse: Expression;
-    readonly iftrue: Expression;
+    cond: Expression;
+    iffalse: Expression;
+    iftrue: Expression;
 
     constructor(json: Node) {
         super(json, 'TernaryOp');
@@ -505,8 +528,11 @@ class TernaryOp extends Node {
         this.iftrue = expression(node.iftrue as Node);
     }
 
-    children(): Node[] {
-        return [this.cond, this.iffalse, this.iftrue];
+    transformChildren(transform: TransformFunc): TernaryOp {
+        this.cond = transform(this.cond);
+        this.iffalse = transform(this.iffalse);
+        this.iftrue = transform(this.iftrue);
+        return this;
     }
 
     exportAsCode(): string {
@@ -518,7 +544,7 @@ class TernaryOp extends Node {
     }
 }
 
-class Constant extends Node {
+export class Constant extends Node {
     readonly _nodetype: 'Constant';
 
     readonly type: string;
@@ -532,15 +558,19 @@ class Constant extends Node {
         this.value = this.assertString(node.value);
     }
 
+    transformChildren(transform: TransformFunc): Constant {
+        return this;
+    }
+
     exportAsCode(): string {
         return this.value;
     }
 }
 
-class ID extends Node {
+export class ID extends Node {
     readonly _nodetype: 'ID';
 
-    readonly name: string;
+    name: string;
 
     constructor(json: Node) {
         super(json, 'ID');
@@ -549,16 +579,20 @@ class ID extends Node {
         this.name = this.assertString(node.name);
     }
 
+    transformChildren(transform: TransformFunc): ID {
+        return this;
+    }
+
     exportAsCode(): string {
         return this.name;
     }
 }
 
-class StructRef extends Node {
+export class StructRef extends Node {
     readonly _nodetype: 'StructRef';
 
-    readonly field: ID;
-    readonly name: ID;
+    field: ID;
+    name: ID;
     readonly type: string;
 
     constructor(json: Node) {
@@ -570,8 +604,10 @@ class StructRef extends Node {
         this.type = node.type;
     }
 
-    children(): Node[] {
-        return [this.field, this.name];
+    transformChildren(transform: TransformFunc): StructRef {
+        this.field = transform(this.field);
+        this.name = transform(this.name);
+        return this;
     }
 
     exportAsCode(): string {
@@ -579,11 +615,11 @@ class StructRef extends Node {
     }
 }
 
-class ArrayRef extends Node {
+export class ArrayRef extends Node {
     readonly _nodetype: 'ArrayRef';
 
-    readonly name: ID | StructRef;
-    readonly subscript: Expression;
+    name: ID | StructRef;
+    subscript: Expression;
 
     constructor(json: Node) {
         super(json, 'ArrayRef');
@@ -603,8 +639,10 @@ class ArrayRef extends Node {
         this.subscript = expression(node.subscript as Node);
     }
 
-    children(): Node[] {
-        return [this.name, this.subscript];
+    transformChildren(transform: TransformFunc): ArrayRef {
+        this.name = transform(this.name);
+        this.subscript = transform(this.subscript);
+        return this;
     }
 
     exportAsCode(): string {
@@ -612,11 +650,11 @@ class ArrayRef extends Node {
     }
 }
 
-class FuncCall extends Node {
+export class FuncCall extends Node {
     readonly _nodetype: 'FuncCall';
 
-    readonly name: ID;
-    readonly args: ExprList | null;
+    name: ID;
+    args: ExprList | null;
 
     constructor(json: Node) {
         super(json, 'FuncCall');
@@ -631,11 +669,12 @@ class FuncCall extends Node {
         }
     }
 
-    children(): Node[] {
+    transformChildren(transform: TransformFunc): FuncCall {
+        this.name = transform(this.name);
         if (this.args !== null) {
-            return [this.name, this.args];
+            this.args = transform(this.args);
         }
-        return [this.name];
+        return this;
     }
 
     exportAsCode(): string {
@@ -647,11 +686,15 @@ class FuncCall extends Node {
     }
 }
 
-class EmptyStatement extends Node {
+export class EmptyStatement extends Node {
     readonly _nodetype: 'EmptyStatement';
 
     constructor(json: Node) {
         super(json, 'EmptyStatement');
+    }
+
+    transformChildren(transform: TransformFunc): EmptyStatement {
+        return this;
     }
 
     exportAsCode(): string {
@@ -659,7 +702,7 @@ class EmptyStatement extends Node {
     }
 }
 
-type Expression = (
+declare type Expression = (
     ID | StructRef | ArrayRef | Constant | Cast | Assignment | FuncCall |
     Typename | UnaryOp | BinaryOp | TernaryOp
 );
@@ -693,7 +736,7 @@ function expression(node: Node): Expression {
     }
 }
 
-type CompoundItem = (
+declare type CompoundItem = (
     Decl | If | Assignment | UnaryOp | Return | FuncCall |
     While | DoWhile | For | Label | Goto | Switch | Default | Continue |
     Case | Break | EmptyStatement
@@ -740,7 +783,7 @@ function compoundItem(node: Node): CompoundItem {
     }
 }
 
-type Block = Compound | CompoundItem;
+declare type Block = Compound | CompoundItem;
 
 function block(node: Node): Block {
     switch (node._nodetype) {
@@ -751,11 +794,11 @@ function block(node: Node): Block {
     }
 }
 
-class Label extends Node {
+export class Label extends Node {
     readonly _nodetype: 'Label';
 
     readonly name: string;
-    readonly stmt: Block;
+    stmt: Block;
 
     constructor(json: Node) {
         super(json, 'Label');
@@ -765,8 +808,9 @@ class Label extends Node {
         this.stmt = block(node.stmt as Node);
     }
 
-    children(): Node[] {
-        return [this.stmt];
+    transformChildren(transform: TransformFunc): Label {
+        this.stmt = transform(this.stmt);
+        return this;
     }
 
     exportAsCode(): string {
@@ -774,7 +818,7 @@ class Label extends Node {
     }
 }
 
-class Goto extends Node {
+export class Goto extends Node {
     readonly _nodetype: 'Goto';
 
     readonly name: string;
@@ -786,17 +830,21 @@ class Goto extends Node {
         this.name = this.assertString(node.name);
     }
 
+    transformChildren(transform: TransformFunc): Goto {
+        return this;
+    }
+
     exportAsCode(): string {
         return `goto ${this.name}`;
     }
 }
 
-class Compound extends Node {
+export class Compound extends Node {
     readonly _nodetype: 'Compound';
     readonly neverSimicolon: boolean = true;
 
     // tslint:disable-next-line:variable-name
-    readonly block_items: CompoundItem[];
+    block_items: CompoundItem[];
 
     constructor(json: Node) {
         super(json, 'Compound');
@@ -806,8 +854,9 @@ class Compound extends Node {
             .map((node: Node) => compoundItem(node));
     }
 
-    children(): Node[] {
-        return this.block_items;
+    transformChildren(transform: TransformFunc): Compound {
+        this.block_items = this.block_items.map(transform);
+        return this;
     }
 
     exportAsCode(): string {
@@ -822,12 +871,12 @@ class Compound extends Node {
     }
 }
 
-class While extends Node {
+export class While extends Node {
     readonly _nodetype: 'While';
     readonly neverSimicolon: boolean = true;
 
-    readonly cond: Expression;
-    readonly stmt: Block;
+    cond: Expression;
+    stmt: Block;
 
     constructor(json: Node) {
         super(json, 'While');
@@ -837,8 +886,10 @@ class While extends Node {
         this.stmt = block(node.stmt as Node);
     }
 
-    children(): Node[] {
-        return [this.cond, this.stmt];
+    transformChildren(transform: TransformFunc): While {
+        this.cond = transform(this.cond);
+        this.stmt = transform(this.stmt);
+        return this;
     }
 
     exportAsCode(): string {
@@ -848,11 +899,11 @@ class While extends Node {
     }
 }
 
-class DoWhile extends Node {
+export class DoWhile extends Node {
     readonly _nodetype: 'DoWhile';
 
-    readonly cond: Expression;
-    readonly stmt: Block;
+    cond: Expression;
+    stmt: Block;
 
     constructor(json: Node) {
         super(json, 'DoWhile');
@@ -862,8 +913,10 @@ class DoWhile extends Node {
         this.stmt = block(node.stmt as Node);
     }
 
-    children(): Node[] {
-        return [this.cond, this.stmt];
+    transformChildren(transform: TransformFunc): DoWhile {
+        this.cond = transform(this.cond);
+        this.stmt = transform(this.stmt);
+        return this;
     }
 
     exportAsCode(): string {
@@ -873,14 +926,14 @@ class DoWhile extends Node {
     }
 }
 
-class For extends Node {
+export class For extends Node {
     readonly neverSimicolon: boolean = true;
     readonly _nodetype: 'For';
 
-    readonly init: Assignment;
-    readonly next: Expression;
-    readonly cond: Expression;
-    readonly stmt: Block;
+    init: Assignment;
+    next: Expression;
+    cond: Expression;
+    stmt: Block;
 
     constructor(json: Node) {
         super(json, 'For');
@@ -892,8 +945,12 @@ class For extends Node {
         this.stmt = block(node.stmt as Node);
     }
 
-    children(): Node[] {
-        return [this.init, this.next, this.cond, this.stmt];
+    transformChildren(transform: TransformFunc): For {
+        this.init = transform(this.init);
+        this.next = transform(this.next);
+        this.cond = transform(this.cond);
+        this.stmt = transform(this.stmt);
+        return this;
     }
 
     exportAsCode(): string {
@@ -905,12 +962,12 @@ class For extends Node {
     }
 }
 
-class Switch extends Node {
+export class Switch extends Node {
     readonly neverSimicolon: true;
     readonly _nodetype: 'Switch';
 
-    readonly cond: Expression;
-    readonly stmt: Compound;
+    cond: Expression;
+    stmt: Compound;
 
     constructor(json: Node) {
         super(json, 'Switch');
@@ -920,8 +977,10 @@ class Switch extends Node {
         this.stmt = new Compound(node.stmt as Node);
     }
 
-    children(): Node[] {
-        return [this.cond, this.stmt];
+    transformChildren(transform: TransformFunc): Switch {
+        this.cond = transform(this.cond);
+        this.stmt = transform(this.stmt);
+        return this;
     }
 
     exportAsCode(): string {
@@ -931,10 +990,10 @@ class Switch extends Node {
     }
 }
 
-class Default extends Node {
+export class Default extends Node {
     readonly _nodetype: 'Default';
 
-    readonly stmts: CompoundItem[] | null;
+    stmts: CompoundItem[] | null;
 
     constructor(json: Node) {
         super(json, 'Default');
@@ -947,12 +1006,11 @@ class Default extends Node {
         }
     }
 
-    children(): Node[] {
+    transformChildren(transform: TransformFunc): Default {
         if (this.stmts !== null) {
-            return this.stmts;
-        } else {
-            return [];
+            this.stmts = this.stmts.map(transform);
         }
+        return this;
     }
 
     exportAsCode(): string {
@@ -970,11 +1028,11 @@ class Default extends Node {
     }
 }
 
-class Case extends Node {
+export class Case extends Node {
     readonly _nodetype: 'Case';
 
-    readonly expr: Expression;
-    readonly stmts: CompoundItem[] | null;
+    expr: Expression;
+    stmts: CompoundItem[] | null;
 
     constructor(json: Node) {
         super(json, 'Case');
@@ -989,12 +1047,12 @@ class Case extends Node {
         }
     }
 
-    children(): Node[] {
+    transformChildren(transform: TransformFunc): Case {
+        this.expr = transform(this.expr);
         if (this.stmts !== null) {
-            return [this.expr, ...this.stmts];
-        } else {
-            return [this.expr];
+            this.stmts = this.stmts.map(transform);
         }
+        return this;
     }
 
     exportAsCode(): string {
@@ -1012,11 +1070,15 @@ class Case extends Node {
     }
 }
 
-class Break extends Node {
+export class Break extends Node {
     readonly _nodetype: 'Break';
 
     constructor(json: Node) {
         super(json, 'Break');
+    }
+
+    transformChildren(transform: TransformFunc): Break {
+        return this;
     }
 
     exportAsCode(): string {
@@ -1024,11 +1086,15 @@ class Break extends Node {
     }
 }
 
-class Continue extends Node {
+export class Continue extends Node {
     readonly _nodetype: 'Continue';
 
     constructor(json: Node) {
         super(json, 'Continue');
+    }
+
+    transformChildren(transform: TransformFunc): Continue {
+        return this;
     }
 
     exportAsCode(): string {
@@ -1036,13 +1102,13 @@ class Continue extends Node {
     }
 }
 
-class If extends Node {
+export class If extends Node {
     readonly _nodetype: 'If';
     readonly neverSimicolon: boolean = true;
 
-    readonly cond: Expression;
-    readonly iffalse: Block | null;
-    readonly iftrue: Block;
+    cond: Expression;
+    iffalse: Block | null;
+    iftrue: Block;
 
     constructor(json: Node) {
         super(json, 'If');
@@ -1058,12 +1124,13 @@ class If extends Node {
         this.iftrue = block(node.iftrue);
     }
 
-    children(): Node[] {
+    transformChildren(transform: TransformFunc): If {
+        this.cond = transform(this.cond);
         if (this.iffalse !== null) {
-            return [this.cond, this.iffalse, this.iftrue];
-        } else {
-            return [this.cond, this.iftrue];
+            this.iffalse = transform(this.iffalse);
         }
+        this.iftrue = transform(this.iftrue);
+        return this;
     }
 
     exportAsCode(): string {
@@ -1086,10 +1153,10 @@ class If extends Node {
     }
 }
 
-class ExprList extends Node {
+export class ExprList extends Node {
     readonly _nodetype: 'ExprList';
 
-    readonly exprs: Expression[];
+    exprs: Expression[];
 
     constructor(json: Node) {
         super(json, 'ExprList');
@@ -1098,8 +1165,9 @@ class ExprList extends Node {
         this.exprs = node.exprs.map((node: Node) => expression(node));
     }
 
-    children(): Node[] {
-        return this.exprs;
+    transformChildren(transform: TransformFunc): ExprList {
+        this.exprs = this.exprs.map(transform);
+        return this;
     }
 
     exportAsCode(): string {
@@ -1108,12 +1176,12 @@ class ExprList extends Node {
     }
 }
 
-class Assignment extends Node {
+export class Assignment extends Node {
     readonly _nodetype: 'Assignment';
 
-    readonly lvalue: ID | UnaryOp | StructRef | ArrayRef;
+    lvalue: ID | UnaryOp | StructRef | ArrayRef;
     readonly op: string;
-    readonly rvalue: Expression;
+    rvalue: Expression;
 
     constructor(json: Node) {
         super(json, 'Assignment');
@@ -1140,8 +1208,10 @@ class Assignment extends Node {
         this.rvalue = expression(node.rvalue as Node);
     }
 
-    children(): Node[] {
-        return [this.lvalue, this.rvalue];
+    transformChildren(transform: TransformFunc): Assignment {
+        this.lvalue = transform(this.lvalue);
+        this.rvalue = transform(this.rvalue);
+        return this;
     }
 
     exportAsCode(): string {
@@ -1151,10 +1221,10 @@ class Assignment extends Node {
     }
 }
 
-class Return extends Node {
+export class Return extends Node {
     readonly _nodetype: 'Return';
 
-    readonly expr: Expression;
+    expr: Expression;
 
     constructor(json: Node) {
         super(json, 'Return');
@@ -1163,8 +1233,9 @@ class Return extends Node {
         this.expr = expression(node.expr as Node);
     }
 
-    children(): Node[] {
-        return [this.expr];
+    transformChildren(transform: TransformFunc): Return {
+        this.expr = transform(this.expr);
+        return this;
     }
 
     exportAsCode(): string {
@@ -1172,11 +1243,11 @@ class Return extends Node {
     }
 }
 
-class FileAST extends Node {
+export class FileAST extends Node {
     readonly _nodetype: 'FileAST';
     readonly neverSimicolon: true;
 
-    readonly ext: Array<Decl | FuncDef>;
+    ext: Array<Decl | FuncDef>;
 
     constructor(json: Node) {
         super(json, 'FileAST');
@@ -1196,20 +1267,15 @@ class FileAST extends Node {
         );
     }
 
-    children(): Node[] {
-        return this.ext;
+    transformChildren(transform: TransformFunc): FileAST {
+        this.ext = this.ext.map(transform);
+        return this;
     }
 
     exportAsCode(): string {
-        const ext = this.ext.map(function map(node): string {
-            if (node instanceof Decl) {
-                return `${node.exportAsCode()};\n`;
-            } else if (node instanceof FuncDef) {
-                return `${node.exportAsCode()}\n`;
-            } else {
-                return unreachable();
-            }
-        });
+        const ext = this.ext.map((node) => (
+            node.exportAsCode() + (node.neverSimicolon ? '' : ';')
+        ));
 
         return ext.join('\n');
     }
@@ -1217,14 +1283,6 @@ class FileAST extends Node {
 
 function unsupportedType(node: Node): Error {
     return new Error(`unknown nodetype ${node._nodetype}, from ${node.coord}`);
-}
-
-export function convertToTypedAST(node: Node) {
-    return new FileAST(node);
-}
-
-function unreachable(): never {
-    throw new Error('unreachable');
 }
 
 function indentCode(code: string): string {
