@@ -1,7 +1,7 @@
-import * as assert from 'assert';
 
-export class Node {
-    readonly _nodetype: string;
+export abstract class Node {
+    readonly abstract _nodetype: string;
+    readonly neverSimicolon: boolean = false;
     readonly coord: string | null;
 
     constructor(node: Node, expectedType: string) {
@@ -12,12 +12,42 @@ export class Node {
             );
         }
 
-        this._nodetype = node._nodetype;
         this.coord = node.coord;
+    }
+
+    abstract exportAsCode(): string;
+
+    protected assertEmpty(nodes: Node[]): Node[] {
+        if (nodes.length !== 0) {
+            throw new Error(
+                `expected empty array in ${this._nodetype} from ${this.coord}`
+            );
+        }
+        return nodes;
+    }
+
+    protected assertString(value: string): string {
+        if (typeof value !== 'string') {
+            throw new Error(
+                `expected string in ${this._nodetype} from ${this.coord}`
+            );
+        }
+        return value;
+    }
+
+    protected assertNull(value: null): null {
+        if (value !== null) {
+            throw new Error(
+                `expected null in ${this._nodetype} from ${this.coord}`
+            );
+        }
+        return value;
     }
 }
 
 class Decl extends Node {
+    readonly _nodetype: 'Decl';
+
     readonly bitsize: null;
     readonly funcspec: Node[];
     readonly init: InitList | Constant | UnaryOp | null;
@@ -27,11 +57,11 @@ class Decl extends Node {
     readonly type: Decl | TypeDecl | FuncDecl | ArrayDecl | PtrDecl;
 
     constructor(json: Node) {
+        super(json, 'Decl');
         const node = json as Decl;
-        super(node, 'Decl');
 
-        this.bitsize = node.bitsize;
-        this.funcspec = assertEmpty(node.funcspec);
+        this.bitsize = this.assertNull(node.bitsize);
+        this.funcspec = this.assertEmpty(node.funcspec);
 
         if (node.init === null) {
             this.init = null;
@@ -51,8 +81,8 @@ class Decl extends Node {
             }
         }
 
-        this.name = node.name;
-        this.quals = assertEmpty(node.quals);
+        this.name = this.assertString(node.name);
+        this.quals = this.assertEmpty(node.quals);
         this.storage = node.storage;
 
         switch (node.type._nodetype) {
@@ -75,15 +105,25 @@ class Decl extends Node {
                 throw unsupportedType(node.type as Node);
         }
     }
+
+    exportAsCode(): string {
+        const stroage = this.storage.join(' ');
+        const type = this.type.exportAsCode();
+        const init = this.init === null ? '' : `= ${this.init.exportAsCode()}`;
+
+        return `${stroage} ${type} ${init}`.trim();
+    }
 }
 
 class FuncDecl extends Node {
+    readonly _nodetype: 'FuncDecl';
+
     readonly args: ParamList | null;
     readonly type: TypeDecl;
 
     constructor(json: Node) {
+        super(json, 'FuncDecl');
         const node = json as FuncDecl;
-        super(node, 'FuncDecl');
 
         if (node.args === null) {
             this.args = null;
@@ -93,216 +133,389 @@ class FuncDecl extends Node {
 
         this.type = new TypeDecl(node.type as Node);
     }
+
+    exportAsCode() {
+        let args = '()';
+        if (this.args !== null) {
+            args = this.args.exportAsCode();
+        }
+
+        return `${this.type.exportAsCode()}${args}`;
+    }
 }
 
 class TypeDecl extends Node {
-    readonly declname: string;
+    readonly _nodetype: 'TypeDecl';
+
+    readonly declname: string | null;
     readonly quals: Node[];
     readonly type: IdentifierType;
 
     constructor(json: Node) {
+        super(json, 'TypeDecl');
         const node = json as TypeDecl;
-        super(node, 'TypeDecl');
 
         this.declname = node.declname;
-        this.quals = assertEmpty(node.quals);
+        this.quals = this.assertEmpty(node.quals);
+        this.type = new IdentifierType(node.type);
+    }
 
-        switch (node.type._nodetype) {
-            case 'IdentifierType':
-                this.type = new IdentifierType(node.type as Node);
-                break;
-            case 'Union':
-                this.type = new Union(node.type as Node);
-                break;
-            default:
-                throw unsupportedType(node.type as Node);
-        }
+    getType(): string {
+        return this.type.exportAsCode();
+    }
+
+    getName(): string {
+        return this.declname || '';
+    }
+
+    exportAsCode(): string {
+        return `${this.getType()} ${this.getName()}`.trim();
     }
 }
 
 class ArrayDecl extends Node {
-    readonly dim: null;
+    readonly _nodetype: 'ArrayDecl';
+
+    readonly dim: Constant | null;
     // tslint:disable-next-line:variable-name
     readonly dim_quals: Node[];
     readonly type: TypeDecl;
 
     constructor(json: Node) {
+        super(json, 'ArrayDecl');
         const node = json as ArrayDecl;
-        super(node, 'ArrayDecl');
 
-        this.dim = node.dim;
-        this.dim_quals = assertEmpty(node.dim_quals);
+        if (node.dim === null) {
+            this.dim = null;
+        } else {
+            this.dim = new Constant(node.dim);
+        }
+
+        this.dim_quals = this.assertEmpty(node.dim_quals);
         this.type = new TypeDecl(node.type as Node);
+    }
+
+    exportAsCode(): string {
+        const type = this.type.exportAsCode();
+        return `${type}[${this.dim === null ? '' : this.dim.exportAsCode()}]`;
     }
 }
 
 class PtrDecl extends Node {
+    readonly _nodetype: 'PtrDecl';
+
     readonly quals: Node[];
     readonly type: TypeDecl;
 
     constructor(json: Node) {
+        super(json, 'PtrDecl');
         const node = json as PtrDecl;
-        super(node, 'PtrDecl');
 
-        this.quals = node.quals;
+        this.quals = this.assertEmpty(node.quals);
         this.type = new TypeDecl(node.type as Node);
+    }
+
+    exportAsCode() {
+        return `${this.type.getType()}* ${this.type.getName()}`;
     }
 }
 
 class InitList extends Node {
+    readonly _nodetype: 'InitList';
+
     exprs: Expression[];
 
     constructor(json: Node) {
+        super(json, 'InitList');
         const node = json as InitList;
-        super(node, 'InitList');
 
         this.exprs = node.exprs.map((node: Node) => expression(node));
+    }
+
+    exportAsCode(): string {
+        const values = this.exprs.map((expr) => expr.exportAsCode()).join(', ');
+        return '{' + values + '}';
     }
 }
 
 class IdentifierType extends Node {
-    readonly name: string[];
+    readonly _nodetype: 'IdentifierType';
+
+    readonly names: string[];
 
     constructor(json: Node) {
+        super(json, 'IdentifierType');
         const node = json as IdentifierType;
-        super(node, 'IdentifierType');
 
-        this.name = node.name;
+        this.names = node.names;
+    }
+
+    exportAsCode(): string {
+        return this.names.join(' ');
     }
 }
 
-class Union extends Node {
-    readonly decls: Decl[];
-    readonly name: null;
+class ParamList extends Node {
+    readonly _nodetype: 'ParamList';
+
+    readonly params: Array<Typename | Decl | ID>;
 
     constructor(json: Node) {
-        const node = json as Union;
-        super(node, 'Union');
+        super(json, 'ParamList');
+        const node = json as ParamList;
 
-        this.decls = node.decls.map((node: Node) => new Decl(node));
-        this.name = node.name;
+        this.params = node.params.map(
+            function convert(json: Node): Typename | Decl | ID {
+                switch (json._nodetype) {
+                    case 'Typename':
+                        return new Typename(json);
+                    case 'Decl':
+                        return new Decl(json);
+                    case 'ID': // Old-style K&R C   :(
+                        return new ID(json);
+                    default:
+                        throw unsupportedType(json);
+                }
+            }
+        );
+    }
+
+    exportAsCode(): string {
+        const params = this.params
+            .map((param) => param.exportAsCode()).join(', ');
+        return `(${params})`;
+    }
+}
+
+class Typename extends Node {
+    readonly _nodetype: 'Typename';
+
+    readonly name: null;
+    readonly quals: Node[];
+    readonly type: TypeDecl | PtrDecl;
+
+    constructor(json: Node) {
+        super(json, 'Typename');
+        const node = json as Typename;
+
+        this.name = this.assertNull(node.name);
+        this.quals = this.assertEmpty(node.quals);
+
+        switch (node.type._nodetype) {
+            case 'TypeDecl':
+                this.type = new TypeDecl(node.type as Node);
+                break;
+            case 'PtrDecl':
+                this.type = new PtrDecl(node.type as Node);
+                break;
+            default:
+                throw unsupportedType(node.type as Node);
+        }
+    }
+
+    exportAsCode(): string {
+        return this.type.exportAsCode();
     }
 }
 
 class FuncDef extends Node {
+    readonly _nodetype: 'FuncDef';
+    readonly neverSimicolon: true;
+
     readonly body: Compound;
     readonly decl: Decl;
     // tslint:disable-next-line:variable-name
-    readonly param_decls: null;
+    readonly param_decls: Decl[] | null; // Old-style K&R C   :(
 
     constructor(json: Node) {
+        super(json, 'FuncDef');
         const node = json as FuncDef;
-        super(node, 'FuncDef');
 
         this.body = new Compound(node.body as Node);
         this.decl = new Decl(node.decl as Decl);
-        this.param_decls = node.param_decls;
+
+        if (node.param_decls === null) {
+            this.param_decls = null;
+        } else {
+            this.param_decls = node.param_decls
+                .map((node: Node) => new Decl(node));
+        }
+    }
+
+    exportAsCode(): string {
+        const body = this.body.exportAsCode();
+        const decl = this.decl.exportAsCode();
+        let decls = '';
+        if (this.param_decls !== null) {
+            decls = ' ' + this.param_decls
+                .map((decl) => decl.exportAsCode())
+                .join(', ');
+        }
+
+        return `${decl}${decls} ${body}`;
     }
 }
 
 class Cast extends Node {
+    readonly _nodetype: 'Cast';
+
     readonly expr: Expression;
     // tslint:disable-next-line:variable-name
     readonly to_type: Typename;
 
     constructor(json: Node) {
+        super(json, 'Cast');
         const node = json as Cast;
-        super(node, 'Cast');
 
         this.expr = expression(node.expr as Node);
         this.to_type = new Typename(node.to_type as Node);
     }
+
+    exportAsCode(): string {
+        return `(${this.to_type.exportAsCode()})${this.expr.exportAsCode()}`;
+    }
 }
 
 class UnaryOp extends Node {
+    readonly _nodetype: 'UnaryOp';
+
     readonly expr: Expression;
     readonly op: string;
 
     constructor(json: Node) {
+        super(json, 'UnaryOp');
         const node = json as UnaryOp;
-        super(node, 'UnaryOp');
 
         this.expr = expression(node.expr as Node);
-        this.op = node.op;
+        this.op = this.assertString(node.op);
+    }
+
+    exportAsCode(): string {
+        switch (this.op) {
+            case 'p++':
+                return `${this.expr.exportAsCode()}++`;
+            case '++p':
+                return `++${this.expr.exportAsCode()}`;
+            default:
+                return `${this.op}${this.expr.exportAsCode()}`;
+        }
     }
 }
 
 class BinaryOp extends Node {
+    readonly _nodetype: 'BinaryOp';
+
     readonly left: Expression;
     readonly op: string;
     readonly right: Expression;
 
     constructor(json: Node) {
+        super(json, 'BinaryOp');
         const node = json as BinaryOp;
-        super(node, 'BinaryOp');
 
         this.left = expression(node.left as Node);
-        this.op = node.op;
+        this.op = this.assertString(node.op);
         this.right = expression(node.right as Node);
+    }
+
+    exportAsCode(): string {
+        const left = this.left.exportAsCode();
+        const right = this.right.exportAsCode();
+        return `(${left} ${this.op} ${right})`;
     }
 }
 
 class TernaryOp extends Node {
+    readonly _nodetype: 'TernaryOp';
+
     readonly cond: Expression;
     readonly iffalse: Expression;
     readonly iftrue: Expression;
 
     constructor(json: Node) {
+        super(json, 'TernaryOp');
         const node = json as TernaryOp;
-        super(node, 'TernaryOp');
 
         this.cond = expression(node.cond as Node);
         this.iffalse = expression(node.iffalse as Node);
         this.iftrue = expression(node.iftrue as Node);
     }
+
+    exportAsCode(): string {
+        const cond = this.cond.exportAsCode();
+        const iffalse = this.iffalse.exportAsCode();
+        const iftrue = this.iftrue.exportAsCode();
+
+        return `(${cond} ? ${iftrue} : ${iffalse})`;
+    }
 }
 
 class Constant extends Node {
+    readonly _nodetype: 'Constant';
+
     readonly type: string;
     readonly value: string;
 
     constructor(json: Node) {
+        super(json, 'Constant');
         const node = json as Constant;
-        super(node, 'Constant');
 
-        this.type = node.type;
-        this.value = node.value;
+        this.type = this.assertString(node.type);
+        this.value = this.assertString(node.value);
+    }
+
+    exportAsCode(): string {
+        return this.value;
     }
 }
 
 class ID extends Node {
+    readonly _nodetype: 'ID';
+
     readonly name: string;
 
     constructor(json: Node) {
+        super(json, 'ID');
         const node = json as ID;
-        super(node, 'ID');
 
-        this.name = node.name;
+        this.name = this.assertString(node.name);
+    }
+
+    exportAsCode(): string {
+        return this.name;
     }
 }
 
 class StructRef extends Node {
+    readonly _nodetype: 'StructRef';
+
     readonly field: ID;
     readonly name: ID;
     readonly type: string;
 
     constructor(json: Node) {
+        super(json, 'StructRef');
         const node = json as StructRef;
-        super(node, 'StructRef');
 
         this.field = node.field;
         this.name = node.name;
         this.type = node.type;
     }
+
+    exportAsCode(): string {
+        return `${this.name.exportAsCode()}.${this.field.exportAsCode()}`;
+    }
 }
 
 class ArrayRef extends Node {
+    readonly _nodetype: 'ArrayRef';
+
     readonly name: ID | StructRef;
     readonly subscript: Expression;
 
     constructor(json: Node) {
+        super(json, 'ArrayRef');
         const node = json as ArrayRef;
-        super(node, 'ArrayRef');
 
         switch (node.name._nodetype) {
             case 'ID':
@@ -317,17 +530,23 @@ class ArrayRef extends Node {
 
         this.subscript = expression(node.subscript as Node);
     }
+
+    exportAsCode(): string {
+        return `${this.name.exportAsCode()}[${this.subscript.exportAsCode()}]`;
+    }
 }
 
 class FuncCall extends Node {
+    readonly _nodetype: 'FuncCall';
+
     readonly name: ID;
     readonly args: ExprList | null;
 
     constructor(json: Node) {
+        super(json, 'FuncCall');
         const node = json as FuncCall;
-        super(node, 'FuncCall');
 
-        this.name = node.name;
+        this.name = new ID(node.name as Node);
 
         if (node.args === null) {
             this.args = null;
@@ -335,12 +554,25 @@ class FuncCall extends Node {
             this.args = new ExprList(node.args as Node);
         }
     }
+
+    exportAsCode(): string {
+        let args = '';
+        if (this.args !== null) {
+            args = this.args.exportAsCode();
+        }
+        return `${this.name.exportAsCode()}${args}`;
+    }
 }
 
 class EmptyStatement extends Node {
+    readonly _nodetype: 'EmptyStatement';
+
     constructor(json: Node) {
-        const node = json as EmptyStatement;
-        super(node, 'EmptyStatement');
+        super(json, 'EmptyStatement');
+    }
+
+    exportAsCode(): string {
+        return '';
     }
 }
 
@@ -379,8 +611,9 @@ function expression(node: Node): Expression {
 }
 
 type CompoundItem = (
-    Decl | If | Assignment | UnaryOp | Return | FuncCall | While | DoWhile |
-    Label | Goto | Switch | Default | Case | Break | EmptyStatement
+    Decl | If | Assignment | UnaryOp | Return | FuncCall |
+    While | DoWhile | For | Label | Goto | Switch | Default | Continue |
+    Case | Break | EmptyStatement
 );
 
 function compoundItem(node: Node): CompoundItem {
@@ -436,104 +669,170 @@ function block(node: Node): Block {
 }
 
 class Label extends Node {
+    readonly _nodetype: 'Label';
+
     readonly name: string;
     readonly stmt: Block;
 
     constructor(json: Node) {
+        super(json, 'Label');
         const node = json as Label;
-        super(node, 'Label');
 
-        this.name = node.name;
+        this.name = this.assertString(node.name);
         this.stmt = block(node.stmt as Node);
+    }
+
+    exportAsCode(): string {
+        return `${this.name}: ${this.stmt.exportAsCode()}`;
     }
 }
 
 class Goto extends Node {
+    readonly _nodetype: 'Goto';
+
     readonly name: string;
 
     constructor(json: Node) {
+        super(json, 'Goto');
         const node = json as Goto;
-        super(node, 'Goto');
 
-        this.name = node.name;
+        this.name = this.assertString(node.name);
+    }
+
+    exportAsCode(): string {
+        return `goto ${this.name}`;
     }
 }
 
 class Compound extends Node {
+    readonly _nodetype: 'Compound';
+    readonly neverSimicolon: boolean = true;
+
     // tslint:disable-next-line:variable-name
     readonly block_items: CompoundItem[];
 
     constructor(json: Node) {
+        super(json, 'Compound');
         const node = json as Compound;
-        super(node, 'Compound');
 
         this.block_items = node.block_items
             .map((node: Node) => compoundItem(node));
     }
+
+    exportAsCode(): string {
+        const items = this.block_items.map((item) => (
+            indentCode(item.exportAsCode()) +
+            (item.neverSimicolon ? '' : ';')
+        ));
+
+        return '{\n' +
+                items.join('\n') + '\n' +
+                '}';
+    }
 }
 
 class While extends Node {
+    readonly _nodetype: 'While';
+    readonly neverSimicolon: boolean = true;
+
     readonly cond: Expression;
     readonly stmt: Block;
 
     constructor(json: Node) {
+        super(json, 'While');
         const node = json as While;
-        super(node, 'While');
 
         this.cond = expression(node.cond as Node);
         this.stmt = block(node.stmt as Node);
+    }
+
+    exportAsCode(): string {
+        const cond = this.cond.exportAsCode();
+        const stmt = this.stmt.exportAsCode();
+        return `while(${cond}) ${stmt}\n`;
     }
 }
 
 class DoWhile extends Node {
+    readonly neverSimicolon: boolean = true;
+    readonly _nodetype: 'DoWhile';
+
     readonly cond: Expression;
     readonly stmt: Block;
 
     constructor(json: Node) {
+        super(json, 'DoWhile');
         const node = json as DoWhile;
-        super(node, 'DoWhile');
 
         this.cond = expression(node.cond as Node);
         this.stmt = block(node.stmt as Node);
     }
+
+    exportAsCode(): string {
+        const cond = this.cond.exportAsCode();
+        const stmt = this.stmt.exportAsCode();
+        return `do ${stmt} while(${cond})\n`;
+    }
 }
 
 class For extends Node {
+    readonly neverSimicolon: boolean = true;
+    readonly _nodetype: 'For';
+
     readonly init: Assignment;
     readonly next: Expression;
     readonly cond: Expression;
     readonly stmt: Block;
 
     constructor(json: Node) {
+        super(json, 'For');
         const node = json as For;
-        super(node, 'For');
 
         this.init = new Assignment(node.init as Node);
         this.next = expression(node.next as Node);
         this.cond = expression(node.cond as Node);
         this.stmt = block(node.stmt as Node);
     }
+
+    exportAsCode(): string {
+        const init = this.init.exportAsCode();
+        const next = this.next.exportAsCode();
+        const cond = this.cond.exportAsCode();
+        const stmt = this.stmt.exportAsCode();
+        return `for (${init}; ${cond}; ${next}) ${stmt}\n`;
+    }
 }
 
 class Switch extends Node {
+    readonly neverSimicolon: true;
+    readonly _nodetype: 'Switch';
+
     readonly cond: Expression;
     readonly stmt: Compound;
 
     constructor(json: Node) {
+        super(json, 'Switch');
         const node = json as Switch;
-        super(node, 'Switch');
 
         this.cond = expression(node.cond as Node);
         this.stmt = new Compound(node.stmt as Node);
     }
+
+    exportAsCode(): string {
+        const cond = this.cond.exportAsCode();
+        const stmt = this.stmt.exportAsCode();
+        return `swtich(${cond}) ${stmt}\n`;
+    }
 }
 
 class Default extends Node {
+    readonly _nodetype: 'Default';
+
     readonly stmts: CompoundItem[] | null;
 
     constructor(json: Node) {
+        super(json, 'Default');
         const node = json as Default;
-        super(node, 'Default');
 
         if (node.stmts === null) {
             this.stmts = null;
@@ -541,15 +840,31 @@ class Default extends Node {
             this.stmts = node.stmts.map((node: Node) => compoundItem(node));
         }
     }
+
+    exportAsCode(): string {
+        let stmts = '';
+        if (this.stmts !== null) {
+            stmts = this.stmts
+                .map((stmt) => (
+                    indentCode(stmt.exportAsCode()) +
+                    stmt.neverSimicolon ? '' : ';'
+                ))
+                .join('\n');
+        }
+        return `default:\n` +
+               `${stmts}`;
+    }
 }
 
 class Case extends Node {
+    readonly _nodetype: 'Case';
+
     readonly expr: Expression;
     readonly stmts: CompoundItem[] | null;
 
     constructor(json: Node) {
+        super(json, 'Case');
         const node = json as Case;
-        super(node, 'Case');
 
         this.expr = expression(node.expr as Node);
 
@@ -559,30 +874,57 @@ class Case extends Node {
             this.stmts = node.stmts.map((node: Node) => compoundItem(node));
         }
     }
+
+    exportAsCode(): string {
+        let stmts = '';
+        if (this.stmts !== null) {
+            stmts = this.stmts
+            .map((stmt) => (
+                indentCode(stmt.exportAsCode()) +
+                stmt.neverSimicolon ? '' : ';'
+            ))
+            .join('\n');
+        }
+        return `case ${this.expr.exportAsCode()}:\n` +
+               `${stmts}`;
+    }
 }
 
 class Break extends Node {
+    readonly _nodetype: 'Break';
+
     constructor(json: Node) {
-        const node = json as Break;
-        super(node, 'Break');
+        super(json, 'Break');
+    }
+
+    exportAsCode(): string {
+        return `break`;
     }
 }
 
 class Continue extends Node {
+    readonly _nodetype: 'Continue';
+
     constructor(json: Node) {
-        const node = json as Continue;
-        super(node, 'Continue');
+        super(json, 'Continue');
+    }
+
+    exportAsCode(): string {
+        return `continue`;
     }
 }
 
 class If extends Node {
+    readonly _nodetype: 'If';
+    readonly neverSimicolon: boolean = true;
+
     readonly cond: Expression;
     readonly iffalse: Block | null;
     readonly iftrue: Block;
 
     constructor(json: Node) {
+        super(json, 'If');
         const node = json as If;
-        super(node, 'If');
 
         this.cond = expression(node.cond as Node);
         if (node.iffalse === null) {
@@ -593,27 +935,55 @@ class If extends Node {
 
         this.iftrue = block(node.iftrue);
     }
+
+    exportAsCode(): string {
+        const cond = this.cond.exportAsCode();
+
+        const iftrue = (
+            this.iftrue.exportAsCode() +
+            (this.iftrue.neverSimicolon ? '' : ';')
+        );
+
+        let elseblock = '';
+        if (this.iffalse !== null) {
+            elseblock = (
+                ' else ' + this.iffalse.exportAsCode() +
+                (this.iffalse.neverSimicolon ? '' : ';')
+            );
+        }
+
+        return `if (${cond}) ${iftrue}${elseblock}`;
+    }
 }
 
 class ExprList extends Node {
+    readonly _nodetype: 'ExprList';
+
     readonly exprs: Expression[];
 
     constructor(json: Node) {
+        super(json, 'ExprList');
         const node = json as ExprList;
-        super(node, 'ExprList');
 
         this.exprs = node.exprs.map((node: Node) => expression(node));
+    }
+
+    exportAsCode(): string {
+        const exprs = this.exprs.map((expr) => expr.exportAsCode());
+        return `(${exprs.join(', ')})`;
     }
 }
 
 class Assignment extends Node {
+    readonly _nodetype: 'Assignment';
+
     readonly lvalue: ID | UnaryOp | StructRef | ArrayRef;
     readonly op: string;
     readonly rvalue: Expression;
 
     constructor(json: Node) {
+        super(json, 'Assignment');
         const node = json as Assignment;
-        super(node, 'Assignment');
 
         switch (node.lvalue._nodetype) {
             case 'ID':
@@ -632,77 +1002,43 @@ class Assignment extends Node {
                 throw unsupportedType(node.lvalue as Node);
         }
 
-        this.op = node.op;
+        this.op = this.assertString(node.op);
         this.rvalue = expression(node.rvalue as Node);
+    }
+
+    exportAsCode(): string {
+        const lvalue = this.lvalue.exportAsCode();
+        const rvalue = this.rvalue.exportAsCode();
+        return `${lvalue} ${this.op} ${rvalue}`;
     }
 }
 
 class Return extends Node {
+    readonly _nodetype: 'Return';
+
     readonly expr: Expression;
 
     constructor(json: Node) {
+        super(json, 'Return');
         const node = json as Return;
-        super(node, 'Return');
 
         this.expr = expression(node.expr as Node);
     }
-}
 
-class ParamList extends Node {
-    readonly params: Array<Typename | Decl | ID>;
-
-    constructor(json: Node) {
-        const node = json as ParamList;
-        super(node, 'ParamList');
-
-        this.params = node.params.map(
-            function convert(json: Node): Typename | Decl | ID {
-                switch (json._nodetype) {
-                    case 'Typename':
-                        return new Typename(json);
-                    case 'Decl':
-                        return new Decl(json);
-                    case 'ID': // Old-style K&R C   :(
-                        return new ID(json);
-                    default:
-                        throw unsupportedType(json);
-                }
-            }
-        );
-    }
-}
-
-class Typename extends Node {
-    readonly name: null;
-    readonly quals: Node[];
-    readonly type: TypeDecl | PtrDecl;
-
-    constructor(json: Node) {
-        const node = json as Typename;
-        super(node, 'Typename');
-
-        this.name = node.name;
-        this.quals = assertEmpty(node.quals);
-
-        switch (node.type._nodetype) {
-            case 'TypeDecl':
-                this.type = new TypeDecl(node.type as Node);
-                break;
-            case 'PtrDecl':
-                this.type = new PtrDecl(node.type as Node);
-                break;
-            default:
-                throw unsupportedType(node.type as Node);
-        }
+    exportAsCode(): string {
+        return `return ${this.expr.exportAsCode()}`;
     }
 }
 
 class FileAST extends Node {
+    readonly _nodetype: 'FileAST';
+    readonly neverSimicolon: true;
+
     readonly ext: Array<Decl | FuncDef>;
 
     constructor(json: Node) {
+        super(json, 'FileAST');
         const node = json as FileAST;
-        super(node, 'FileAST');
 
         this.ext = node.ext.map(
             function convert(json: Node): Decl | FuncDef {
@@ -717,11 +1053,20 @@ class FileAST extends Node {
             }
         );
     }
-}
 
-function assertEmpty(nodes: Node[]): Node[] {
-    assert(nodes.length === 0);
-    return nodes;
+    exportAsCode(): string {
+        const ext = this.ext.map(function map(node): string {
+            if (node instanceof Decl) {
+                return `${node.exportAsCode()};\n`;
+            } else if (node instanceof FuncDef) {
+                return `${node.exportAsCode()}\n`;
+            } else {
+                return unreachable();
+            }
+        });
+
+        return ext.join('\n');
+    }
 }
 
 function unsupportedType(node: Node): Error {
@@ -729,6 +1074,16 @@ function unsupportedType(node: Node): Error {
 }
 
 export function convertToTypedAST(node: Node) {
-    assert(node._nodetype === 'FileAST');
     return new FileAST(node);
+}
+
+function unreachable(): never {
+    throw new Error('unreachable');
+}
+
+function indentCode(code: string): string {
+    return code
+        .split('\n')
+        .map((line) => '  ' + line)
+        .join('\n');
 }
