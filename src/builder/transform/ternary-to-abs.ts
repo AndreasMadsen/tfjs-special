@@ -1,5 +1,5 @@
 
-import { FileAST, Node, TernaryOp, BinaryOp, Constant, UnaryOp, FuncCall, ID, ExprList } from '../ast';
+import { FileAST, Node, TernaryOp, BinaryOp, Constant, UnaryOp, FuncCall } from '../ast';
 
 // #define fabsf(x) ((x) < 0 ? -(x) : (x))
 
@@ -22,17 +22,17 @@ export function ternaryToAbs(ast: FileAST): FileAST {
                         const call = new FuncCall({
                             _nodetype: 'FuncCall',
                             coord: 'transform/ternary-to-abs.js',
-                            name: new ID({
+                            name: {
                                 _nodetype: 'ID',
                                 coord: 'transform/ternary-to-abs.js',
                                 name: 'abs'
-                            } as ID),
-                            args: new ExprList({
+                            },
+                            args: {
                                 _nodetype: 'ExprList',
                                 coord: 'transform/ternary-to-abs.js',
                                 exprs: [child.iffalse]
-                            } as ExprList)
-                        } as FuncCall);
+                            }
+                        });
 
                         return call as Node as T;
                     }

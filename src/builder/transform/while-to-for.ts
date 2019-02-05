@@ -3,8 +3,7 @@ import {
     FileAST, Node,
     While, DoWhile, For,
     Compound, Block, Expression, If,
-    Decl, TypeDecl, ID, Constant,
-    UnaryOp, Break, BinaryOp, IdentifierType
+    Decl, ID
  } from '../ast';
 
 function convertBlockToCompound(stmt: Block): Compound {
@@ -17,25 +16,25 @@ function convertBlockToCompound(stmt: Block): Compound {
         _nodetype: 'Compound',
         coord: 'transform/while-to-for.ts',
         block_items: [stmt]
-    } as Compound);
+    });
 }
 
 function convertCondToIfBreak(cond: Expression): If {
     return new If({
         _nodetype: 'If',
         coord: 'transform/while-to-for.ts',
-        cond: new UnaryOp({
+        cond: {
             _nodetype: 'UnaryOp',
             coord: 'transform/while-to-for.ts',
             expr: cond,
             op: '!'
-        } as UnaryOp),
+        },
         iffalse: null,
-        iftrue: new Break({
+        iftrue: {
             _nodetype: 'Break',
             coord: 'transform/while-to-for.ts'
-        } as Break)
-    } as If);
+        }
+    });
 }
 
 function makeStaticFor(incrementerName: string, maxIter: number,
@@ -44,59 +43,59 @@ function makeStaticFor(incrementerName: string, maxIter: number,
         _nodetype: 'ID',
         coord: 'transform/while-to-for.ts',
         name: incrementerName
-    } as ID);
+    });
 
     const initDecl = new Decl({
         _nodetype: 'Decl',
         coord: 'transform/while-to-for.ts',
         bitsize: null,
         funcspec: [],
-        init: new Constant({
+        init: {
             _nodetype: 'Constant',
             coord: 'transform/while-to-for.ts',
             value: '0',
             type: 'int'
-        } as Constant),
+        },
         name: incrementerName,
         quals: [],
         storage: [],
-        type: new TypeDecl({
+        type: {
             _nodetype: 'TypeDecl',
             coord: 'transform/while-to-for.ts',
             declname: incrementerName,
             quals: [],
-            type: new IdentifierType({
+            type: {
                 _nodetype: 'IdentifierType',
                 coord: 'transform/while-to-for.ts',
                 names: ['int']
-            } as IdentifierType)
-        } as TypeDecl)
-    } as Decl);
+            }
+        }
+    });
 
     return new For({
         _nodetype: 'For',
         coord: 'transform/while-to-for.ts',
         init: initDecl,
-        cond: new BinaryOp({
+        cond: {
             _nodetype: 'BinaryOp',
             coord: 'transform/while-to-for.ts',
             left: incrementer,
             op: '<',
-            right: new Constant({
+            right: {
                 _nodetype: 'Constant',
                 coord: 'transform/while-to-for.ts',
                 value: maxIter.toString(),
                 type: 'int'
-            } as Constant)
-        } as BinaryOp),
-        next: new UnaryOp({
+            }
+        },
+        next: {
             _nodetype: 'UnaryOp',
             coord: 'transform/while-to-for.ts',
             expr: incrementer,
             op: 'p++'
-        } as UnaryOp),
+        },
         stmt: compound
-    } as For);
+    });
 }
 
 export function whileToFor(ast: FileAST): FileAST {

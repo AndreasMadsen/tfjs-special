@@ -1,6 +1,6 @@
 
 import * as fs from 'fs';
-import { Node, FileAST } from './ast';
+import { importAstFromJson } from './ast';
 import { useBuiltinMath } from './transform/use-builtin-math';
 import { removeMtherr } from './transform/remove-mtherr';
 import { ternaryToAbs } from './transform/ternary-to-abs';
@@ -12,7 +12,7 @@ import { whileToFor } from './transform/while-to-for';
 
 for (const filename of process.argv.slice(2)) {
     const kernelSource = fs.readFileSync(filename, 'utf-8');
-    let ast = new FileAST(JSON.parse(kernelSource) as Node);
+    let ast = importAstFromJson(JSON.parse(kernelSource));
 
     ast = useBuiltinMath(ast);
     ast = removeMtherr(ast);

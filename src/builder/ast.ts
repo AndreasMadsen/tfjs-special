@@ -1,21 +1,25 @@
 
-export declare type TransformFunc = <T extends Node, TT extends Node>(
-    child: T, parent: TT
-) => T;
+export type TransformFunc = (<T extends Node, TT extends Node>(child: T, parent: TT) => T);
 
-export abstract class Node {
-    readonly abstract _nodetype: string;
+interface NodeInterface {
+    readonly _nodetype: string;
+    readonly coord: string | null;
+}
+
+export abstract class Node implements NodeInterface {
+    readonly _nodetype: string;
     readonly neverSimicolon: boolean = false;
     readonly coord: string | null;
 
-    constructor(node: Node, expectedType: string) {
-        if (node._nodetype !== expectedType) {
+    constructor(node: NodeInterface, expectedNodetype: string) {
+        if (node._nodetype !== expectedNodetype) {
             throw new Error(
                 `unexpected type ${node._nodetype}, ` +
-                `expected ${expectedType} from ${node.coord}`
+                `expected ${expectedNodetype} from ${node.coord}`
             );
         }
 
+        this._nodetype = expectedNodetype;
         this.coord = node.coord;
     }
 
@@ -23,13 +27,13 @@ export abstract class Node {
 
     abstract transformChildren(transform: TransformFunc): Node;
 
-    protected assertEmpty(nodes: Node[]): Node[] {
+    protected assertEmpty(nodes: NodeInterface[]): Node[] {
         if (nodes.length !== 0) {
             throw new Error(
                 `expected empty array in ${this._nodetype} from ${this.coord}`
             );
         }
-        return nodes;
+        return [];
     }
 
     protected assertString(value: string): string {
@@ -51,10 +55,24 @@ export abstract class Node {
     }
 }
 
+declare type AllDeclInterface = (
+    DeclInterface | TypeDeclInterface | FuncDeclInterface |
+    ArrayDeclInterface | PtrDeclInterface
+);
 export declare type AllDecl = Decl | TypeDecl | FuncDecl | ArrayDecl | PtrDecl;
 
-export class Decl extends Node {
-    readonly _nodetype: string = 'Decl';
+interface DeclInterface extends NodeInterface {
+    readonly bitsize: null;
+    readonly funcspec: Node[];
+    init: InitListInterface | ConstantInterface | UnaryOpInterface | null;
+    readonly name: string;
+    readonly quals: Node[];
+    readonly storage: string[];
+    type: AllDeclInterface;
+}
+
+export class Decl extends Node implements DeclInterface {
+    readonly _nodetype: 'Decl';
 
     readonly bitsize: null;
     readonly funcspec: Node[];
@@ -64,9 +82,8 @@ export class Decl extends Node {
     readonly storage: string[];
     type: AllDecl;
 
-    constructor(json: Node) {
-        super(json, 'Decl');
-        const node = json as Decl;
+    constructor(node: DeclInterface) {
+        super(node, 'Decl');
 
         this.bitsize = this.assertNull(node.bitsize);
         this.funcspec = this.assertEmpty(node.funcspec);
@@ -74,44 +91,20 @@ export class Decl extends Node {
         if (node.init === null) {
             this.init = null;
         } else {
-            switch (node.init._nodetype) {
-                case 'InitList':
-                    this.init = new InitList(node.init as Node);
-                    break;
-                case 'Constant':
-                    this.init = new Constant(node.init as Node);
-                    break;
-                case 'UnaryOp':
-                    this.init = new UnaryOp(node.init as Node);
-                    break;
-                default:
-                    throw unsupportedType(node.init as Node);
-            }
+            this.init = instantiate<
+                InitList | Constant | UnaryOp,
+                InitListInterface | ConstantInterface | UnaryOpInterface
+            >(node.init, ['InitList', 'Constant', 'UnaryOp']);
         }
 
         this.name = this.assertString(node.name);
         this.quals = this.assertEmpty(node.quals);
         this.storage = node.storage;
 
-        switch (node.type._nodetype) {
-            case 'Decl':
-                this.type = new Decl(node.type as Node);
-                break;
-            case 'TypeDecl':
-                this.type = new TypeDecl(node.type as Node);
-                break;
-            case 'FuncDecl':
-                this.type = new FuncDecl(node.type as Node);
-                break;
-            case 'ArrayDecl':
-                this.type = new ArrayDecl(node.type as Node);
-                break;
-            case 'PtrDecl':
-                this.type = new PtrDecl(node.type as Node);
-                break;
-            default:
-                throw unsupportedType(node.type as Node);
-        }
+        this.type = instantiate<
+            AllDecl,
+            AllDeclInterface
+        >(node.type, ['Decl', 'TypeDecl', 'FuncDecl', 'ArrayDecl', 'PtrDecl']);
     }
 
     transformChildren(transform: TransformFunc): Decl {
@@ -132,23 +125,27 @@ export class Decl extends Node {
     }
 }
 
-export class FuncDecl extends Node {
-    readonly _nodetype: string = 'FuncDecl';
+interface FuncDeclInterface extends NodeInterface {
+    args: ParamListInterface | null;
+    type: TypeDeclInterface;
+}
+
+export class FuncDecl extends Node implements FuncDeclInterface {
+    readonly _nodetype: 'FuncDecl';
 
     args: ParamList | null;
     type: TypeDecl;
 
-    constructor(json: Node) {
-        super(json, 'FuncDecl');
-        const node = json as FuncDecl;
+    constructor(node: FuncDeclInterface) {
+        super(node, 'FuncDecl');
 
         if (node.args === null) {
             this.args = null;
         } else {
-            this.args = new ParamList(node.args as Node);
+            this.args = new ParamList(node.args);
         }
 
-        this.type = new TypeDecl(node.type as Node);
+        this.type = new TypeDecl(node.type);
     }
 
     transformChildren(transform: TransformFunc): FuncDecl {
@@ -170,16 +167,21 @@ export class FuncDecl extends Node {
     }
 }
 
-export class TypeDecl extends Node {
-    readonly _nodetype: string = 'TypeDecl';
+interface TypeDeclInterface extends NodeInterface {
+    readonly declname: string | null;
+    readonly quals: NodeInterface[];
+    type: IdentifierTypeInterface;
+}
+
+export class TypeDecl extends Node implements TypeDeclInterface {
+    readonly _nodetype: 'TypeDecl';
 
     readonly declname: string | null;
     readonly quals: Node[];
     type: IdentifierType;
 
-    constructor(json: Node) {
-        super(json, 'TypeDecl');
-        const node = json as TypeDecl;
+    constructor(node: TypeDeclInterface) {
+        super(node, 'TypeDecl');
 
         this.declname = node.declname;
         this.quals = this.assertEmpty(node.quals);
@@ -204,17 +206,23 @@ export class TypeDecl extends Node {
     }
 }
 
-export class ArrayDecl extends Node {
-    readonly _nodetype: string = 'ArrayDecl';
+interface ArrayDeclInterface extends NodeInterface {
+    dim: Constant | null;
+    // tslint:disable-next-line:variable-name
+    readonly dim_quals: Node[];
+    type: TypeDecl;
+}
+
+export class ArrayDecl extends Node implements ArrayDeclInterface {
+    readonly _nodetype: 'ArrayDecl';
 
     dim: Constant | null;
     // tslint:disable-next-line:variable-name
     readonly dim_quals: Node[];
     type: TypeDecl;
 
-    constructor(json: Node) {
-        super(json, 'ArrayDecl');
-        const node = json as ArrayDecl;
+    constructor(node: ArrayDeclInterface) {
+        super(node, 'ArrayDecl');
 
         if (node.dim === null) {
             this.dim = null;
@@ -223,7 +231,7 @@ export class ArrayDecl extends Node {
         }
 
         this.dim_quals = this.assertEmpty(node.dim_quals);
-        this.type = new TypeDecl(node.type as Node);
+        this.type = new TypeDecl(node.type);
     }
 
     transformChildren(transform: TransformFunc): ArrayDecl {
@@ -240,18 +248,22 @@ export class ArrayDecl extends Node {
     }
 }
 
-export class PtrDecl extends Node {
-    readonly _nodetype: string = 'PtrDecl';
+interface PtrDeclInterface extends NodeInterface {
+    readonly quals: Node[];
+    type: TypeDeclInterface;
+}
+
+export class PtrDecl extends Node implements PtrDeclInterface {
+    readonly _nodetype: 'PtrDecl';
 
     readonly quals: Node[];
     type: TypeDecl;
 
-    constructor(json: Node) {
-        super(json, 'PtrDecl');
-        const node = json as PtrDecl;
+    constructor(node: PtrDeclInterface) {
+        super(node, 'PtrDecl');
 
         this.quals = this.assertEmpty(node.quals);
-        this.type = new TypeDecl(node.type as Node);
+        this.type = new TypeDecl(node.type);
     }
 
     transformChildren(transform: TransformFunc): PtrDecl {
@@ -265,16 +277,19 @@ export class PtrDecl extends Node {
     }
 }
 
-export class InitList extends Node {
-    readonly _nodetype: string = 'InitList';
+interface InitListInterface extends NodeInterface {
+    exprs: ExpressionInterface[];
+}
+
+export class InitList extends Node implements InitListInterface {
+    readonly _nodetype: 'InitList';
 
     exprs: Expression[];
 
-    constructor(json: Node) {
-        super(json, 'InitList');
-        const node = json as InitList;
+    constructor(node: InitListInterface) {
+        super(node, 'InitList');
 
-        this.exprs = node.exprs.map((node: Node) => expression(node));
+        this.exprs = node.exprs.map(expression);
     }
 
     transformChildren(transform: TransformFunc): InitList {
@@ -288,14 +303,17 @@ export class InitList extends Node {
     }
 }
 
-export class IdentifierType extends Node {
-    readonly _nodetype: string = 'IdentifierType';
+interface IdentifierTypeInterface extends NodeInterface {
+    readonly names: string[];
+}
+
+export class IdentifierType extends Node implements IdentifierTypeInterface {
+    readonly _nodetype: 'IdentifierType';
 
     readonly names: string[];
 
-    constructor(json: Node) {
-        super(json, 'IdentifierType');
-        const node = json as IdentifierType;
+    constructor(node: IdentifierTypeInterface) {
+        super(node, 'IdentifierType');
 
         this.names = node.names;
     }
@@ -309,28 +327,23 @@ export class IdentifierType extends Node {
     }
 }
 
-export class ParamList extends Node {
-    readonly _nodetype: string = 'ParamList';
+interface ParamListInterface extends NodeInterface {
+    params: Array<TypenameInterface | DeclInterface | AstIDInterface>;
+}
+
+export class ParamList extends Node implements ParamListInterface {
+    readonly _nodetype: 'ParamList';
 
     params: Array<Typename | Decl | ID>;
 
-    constructor(json: Node) {
-        super(json, 'ParamList');
-        const node = json as ParamList;
+    constructor(node: ParamListInterface) {
+        super(node, 'ParamList');
 
         this.params = node.params.map(
-            function convert(json: Node): Typename | Decl | ID {
-                switch (json._nodetype) {
-                    case 'Typename':
-                        return new Typename(json);
-                    case 'Decl':
-                        return new Decl(json);
-                    case 'ID': // Old-style K&R C   :(
-                        return new ID(json);
-                    default:
-                        throw unsupportedType(json);
-                }
-            }
+            (param) => instantiate<
+                Typename | Decl | ID,
+                TypenameInterface | DeclInterface | AstIDInterface
+            >(param, ['Typename', 'Decl', 'ID'])
         );
     }
 
@@ -346,30 +359,28 @@ export class ParamList extends Node {
     }
 }
 
-export class Typename extends Node {
-    readonly _nodetype: string = 'Typename';
+interface TypenameInterface extends NodeInterface {
+    readonly name: null;
+    readonly quals: Node[];
+    type: TypeDeclInterface | PtrDeclInterface;
+}
+
+export class Typename extends Node implements TypenameInterface {
+    readonly _nodetype: 'Typename';
 
     readonly name: null;
     readonly quals: Node[];
     type: TypeDecl | PtrDecl;
 
-    constructor(json: Node) {
-        super(json, 'Typename');
-        const node = json as Typename;
+    constructor(node: TypenameInterface) {
+        super(node, 'Typename');
 
         this.name = this.assertNull(node.name);
         this.quals = this.assertEmpty(node.quals);
-
-        switch (node.type._nodetype) {
-            case 'TypeDecl':
-                this.type = new TypeDecl(node.type as Node);
-                break;
-            case 'PtrDecl':
-                this.type = new PtrDecl(node.type as Node);
-                break;
-            default:
-                throw unsupportedType(node.type as Node);
-        }
+        this.type = instantiate<
+            TypeDecl | PtrDecl,
+            TypeDeclInterface | PtrDeclInterface
+        >(node.type, ['TypeDecl', 'PtrDecl']);
     }
 
     transformChildren(transform: TransformFunc): Typename {
@@ -382,8 +393,15 @@ export class Typename extends Node {
     }
 }
 
-export class FuncDef extends Node {
-    readonly _nodetype: string = 'FuncDef';
+interface FuncDefInterface extends NodeInterface {
+    body: CompoundInterface;
+    decl: DeclInterface;
+    // tslint:disable-next-line:variable-name
+    param_decls: DeclInterface[] | null; // Old-style K&R C   :(
+}
+
+export class FuncDef extends Node implements FuncDefInterface {
+    readonly _nodetype: 'FuncDef';
     readonly neverSimicolon: boolean = true;
 
     body: Compound;
@@ -391,18 +409,17 @@ export class FuncDef extends Node {
     // tslint:disable-next-line:variable-name
     param_decls: Decl[] | null; // Old-style K&R C   :(
 
-    constructor(json: Node) {
-        super(json, 'FuncDef');
-        const node = json as FuncDef;
+    constructor(node: FuncDefInterface) {
+        super(node, 'FuncDef');
 
-        this.body = new Compound(node.body as Node);
+        this.body = new Compound(node.body);
         this.decl = new Decl(node.decl as Decl);
 
         if (node.param_decls === null) {
             this.param_decls = null;
         } else {
             this.param_decls = node.param_decls
-                .map((node: Node) => new Decl(node));
+                .map((decl) => new Decl(decl));
         }
     }
 
@@ -430,19 +447,24 @@ export class FuncDef extends Node {
     }
 }
 
-export class Cast extends Node {
-    readonly _nodetype: string = 'Cast';
+interface CastInterface extends NodeInterface {
+    expr: Expression;
+    // tslint:disable-next-line:variable-name
+    to_type: Typename;
+}
+
+export class Cast extends Node implements CastInterface {
+    readonly _nodetype: 'Cast';
 
     expr: Expression;
     // tslint:disable-next-line:variable-name
     to_type: Typename;
 
-    constructor(json: Node) {
-        super(json, 'Cast');
-        const node = json as Cast;
+    constructor(node: CastInterface) {
+        super(node, 'Cast');
 
-        this.expr = expression(node.expr as Node);
-        this.to_type = new Typename(node.to_type as Node);
+        this.expr = expression(node.expr);
+        this.to_type = new Typename(node.to_type);
     }
 
     transformChildren(transform: TransformFunc): Cast {
@@ -456,17 +478,21 @@ export class Cast extends Node {
     }
 }
 
-export class UnaryOp extends Node {
-    readonly _nodetype: string = 'UnaryOp';
+interface UnaryOpInterface extends NodeInterface {
+    expr: Expression;
+    readonly op: string;
+}
+
+export class UnaryOp extends Node implements UnaryOpInterface {
+    readonly _nodetype: 'UnaryOp';
 
     expr: Expression;
     readonly op: string;
 
-    constructor(json: Node) {
-        super(json, 'UnaryOp');
-        const node = json as UnaryOp;
+    constructor(node: UnaryOpInterface) {
+        super(node, 'UnaryOp');
 
-        this.expr = expression(node.expr as Node);
+        this.expr = expression(node.expr);
         this.op = this.assertString(node.op);
     }
 
@@ -487,20 +513,25 @@ export class UnaryOp extends Node {
     }
 }
 
-export class BinaryOp extends Node {
-    readonly _nodetype: string = 'BinaryOp';
+interface BinaryOpInterface extends NodeInterface {
+    left: ExpressionInterface;
+    readonly op: string;
+    right: ExpressionInterface;
+}
+
+export class BinaryOp extends Node implements BinaryOpInterface {
+    readonly _nodetype: 'BinaryOp';
 
     left: Expression;
     readonly op: string;
     right: Expression;
 
-    constructor(json: Node) {
-        super(json, 'BinaryOp');
-        const node = json as BinaryOp;
+    constructor(node: BinaryOpInterface) {
+        super(node, 'BinaryOp');
 
-        this.left = expression(node.left as Node);
+        this.left = expression(node.left);
         this.op = this.assertString(node.op);
-        this.right = expression(node.right as Node);
+        this.right = expression(node.right);
     }
 
     transformChildren(transform: TransformFunc): BinaryOp {
@@ -516,20 +547,25 @@ export class BinaryOp extends Node {
     }
 }
 
-export class TernaryOp extends Node {
-    readonly _nodetype: string = 'TernaryOp';
+interface TernaryOpInterface extends NodeInterface {
+    cond: ExpressionInterface;
+    iffalse: ExpressionInterface;
+    iftrue: ExpressionInterface;
+}
+
+export class TernaryOp extends Node implements TernaryOpInterface {
+    readonly _nodetype: 'TernaryOp';
 
     cond: Expression;
     iffalse: Expression;
     iftrue: Expression;
 
-    constructor(json: Node) {
-        super(json, 'TernaryOp');
-        const node = json as TernaryOp;
+    constructor(node: TernaryOpInterface) {
+        super(node, 'TernaryOp');
 
-        this.cond = expression(node.cond as Node);
-        this.iffalse = expression(node.iffalse as Node);
-        this.iftrue = expression(node.iftrue as Node);
+        this.cond = expression(node.cond);
+        this.iffalse = expression(node.iffalse);
+        this.iftrue = expression(node.iftrue);
     }
 
     transformChildren(transform: TransformFunc): TernaryOp {
@@ -548,15 +584,19 @@ export class TernaryOp extends Node {
     }
 }
 
-export class Constant extends Node {
-    readonly _nodetype: string = 'Constant';
+interface ConstantInterface extends NodeInterface {
+    readonly type: string;
+    readonly value: string;
+}
+
+export class Constant extends Node implements ConstantInterface {
+    readonly _nodetype: 'Constant';
 
     readonly type: string;
     readonly value: string;
 
-    constructor(json: Node) {
-        super(json, 'Constant');
-        const node = json as Constant;
+    constructor(node: ConstantInterface) {
+        super(node, 'Constant');
 
         this.type = this.assertString(node.type);
         this.value = this.assertString(node.value);
@@ -571,14 +611,17 @@ export class Constant extends Node {
     }
 }
 
-export class ID extends Node {
-    readonly _nodetype: string = 'ID';
+interface AstIDInterface extends NodeInterface {
+    name: string;
+}
+
+export class ID extends Node implements AstIDInterface {
+    readonly _nodetype: 'ID';
 
     name: string;
 
-    constructor(json: Node) {
-        super(json, 'ID');
-        const node = json as ID;
+    constructor(node: AstIDInterface) {
+        super(node, 'ID');
 
         this.name = this.assertString(node.name);
     }
@@ -592,19 +635,24 @@ export class ID extends Node {
     }
 }
 
-export class StructRef extends Node {
-    readonly _nodetype: string = 'StructRef';
+interface StructRefInterface extends NodeInterface {
+    field: AstIDInterface;
+    name: AstIDInterface;
+    readonly type: string;
+}
+
+export class StructRef extends Node implements StructRefInterface {
+    readonly _nodetype: 'StructRef';
 
     field: ID;
     name: ID;
     readonly type: string;
 
-    constructor(json: Node) {
-        super(json, 'StructRef');
-        const node = json as StructRef;
+    constructor(node: StructRefInterface) {
+        super(node, 'StructRef');
 
-        this.field = node.field;
-        this.name = node.name;
+        this.field = new ID(node.field);
+        this.name = new ID(node.name);
         this.type = node.type;
     }
 
@@ -619,28 +667,25 @@ export class StructRef extends Node {
     }
 }
 
-export class ArrayRef extends Node {
-    readonly _nodetype: string = 'ArrayRef';
+interface ArrayRefInterface extends NodeInterface {
+    name: AstIDInterface | StructRefInterface;
+    subscript: ExpressionInterface;
+}
+
+export class ArrayRef extends Node implements ArrayRefInterface {
+    readonly _nodetype: 'ArrayRef';
 
     name: ID | StructRef;
     subscript: Expression;
 
-    constructor(json: Node) {
-        super(json, 'ArrayRef');
-        const node = json as ArrayRef;
+    constructor(node: ArrayRefInterface) {
+        super(node, 'ArrayRef');
 
-        switch (node.name._nodetype) {
-            case 'ID':
-                this.name = new ID(node.name as Node);
-                break;
-            case 'StructRef':
-                this.name = new StructRef(node.name as Node);
-                break;
-            default:
-                throw unsupportedType(node.name as Node);
-        }
-
-        this.subscript = expression(node.subscript as Node);
+        this.name = instantiate<
+            ID | StructRef,
+            AstIDInterface | StructRefInterface
+        >(node.name, ['ID', 'StructRef']);
+        this.subscript = expression(node.subscript);
     }
 
     transformChildren(transform: TransformFunc): ArrayRef {
@@ -654,22 +699,26 @@ export class ArrayRef extends Node {
     }
 }
 
-export class FuncCall extends Node {
-    readonly _nodetype: string = 'FuncCall';
+interface FuncCallInterface extends NodeInterface {
+    name: AstIDInterface;
+    args: ExprListInterface | null;
+}
+
+export class FuncCall extends Node implements FuncCallInterface {
+    readonly _nodetype: 'FuncCall';
 
     name: ID;
     args: ExprList | null;
 
-    constructor(json: Node) {
-        super(json, 'FuncCall');
-        const node = json as FuncCall;
+    constructor(node: FuncCallInterface) {
+        super(node, 'FuncCall');
 
-        this.name = new ID(node.name as Node);
+        this.name = new ID(node.name);
 
         if (node.args === null) {
             this.args = null;
         } else {
-            this.args = new ExprList(node.args as Node);
+            this.args = new ExprList(node.args);
         }
     }
 
@@ -690,11 +739,13 @@ export class FuncCall extends Node {
     }
 }
 
-export class EmptyStatement extends Node {
-    readonly _nodetype: string = 'EmptyStatement';
+interface EmptyStatementInterface extends NodeInterface {}
 
-    constructor(json: Node) {
-        super(json, 'EmptyStatement');
+export class EmptyStatement extends Node implements EmptyStatementInterface {
+    readonly _nodetype: 'EmptyStatement';
+
+    constructor(node: EmptyStatementInterface) {
+        super(node, 'EmptyStatement');
     }
 
     transformChildren(transform: TransformFunc): EmptyStatement {
@@ -706,39 +757,33 @@ export class EmptyStatement extends Node {
     }
 }
 
+declare type ExpressionInterface = (
+    AstIDInterface | StructRefInterface | ArrayRefInterface |
+    ConstantInterface | CastInterface | AssignmentInterface |
+    FuncCallInterface | TypenameInterface | UnaryOpInterface |
+    BinaryOpInterface | TernaryOpInterface
+);
+
 export declare type Expression = (
     ID | StructRef | ArrayRef | Constant | Cast | Assignment | FuncCall |
     Typename | UnaryOp | BinaryOp | TernaryOp
 );
 
-function expression(node: Node): Expression {
-    switch (node._nodetype) {
-        case 'ID':
-            return new ID(node as Node);
-        case 'StructRef':
-            return new StructRef(node as Node);
-        case 'ArrayRef':
-            return new ArrayRef(node as Node);
-        case 'Constant':
-            return new Constant(node as Node);
-        case 'Cast':
-            return new Cast(node as Node);
-        case 'Assignment':
-            return new Assignment(node as Node);
-        case 'FuncCall':
-            return new FuncCall(node as Node);
-        case 'Typename':
-           return new Typename(node as Node);
-        case 'UnaryOp':
-            return new UnaryOp(node as Node);
-        case 'BinaryOp':
-            return new BinaryOp(node as Node);
-        case 'TernaryOp':
-            return new TernaryOp(node as Node);
-        default:
-            throw unsupportedType(node);
-    }
+function expression(node: ExpressionInterface): Expression {
+    return instantiate<Expression, ExpressionInterface>(node, [
+        'ID', 'StructRef', 'ArrayRef', 'Constant', 'Cast',
+        'Assignment', 'FuncCall', 'Typename', 'UnaryOp', 'BinaryOp',
+        'TernaryOp'
+    ]);
 }
+
+declare type CompoundItemInterface = (
+    DeclInterface | IfInterface | AssignmentInterface | UnaryOpInterface |
+    ReturnInterface | FuncCallInterface | WhileInterface |
+    DoWhileInterface | ForInterface | LabelInterface | GotoInterface |
+    SwitchInterface | DefaultInterface | ContinueInterface |
+    CaseInterface | BreakInterface | EmptyStatementInterface
+);
 
 export declare type CompoundItem = (
     Decl | If | Assignment | UnaryOp | Return | FuncCall |
@@ -746,70 +791,42 @@ export declare type CompoundItem = (
     Case | Break | EmptyStatement
 );
 
-function compoundItem(node: Node): CompoundItem {
-    switch (node._nodetype) {
-        case 'Decl':
-        return new Decl(node);
-        case 'If':
-            return new If(node);
-        case 'Assignment':
-            return new Assignment(node);
-        case 'UnaryOp':
-            return new UnaryOp(node);
-        case 'Return':
-            return new Return(node);
-        case 'FuncCall':
-            return new FuncCall(node);
-        case 'While':
-            return new While(node);
-        case 'DoWhile':
-            return new DoWhile(node);
-        case 'For':
-            return new For(node);
-        case 'Label':
-            return new Label(node);
-        case 'Goto':
-            return new Goto(node);
-        case 'Switch':
-            return new Switch(node);
-        case 'Default':
-            return new Default(node);
-        case 'Case':
-            return new Case(node);
-        case 'Break':
-            return new Break(node);
-        case 'Continue':
-            return new Continue(node);
-        case 'EmptyStatement':
-            return new EmptyStatement(node);
-        default:
-            throw unsupportedType(node);
-    }
+function compoundItem(node: CompoundItemInterface): CompoundItem {
+    return instantiate<CompoundItem, CompoundItemInterface>(node, [
+        'Decl', 'If', 'Assignment', 'UnaryOp', 'Return', 'FuncCall',
+        'While', 'DoWhile', 'For', 'Label', 'Goto', 'Switch', 'Default',
+        'Continue', 'Case', 'Break', 'EmptyStatement'
+    ]);
 }
+
+declare type BlockInterface = CompoundInterface | CompoundItemInterface;
 
 export declare type Block = Compound | CompoundItem;
 
-function block(node: Node): Block {
-    switch (node._nodetype) {
-        case 'Compound':
-            return new Compound(node);
-        default:
-            return compoundItem(node);
+function block(node: BlockInterface): Block {
+    if (checkType<CompoundInterface>(node, 'Compound')) {
+        return new Compound(node);
+    } else {
+        return compoundItem(node);
     }
 }
 
-export class Label extends Node {
-    readonly _nodetype: string = 'Label';
+interface LabelInterface extends NodeInterface {
+    readonly name: string;
+    stmt: BlockInterface;
+}
+
+export class Label extends Node implements LabelInterface {
+    readonly _nodetype: 'Label';
 
     readonly name: string;
     stmt: Block;
 
-    constructor(json: Node) {
-        super(json, 'Label');
-        const node = json as Label;
+    constructor(node: LabelInterface) {
+        super(node, 'Label');
 
         this.name = this.assertString(node.name);
-        this.stmt = block(node.stmt as Node);
+        this.stmt = block(node.stmt);
     }
 
     transformChildren(transform: TransformFunc): Label {
@@ -822,14 +839,17 @@ export class Label extends Node {
     }
 }
 
-export class Goto extends Node {
-    readonly _nodetype: string = 'Goto';
+interface GotoInterface extends NodeInterface {
+    readonly name: string;
+}
+
+export class Goto extends Node implements GotoInterface {
+    readonly _nodetype: 'Goto';
 
     readonly name: string;
 
-    constructor(json: Node) {
-        super(json, 'Goto');
-        const node = json as Goto;
+    constructor(node: GotoInterface) {
+        super(node, 'Goto');
 
         this.name = this.assertString(node.name);
     }
@@ -843,16 +863,20 @@ export class Goto extends Node {
     }
 }
 
-export class Compound extends Node {
-    readonly _nodetype: string = 'Compound';
+interface CompoundInterface extends NodeInterface {
+    // tslint:disable-next-line:variable-name
+    block_items: CompoundItem[];
+}
+
+export class Compound extends Node implements CompoundInterface {
+    readonly _nodetype: 'Compound';
     readonly neverSimicolon: boolean = true;
 
     // tslint:disable-next-line:variable-name
     block_items: CompoundItem[];
 
-    constructor(json: Node) {
-        super(json, 'Compound');
-        const node = json as Compound;
+    constructor(node: CompoundInterface) {
+        super(node, 'Compound');
 
         this.block_items = node.block_items
             .map((node: Node) => compoundItem(node));
@@ -876,19 +900,23 @@ export class Compound extends Node {
     }
 }
 
-export class While extends Node {
-    readonly _nodetype: string = 'While';
+interface WhileInterface extends NodeInterface {
+    cond: ExpressionInterface;
+    stmt: BlockInterface;
+}
+
+export class While extends Node implements WhileInterface {
+    readonly _nodetype: 'While';
     readonly neverSimicolon: boolean = true;
 
     cond: Expression;
     stmt: Block;
 
-    constructor(json: Node) {
-        super(json, 'While');
-        const node = json as While;
+    constructor(node: WhileInterface) {
+        super(node, 'While');
 
-        this.cond = expression(node.cond as Node);
-        this.stmt = block(node.stmt as Node);
+        this.cond = expression(node.cond);
+        this.stmt = block(node.stmt);
     }
 
     transformChildren(transform: TransformFunc): While {
@@ -904,18 +932,22 @@ export class While extends Node {
     }
 }
 
-export class DoWhile extends Node {
-    readonly _nodetype: string = 'DoWhile';
+interface DoWhileInterface extends NodeInterface {
+    cond: ExpressionInterface;
+    stmt: BlockInterface;
+}
+
+export class DoWhile extends Node implements DoWhileInterface {
+    readonly _nodetype: 'DoWhile';
 
     cond: Expression;
     stmt: Block;
 
-    constructor(json: Node) {
-        super(json, 'DoWhile');
-        const node = json as DoWhile;
+    constructor(node: DoWhileInterface) {
+        super(node, 'DoWhile');
 
-        this.cond = expression(node.cond as Node);
-        this.stmt = block(node.stmt as Node);
+        this.cond = expression(node.cond);
+        this.stmt = block(node.stmt);
     }
 
     transformChildren(transform: TransformFunc): DoWhile {
@@ -931,33 +963,32 @@ export class DoWhile extends Node {
     }
 }
 
-export class For extends Node {
+interface ForInterface extends NodeInterface {
+    init: AssignmentInterface | DeclInterface;
+    next: ExpressionInterface;
+    cond: ExpressionInterface;
+    stmt: BlockInterface;
+}
+
+export class For extends Node implements ForInterface {
     readonly neverSimicolon: boolean = true;
-    readonly _nodetype: string = 'For';
+    readonly _nodetype: 'For';
 
     init: Assignment | Decl;
     next: Expression;
     cond: Expression;
     stmt: Block;
 
-    constructor(json: Node) {
-        super(json, 'For');
-        const node = json as For;
+    constructor(node: ForInterface) {
+        super(node, 'For');
 
-        switch (node.init._nodetype) {
-            case 'Assignment':
-                this.init = new Assignment(node.init as Node);
-                break;
-            case 'Decl':
-                this.init = new Decl(node.init as Node);
-                break;
-            default:
-                throw unsupportedType(node.init as Node);
-        }
-
-        this.next = expression(node.next as Node);
-        this.cond = expression(node.cond as Node);
-        this.stmt = block(node.stmt as Node);
+        this.init = instantiate<
+            Assignment | Decl,
+            AssignmentInterface | DeclInterface
+        >(node.init, ['Assignment', 'Decl']);
+        this.next = expression(node.next);
+        this.cond = expression(node.cond);
+        this.stmt = block(node.stmt);
     }
 
     transformChildren(transform: TransformFunc): For {
@@ -977,19 +1008,23 @@ export class For extends Node {
     }
 }
 
-export class Switch extends Node {
+interface SwitchInterface extends NodeInterface {
+    cond: ExpressionInterface;
+    stmt: CompoundInterface;
+}
+
+export class Switch extends Node implements SwitchInterface {
     readonly neverSimicolon: true;
-    readonly _nodetype: string = 'Switch';
+    readonly _nodetype: 'Switch';
 
     cond: Expression;
     stmt: Compound;
 
-    constructor(json: Node) {
-        super(json, 'Switch');
-        const node = json as Switch;
+    constructor(node: SwitchInterface) {
+        super(node, 'Switch');
 
-        this.cond = expression(node.cond as Node);
-        this.stmt = new Compound(node.stmt as Node);
+        this.cond = expression(node.cond);
+        this.stmt = new Compound(node.stmt);
     }
 
     transformChildren(transform: TransformFunc): Switch {
@@ -1005,19 +1040,22 @@ export class Switch extends Node {
     }
 }
 
-export class Default extends Node {
-    readonly _nodetype: string = 'Default';
+interface DefaultInterface extends NodeInterface {
+    stmts: CompoundItemInterface[] | null;
+}
+
+export class Default extends Node implements DefaultInterface {
+    readonly _nodetype: 'Default';
 
     stmts: CompoundItem[] | null;
 
-    constructor(json: Node) {
-        super(json, 'Default');
-        const node = json as Default;
+    constructor(node: DefaultInterface) {
+        super(node, 'Default');
 
         if (node.stmts === null) {
             this.stmts = null;
         } else {
-            this.stmts = node.stmts.map((node: Node) => compoundItem(node));
+            this.stmts = node.stmts.map(compoundItem);
         }
     }
 
@@ -1044,22 +1082,26 @@ export class Default extends Node {
     }
 }
 
-export class Case extends Node {
-    readonly _nodetype: string = 'Case';
+interface CaseInterface extends NodeInterface {
+    expr: ExpressionInterface;
+    stmts: CompoundItemInterface[] | null;
+}
+
+export class Case extends Node implements CaseInterface {
+    readonly _nodetype: 'Case';
 
     expr: Expression;
     stmts: CompoundItem[] | null;
 
-    constructor(json: Node) {
-        super(json, 'Case');
-        const node = json as Case;
+    constructor(node: CaseInterface) {
+        super(node, 'Case');
 
-        this.expr = expression(node.expr as Node);
+        this.expr = expression(node.expr);
 
         if (node.stmts === null) {
             this.stmts = null;
         } else {
-            this.stmts = node.stmts.map((node: Node) => compoundItem(node));
+            this.stmts = node.stmts.map(compoundItem);
         }
     }
 
@@ -1087,11 +1129,13 @@ export class Case extends Node {
     }
 }
 
-export class Break extends Node {
-    readonly _nodetype: string = 'Break';
+interface BreakInterface extends NodeInterface {}
 
-    constructor(json: Node) {
-        super(json, 'Break');
+export class Break extends Node implements BreakInterface {
+    readonly _nodetype: 'Break';
+
+    constructor(node: BreakInterface) {
+        super(node, 'Break');
     }
 
     transformChildren(transform: TransformFunc): Break {
@@ -1103,11 +1147,13 @@ export class Break extends Node {
     }
 }
 
-export class Continue extends Node {
-    readonly _nodetype: string = 'Continue';
+interface ContinueInterface extends NodeInterface {}
 
-    constructor(json: Node) {
-        super(json, 'Continue');
+export class Continue extends Node implements ContinueInterface {
+    readonly _nodetype: 'Continue';
+
+    constructor(node: ContinueInterface) {
+        super(node, 'Continue');
     }
 
     transformChildren(transform: TransformFunc): Continue {
@@ -1119,19 +1165,24 @@ export class Continue extends Node {
     }
 }
 
-export class If extends Node {
-    readonly _nodetype: string = 'If';
+interface IfInterface extends NodeInterface {
+    cond: ExpressionInterface;
+    iffalse: BlockInterface | null;
+    iftrue: BlockInterface;
+}
+
+export class If extends Node implements IfInterface {
+    readonly _nodetype: 'If';
     readonly neverSimicolon: boolean = true;
 
     cond: Expression;
     iffalse: Block | null;
     iftrue: Block;
 
-    constructor(json: Node) {
-        super(json, 'If');
-        const node = json as If;
+    constructor(node: IfInterface) {
+        super(node, 'If');
 
-        this.cond = expression(node.cond as Node);
+        this.cond = expression(node.cond);
         if (node.iffalse === null) {
             this.iffalse = null;
         } else {
@@ -1170,16 +1221,19 @@ export class If extends Node {
     }
 }
 
-export class ExprList extends Node {
-    readonly _nodetype: string = 'ExprList';
+interface ExprListInterface extends NodeInterface {
+    exprs: ExpressionInterface[];
+}
+
+export class ExprList extends Node implements ExprListInterface {
+    readonly _nodetype: 'ExprList';
 
     exprs: Expression[];
 
-    constructor(json: Node) {
-        super(json, 'ExprList');
-        const node = json as ExprList;
+    constructor(node: ExprListInterface) {
+        super(node, 'ExprList');
 
-        this.exprs = node.exprs.map((node: Node) => expression(node));
+        this.exprs = node.exprs.map(expression);
     }
 
     transformChildren(transform: TransformFunc): ExprList {
@@ -1194,36 +1248,30 @@ export class ExprList extends Node {
     }
 }
 
-export class Assignment extends Node {
-    readonly _nodetype: string = 'Assignment';
+interface AssignmentInterface extends NodeInterface {
+    lvalue: AstIDInterface | UnaryOpInterface |
+            StructRefInterface | ArrayRefInterface;
+    readonly op: string;
+    rvalue: ExpressionInterface;
+}
+
+export class Assignment extends Node implements AssignmentInterface {
+    readonly _nodetype: 'Assignment';
 
     lvalue: ID | UnaryOp | StructRef | ArrayRef;
     readonly op: string;
     rvalue: Expression;
 
-    constructor(json: Node) {
-        super(json, 'Assignment');
-        const node = json as Assignment;
+    constructor(node: AssignmentInterface) {
+        super(node, 'Assignment');
 
-        switch (node.lvalue._nodetype) {
-            case 'ID':
-                this.lvalue = new ID(node.lvalue as Node);
-                break;
-            case 'UnaryOp':
-                this.lvalue = new UnaryOp(node.lvalue as Node);
-                break;
-            case 'StructRef':
-                this.lvalue = new StructRef(node.lvalue as Node);
-                break;
-            case 'ArrayRef':
-                this.lvalue = new ArrayRef(node.lvalue as Node);
-                break;
-            default:
-                throw unsupportedType(node.lvalue as Node);
-        }
-
+        this.lvalue = instantiate<
+            ID | UnaryOp | StructRef | ArrayRef,
+            AstIDInterface | UnaryOpInterface |
+            StructRefInterface | ArrayRefInterface
+        >(node.lvalue, ['ID', 'UnaryOp', 'StructRef', 'ArrayRef']);
         this.op = this.assertString(node.op);
-        this.rvalue = expression(node.rvalue as Node);
+        this.rvalue = expression(node.rvalue);
     }
 
     transformChildren(transform: TransformFunc): Assignment {
@@ -1239,16 +1287,19 @@ export class Assignment extends Node {
     }
 }
 
-export class Return extends Node {
-    readonly _nodetype: string = 'Return';
+interface ReturnInterface extends NodeInterface {
+    expr: ExpressionInterface;
+}
+
+export class Return extends Node implements ReturnInterface {
+    readonly _nodetype: 'Return';
 
     expr: Expression;
 
-    constructor(json: Node) {
-        super(json, 'Return');
-        const node = json as Return;
+    constructor(node: ReturnInterface) {
+        super(node, 'Return');
 
-        this.expr = expression(node.expr as Node);
+        this.expr = expression(node.expr);
     }
 
     transformChildren(transform: TransformFunc): Return {
@@ -1261,27 +1312,24 @@ export class Return extends Node {
     }
 }
 
-export class FileAST extends Node {
-    readonly _nodetype: string = 'FileAST';
+interface FileASTInterface extends NodeInterface {
+    ext: Array<DeclInterface | FuncDefInterface>;
+}
+
+export class FileAST extends Node implements FileASTInterface {
+    readonly _nodetype: 'FileAST';
     readonly neverSimicolon: true;
 
     ext: Array<Decl | FuncDef>;
 
-    constructor(json: Node) {
-        super(json, 'FileAST');
-        const node = json as FileAST;
+    constructor(node: FileASTInterface) {
+        super(node, 'FileAST');
 
         this.ext = node.ext.map(
-            function convert(json: Node): Decl | FuncDef {
-                switch (json._nodetype) {
-                    case 'Decl':
-                        return new Decl(json);
-                    case 'FuncDef':
-                        return new FuncDef(json);
-                    default:
-                        throw unsupportedType(json);
-                }
-            }
+            (node) => instantiate<
+                Decl | FuncDef,
+                DeclInterface | FuncDefInterface
+            >(node, ['Decl', 'FuncDef'])
         );
     }
 
@@ -1300,8 +1348,12 @@ export class FileAST extends Node {
     }
 }
 
-function unsupportedType(node: Node): Error {
-    return new Error(`unknown _nodetype ${node._nodetype}, from ${node.coord}`);
+export function importAstFromJson(json: NodeInterface): FileAST {
+    if (checkType<FileASTInterface>(json, 'FileAST')) {
+        return new FileAST(json);
+    } else {
+        throw new Error('invalid JSON AST');
+    }
 }
 
 function indentCode(code: string): string {
@@ -1309,4 +1361,131 @@ function indentCode(code: string): string {
         .split('\n')
         .map((line) => '  ' + line)
         .join('\n');
+}
+
+function checkType<T extends NodeInterface>(
+    node: NodeInterface, name: string
+): node is T {
+    return node._nodetype === name;
+}
+
+function instantiate<T extends Node, I extends NodeInterface>(
+    node: I, allowedTypes: string[]
+): T {
+    if (allowedTypes.indexOf(node._nodetype) === -1) {
+        throw new Error(`unexpected ${node._nodetype}, ` +
+                        `expected ${allowedTypes.join(', ')} ` +
+                        `from ${node.coord}`);
+    }
+
+    if (checkType<DeclInterface>(node, 'Decl')) {
+        return new Decl(node) as Node as T;
+    }
+    if (checkType<FuncDeclInterface>(node, 'FuncDecl')) {
+        return new FuncDecl(node) as Node as T;
+    }
+    if (checkType<TypeDeclInterface>(node, 'TypeDecl')) {
+        return new TypeDecl(node) as Node as T;
+    }
+    if (checkType<ArrayDeclInterface>(node, 'ArrayDecl')) {
+        return new ArrayDecl(node) as Node as T;
+    }
+    if (checkType<PtrDeclInterface>(node, 'PtrDecl')) {
+        return new PtrDecl(node) as Node as T;
+    }
+    if (checkType<InitListInterface>(node, 'InitList')) {
+        return new InitList(node) as Node as T;
+    }
+    if (checkType<IdentifierTypeInterface>(node, 'IdentifierType')) {
+        return new IdentifierType(node) as Node as T;
+    }
+    if (checkType<ParamListInterface>(node, 'ParamList')) {
+        return new ParamList(node) as Node as T;
+    }
+    if (checkType<TypenameInterface>(node, 'Typename')) {
+        return new Typename(node) as Node as T;
+    }
+    if (checkType<FuncDefInterface>(node, 'FuncDef')) {
+        return new FuncDef(node) as Node as T;
+    }
+    if (checkType<CastInterface>(node, 'Cast')) {
+        return new Cast(node) as Node as T;
+    }
+    if (checkType<UnaryOpInterface>(node, 'UnaryOp')) {
+        return new UnaryOp(node) as Node as T;
+    }
+    if (checkType<BinaryOpInterface>(node, 'BinaryOp')) {
+        return new BinaryOp(node) as Node as T;
+    }
+    if (checkType<TernaryOpInterface>(node, 'TernaryOp')) {
+        return new TernaryOp(node) as Node as T;
+    }
+    if (checkType<ConstantInterface>(node, 'Constant')) {
+        return new Constant(node) as Node as T;
+    }
+    if (checkType<AstIDInterface>(node, 'ID')) {
+        return new ID(node) as Node as T;
+    }
+    if (checkType<StructRefInterface>(node, 'StructRef')) {
+        return new StructRef(node) as Node as T;
+    }
+    if (checkType<ArrayRefInterface>(node, 'ArrayRef')) {
+        return new ArrayRef(node) as Node as T;
+    }
+    if (checkType<FuncCallInterface>(node, 'FuncCall')) {
+        return new FuncCall(node) as Node as T;
+    }
+    if (checkType<EmptyStatementInterface>(node, 'EmptyStatement')) {
+        return new EmptyStatement(node) as Node as T;
+    }
+    if (checkType<LabelInterface>(node, 'Label')) {
+        return new Label(node) as Node as T;
+    }
+    if (checkType<GotoInterface>(node, 'Goto')) {
+        return new Goto(node) as Node as T;
+    }
+    if (checkType<CompoundInterface>(node, 'Compound')) {
+        return new Compound(node) as Node as T;
+    }
+    if (checkType<WhileInterface>(node, 'While')) {
+        return new While(node) as Node as T;
+    }
+    if (checkType<DoWhileInterface>(node, 'DoWhile')) {
+        return new DoWhile(node) as Node as T;
+    }
+    if (checkType<ForInterface>(node, 'For')) {
+        return new For(node) as Node as T;
+    }
+    if (checkType<SwitchInterface>(node, 'Switch')) {
+        return new Switch(node) as Node as T;
+    }
+    if (checkType<DefaultInterface>(node, 'Default')) {
+        return new Default(node) as Node as T;
+    }
+    if (checkType<CaseInterface>(node, 'Case')) {
+        return new Case(node) as Node as T;
+    }
+    if (checkType<BreakInterface>(node, 'Break')) {
+        return new Break(node) as Node as T;
+    }
+    if (checkType<ContinueInterface>(node, 'Continue')) {
+        return new Continue(node) as Node as T;
+    }
+    if (checkType<IfInterface>(node, 'If')) {
+        return new If(node) as Node as T;
+    }
+    if (checkType<ExprListInterface>(node, 'ExprList')) {
+        return new ExprList(node) as Node as T;
+    }
+    if (checkType<AssignmentInterface>(node, 'Assignment')) {
+        return new Assignment(node) as Node as T;
+    }
+    if (checkType<ReturnInterface>(node, 'Return')) {
+        return new Return(node) as Node as T;
+    }
+    if (checkType<FileASTInterface>(node, 'FileAST')) {
+        return new FileAST(node) as Node as T;
+    }
+
+    throw new Error('unreachable');
 }
