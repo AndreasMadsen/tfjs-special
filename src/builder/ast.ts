@@ -1,5 +1,7 @@
 
-declare type TransformFunc = <T extends Node>(child: T) => T;
+export declare type TransformFunc = <T extends Node, TT extends Node>(
+    child: T, parent: TT
+) => T;
 
 export abstract class Node {
     readonly abstract _nodetype: string;
@@ -49,10 +51,10 @@ export abstract class Node {
     }
 }
 
-declare type AllDecl = Decl | TypeDecl | FuncDecl | ArrayDecl | PtrDecl;
+export declare type AllDecl = Decl | TypeDecl | FuncDecl | ArrayDecl | PtrDecl;
 
 export class Decl extends Node {
-    readonly _nodetype: 'Decl';
+    readonly _nodetype: string = 'Decl';
 
     readonly bitsize: null;
     readonly funcspec: Node[];
@@ -114,9 +116,9 @@ export class Decl extends Node {
 
     transformChildren(transform: TransformFunc): Decl {
         if (this.init !== null) {
-            this.init = transform(this.init);
+            this.init = transform(this.init, this);
         }
-        this.type = transform(this.type);
+        this.type = transform(this.type, this);
 
         return this;
     }
@@ -131,7 +133,7 @@ export class Decl extends Node {
 }
 
 export class FuncDecl extends Node {
-    readonly _nodetype: 'FuncDecl';
+    readonly _nodetype: string = 'FuncDecl';
 
     args: ParamList | null;
     type: TypeDecl;
@@ -151,9 +153,9 @@ export class FuncDecl extends Node {
 
     transformChildren(transform: TransformFunc): FuncDecl {
         if (this.args !== null) {
-            this.args = transform(this.args);
+            this.args = transform(this.args, this);
         }
-        this.type = transform(this.type);
+        this.type = transform(this.type, this);
 
         return this;
     }
@@ -169,7 +171,7 @@ export class FuncDecl extends Node {
 }
 
 export class TypeDecl extends Node {
-    readonly _nodetype: 'TypeDecl';
+    readonly _nodetype: string = 'TypeDecl';
 
     readonly declname: string | null;
     readonly quals: Node[];
@@ -185,7 +187,7 @@ export class TypeDecl extends Node {
     }
 
     transformChildren(transform: TransformFunc): TypeDecl {
-        this.type = transform(this.type);
+        this.type = transform(this.type, this);
         return this;
     }
 
@@ -203,7 +205,7 @@ export class TypeDecl extends Node {
 }
 
 export class ArrayDecl extends Node {
-    readonly _nodetype: 'ArrayDecl';
+    readonly _nodetype: string = 'ArrayDecl';
 
     dim: Constant | null;
     // tslint:disable-next-line:variable-name
@@ -226,9 +228,9 @@ export class ArrayDecl extends Node {
 
     transformChildren(transform: TransformFunc): ArrayDecl {
         if (this.dim !== null) {
-            this.dim = transform(this.dim);
+            this.dim = transform(this.dim, this);
         }
-        this.type = transform(this.type);
+        this.type = transform(this.type, this);
         return this;
     }
 
@@ -239,7 +241,7 @@ export class ArrayDecl extends Node {
 }
 
 export class PtrDecl extends Node {
-    readonly _nodetype: 'PtrDecl';
+    readonly _nodetype: string = 'PtrDecl';
 
     readonly quals: Node[];
     type: TypeDecl;
@@ -253,17 +255,18 @@ export class PtrDecl extends Node {
     }
 
     transformChildren(transform: TransformFunc): PtrDecl {
-        this.type = transform(this.type);
+        this.type = transform(this.type, this);
         return this;
     }
 
     exportAsCode() {
-        return `${this.type.getType()}* ${this.type.getName()}`;
+        const name = this.type.getName();
+        return `${this.type.getType()}*${name === '' ? '' : ' ' + name}`;
     }
 }
 
 export class InitList extends Node {
-    readonly _nodetype: 'InitList';
+    readonly _nodetype: string = 'InitList';
 
     exprs: Expression[];
 
@@ -275,7 +278,7 @@ export class InitList extends Node {
     }
 
     transformChildren(transform: TransformFunc): InitList {
-        this.exprs = this.exprs.map(transform);
+        this.exprs = this.exprs.map((expr) => transform(expr, this));
         return this;
     }
 
@@ -286,7 +289,7 @@ export class InitList extends Node {
 }
 
 export class IdentifierType extends Node {
-    readonly _nodetype: 'IdentifierType';
+    readonly _nodetype: string = 'IdentifierType';
 
     readonly names: string[];
 
@@ -307,7 +310,7 @@ export class IdentifierType extends Node {
 }
 
 export class ParamList extends Node {
-    readonly _nodetype: 'ParamList';
+    readonly _nodetype: string = 'ParamList';
 
     params: Array<Typename | Decl | ID>;
 
@@ -332,7 +335,7 @@ export class ParamList extends Node {
     }
 
     transformChildren(transform: TransformFunc): ParamList {
-        this.params = this.params.map(transform);
+        this.params = this.params.map((param) => transform(param, this));
         return this;
     }
 
@@ -344,7 +347,7 @@ export class ParamList extends Node {
 }
 
 export class Typename extends Node {
-    readonly _nodetype: 'Typename';
+    readonly _nodetype: string = 'Typename';
 
     readonly name: null;
     readonly quals: Node[];
@@ -370,7 +373,7 @@ export class Typename extends Node {
     }
 
     transformChildren(transform: TransformFunc): Typename {
-        this.type = transform(this.type);
+        this.type = transform(this.type, this);
         return this;
     }
 
@@ -380,7 +383,7 @@ export class Typename extends Node {
 }
 
 export class FuncDef extends Node {
-    readonly _nodetype: 'FuncDef';
+    readonly _nodetype: string = 'FuncDef';
     readonly neverSimicolon: boolean = true;
 
     body: Compound;
@@ -404,10 +407,11 @@ export class FuncDef extends Node {
     }
 
     transformChildren(transform: TransformFunc): FuncDef {
-        this.body = transform(this.body);
-        this.decl = transform(this.decl);
+        this.body = transform(this.body, this);
+        this.decl = transform(this.decl, this);
         if (this.param_decls !== null) {
-            this.param_decls = this.param_decls.map(transform);
+            this.param_decls = this.param_decls
+                .map((decl) => transform(decl, this));
         }
         return this;
     }
@@ -427,7 +431,7 @@ export class FuncDef extends Node {
 }
 
 export class Cast extends Node {
-    readonly _nodetype: 'Cast';
+    readonly _nodetype: string = 'Cast';
 
     expr: Expression;
     // tslint:disable-next-line:variable-name
@@ -442,8 +446,8 @@ export class Cast extends Node {
     }
 
     transformChildren(transform: TransformFunc): Cast {
-        this.expr = transform(this.expr);
-        this.to_type = transform(this.to_type);
+        this.expr = transform(this.expr, this);
+        this.to_type = transform(this.to_type, this);
         return this;
     }
 
@@ -453,7 +457,7 @@ export class Cast extends Node {
 }
 
 export class UnaryOp extends Node {
-    readonly _nodetype: 'UnaryOp';
+    readonly _nodetype: string = 'UnaryOp';
 
     expr: Expression;
     readonly op: string;
@@ -467,7 +471,7 @@ export class UnaryOp extends Node {
     }
 
     transformChildren(transform: TransformFunc): UnaryOp {
-        this.expr = transform(this.expr);
+        this.expr = transform(this.expr, this);
         return this;
     }
 
@@ -484,7 +488,7 @@ export class UnaryOp extends Node {
 }
 
 export class BinaryOp extends Node {
-    readonly _nodetype: 'BinaryOp';
+    readonly _nodetype: string = 'BinaryOp';
 
     left: Expression;
     readonly op: string;
@@ -500,8 +504,8 @@ export class BinaryOp extends Node {
     }
 
     transformChildren(transform: TransformFunc): BinaryOp {
-        this.left = transform(this.left);
-        this.right = transform(this.right);
+        this.left = transform(this.left, this);
+        this.right = transform(this.right, this);
         return this;
     }
 
@@ -513,7 +517,7 @@ export class BinaryOp extends Node {
 }
 
 export class TernaryOp extends Node {
-    readonly _nodetype: 'TernaryOp';
+    readonly _nodetype: string = 'TernaryOp';
 
     cond: Expression;
     iffalse: Expression;
@@ -529,9 +533,9 @@ export class TernaryOp extends Node {
     }
 
     transformChildren(transform: TransformFunc): TernaryOp {
-        this.cond = transform(this.cond);
-        this.iffalse = transform(this.iffalse);
-        this.iftrue = transform(this.iftrue);
+        this.cond = transform(this.cond, this);
+        this.iffalse = transform(this.iffalse, this);
+        this.iftrue = transform(this.iftrue, this);
         return this;
     }
 
@@ -545,7 +549,7 @@ export class TernaryOp extends Node {
 }
 
 export class Constant extends Node {
-    readonly _nodetype: 'Constant';
+    readonly _nodetype: string = 'Constant';
 
     readonly type: string;
     readonly value: string;
@@ -568,7 +572,7 @@ export class Constant extends Node {
 }
 
 export class ID extends Node {
-    readonly _nodetype: 'ID';
+    readonly _nodetype: string = 'ID';
 
     name: string;
 
@@ -589,7 +593,7 @@ export class ID extends Node {
 }
 
 export class StructRef extends Node {
-    readonly _nodetype: 'StructRef';
+    readonly _nodetype: string = 'StructRef';
 
     field: ID;
     name: ID;
@@ -605,8 +609,8 @@ export class StructRef extends Node {
     }
 
     transformChildren(transform: TransformFunc): StructRef {
-        this.field = transform(this.field);
-        this.name = transform(this.name);
+        this.field = transform(this.field, this);
+        this.name = transform(this.name, this);
         return this;
     }
 
@@ -616,7 +620,7 @@ export class StructRef extends Node {
 }
 
 export class ArrayRef extends Node {
-    readonly _nodetype: 'ArrayRef';
+    readonly _nodetype: string = 'ArrayRef';
 
     name: ID | StructRef;
     subscript: Expression;
@@ -640,8 +644,8 @@ export class ArrayRef extends Node {
     }
 
     transformChildren(transform: TransformFunc): ArrayRef {
-        this.name = transform(this.name);
-        this.subscript = transform(this.subscript);
+        this.name = transform(this.name, this);
+        this.subscript = transform(this.subscript, this);
         return this;
     }
 
@@ -651,7 +655,7 @@ export class ArrayRef extends Node {
 }
 
 export class FuncCall extends Node {
-    readonly _nodetype: 'FuncCall';
+    readonly _nodetype: string = 'FuncCall';
 
     name: ID;
     args: ExprList | null;
@@ -670,9 +674,9 @@ export class FuncCall extends Node {
     }
 
     transformChildren(transform: TransformFunc): FuncCall {
-        this.name = transform(this.name);
+        this.name = transform(this.name, this);
         if (this.args !== null) {
-            this.args = transform(this.args);
+            this.args = transform(this.args, this);
         }
         return this;
     }
@@ -687,7 +691,7 @@ export class FuncCall extends Node {
 }
 
 export class EmptyStatement extends Node {
-    readonly _nodetype: 'EmptyStatement';
+    readonly _nodetype: string = 'EmptyStatement';
 
     constructor(json: Node) {
         super(json, 'EmptyStatement');
@@ -702,7 +706,7 @@ export class EmptyStatement extends Node {
     }
 }
 
-declare type Expression = (
+export declare type Expression = (
     ID | StructRef | ArrayRef | Constant | Cast | Assignment | FuncCall |
     Typename | UnaryOp | BinaryOp | TernaryOp
 );
@@ -736,7 +740,7 @@ function expression(node: Node): Expression {
     }
 }
 
-declare type CompoundItem = (
+export declare type CompoundItem = (
     Decl | If | Assignment | UnaryOp | Return | FuncCall |
     While | DoWhile | For | Label | Goto | Switch | Default | Continue |
     Case | Break | EmptyStatement
@@ -783,7 +787,7 @@ function compoundItem(node: Node): CompoundItem {
     }
 }
 
-declare type Block = Compound | CompoundItem;
+export declare type Block = Compound | CompoundItem;
 
 function block(node: Node): Block {
     switch (node._nodetype) {
@@ -795,7 +799,7 @@ function block(node: Node): Block {
 }
 
 export class Label extends Node {
-    readonly _nodetype: 'Label';
+    readonly _nodetype: string = 'Label';
 
     readonly name: string;
     stmt: Block;
@@ -809,7 +813,7 @@ export class Label extends Node {
     }
 
     transformChildren(transform: TransformFunc): Label {
-        this.stmt = transform(this.stmt);
+        this.stmt = transform(this.stmt, this);
         return this;
     }
 
@@ -819,7 +823,7 @@ export class Label extends Node {
 }
 
 export class Goto extends Node {
-    readonly _nodetype: 'Goto';
+    readonly _nodetype: string = 'Goto';
 
     readonly name: string;
 
@@ -840,7 +844,7 @@ export class Goto extends Node {
 }
 
 export class Compound extends Node {
-    readonly _nodetype: 'Compound';
+    readonly _nodetype: string = 'Compound';
     readonly neverSimicolon: boolean = true;
 
     // tslint:disable-next-line:variable-name
@@ -855,7 +859,8 @@ export class Compound extends Node {
     }
 
     transformChildren(transform: TransformFunc): Compound {
-        this.block_items = this.block_items.map(transform);
+        this.block_items = this.block_items
+            .map((block) => transform(block, this));
         return this;
     }
 
@@ -872,7 +877,7 @@ export class Compound extends Node {
 }
 
 export class While extends Node {
-    readonly _nodetype: 'While';
+    readonly _nodetype: string = 'While';
     readonly neverSimicolon: boolean = true;
 
     cond: Expression;
@@ -887,8 +892,8 @@ export class While extends Node {
     }
 
     transformChildren(transform: TransformFunc): While {
-        this.cond = transform(this.cond);
-        this.stmt = transform(this.stmt);
+        this.cond = transform(this.cond, this);
+        this.stmt = transform(this.stmt, this);
         return this;
     }
 
@@ -900,7 +905,7 @@ export class While extends Node {
 }
 
 export class DoWhile extends Node {
-    readonly _nodetype: 'DoWhile';
+    readonly _nodetype: string = 'DoWhile';
 
     cond: Expression;
     stmt: Block;
@@ -914,8 +919,8 @@ export class DoWhile extends Node {
     }
 
     transformChildren(transform: TransformFunc): DoWhile {
-        this.cond = transform(this.cond);
-        this.stmt = transform(this.stmt);
+        this.cond = transform(this.cond, this);
+        this.stmt = transform(this.stmt, this);
         return this;
     }
 
@@ -928,9 +933,9 @@ export class DoWhile extends Node {
 
 export class For extends Node {
     readonly neverSimicolon: boolean = true;
-    readonly _nodetype: 'For';
+    readonly _nodetype: string = 'For';
 
-    init: Assignment;
+    init: Assignment | Decl;
     next: Expression;
     cond: Expression;
     stmt: Block;
@@ -939,17 +944,27 @@ export class For extends Node {
         super(json, 'For');
         const node = json as For;
 
-        this.init = new Assignment(node.init as Node);
+        switch (node.init._nodetype) {
+            case 'Assignment':
+                this.init = new Assignment(node.init as Node);
+                break;
+            case 'Decl':
+                this.init = new Decl(node.init as Node);
+                break;
+            default:
+                throw unsupportedType(node.init as Node);
+        }
+
         this.next = expression(node.next as Node);
         this.cond = expression(node.cond as Node);
         this.stmt = block(node.stmt as Node);
     }
 
     transformChildren(transform: TransformFunc): For {
-        this.init = transform(this.init);
-        this.next = transform(this.next);
-        this.cond = transform(this.cond);
-        this.stmt = transform(this.stmt);
+        this.init = transform(this.init, this);
+        this.next = transform(this.next, this);
+        this.cond = transform(this.cond, this);
+        this.stmt = transform(this.stmt, this);
         return this;
     }
 
@@ -964,7 +979,7 @@ export class For extends Node {
 
 export class Switch extends Node {
     readonly neverSimicolon: true;
-    readonly _nodetype: 'Switch';
+    readonly _nodetype: string = 'Switch';
 
     cond: Expression;
     stmt: Compound;
@@ -978,8 +993,8 @@ export class Switch extends Node {
     }
 
     transformChildren(transform: TransformFunc): Switch {
-        this.cond = transform(this.cond);
-        this.stmt = transform(this.stmt);
+        this.cond = transform(this.cond, this);
+        this.stmt = transform(this.stmt, this);
         return this;
     }
 
@@ -991,7 +1006,7 @@ export class Switch extends Node {
 }
 
 export class Default extends Node {
-    readonly _nodetype: 'Default';
+    readonly _nodetype: string = 'Default';
 
     stmts: CompoundItem[] | null;
 
@@ -1008,7 +1023,8 @@ export class Default extends Node {
 
     transformChildren(transform: TransformFunc): Default {
         if (this.stmts !== null) {
-            this.stmts = this.stmts.map(transform);
+            this.stmts = this.stmts
+                .map((stmt) => transform(stmt, this));
         }
         return this;
     }
@@ -1029,7 +1045,7 @@ export class Default extends Node {
 }
 
 export class Case extends Node {
-    readonly _nodetype: 'Case';
+    readonly _nodetype: string = 'Case';
 
     expr: Expression;
     stmts: CompoundItem[] | null;
@@ -1048,9 +1064,10 @@ export class Case extends Node {
     }
 
     transformChildren(transform: TransformFunc): Case {
-        this.expr = transform(this.expr);
+        this.expr = transform(this.expr, this);
         if (this.stmts !== null) {
-            this.stmts = this.stmts.map(transform);
+            this.stmts = this.stmts
+                .map((stmt) => transform(stmt, this));
         }
         return this;
     }
@@ -1071,7 +1088,7 @@ export class Case extends Node {
 }
 
 export class Break extends Node {
-    readonly _nodetype: 'Break';
+    readonly _nodetype: string = 'Break';
 
     constructor(json: Node) {
         super(json, 'Break');
@@ -1087,7 +1104,7 @@ export class Break extends Node {
 }
 
 export class Continue extends Node {
-    readonly _nodetype: 'Continue';
+    readonly _nodetype: string = 'Continue';
 
     constructor(json: Node) {
         super(json, 'Continue');
@@ -1103,7 +1120,7 @@ export class Continue extends Node {
 }
 
 export class If extends Node {
-    readonly _nodetype: 'If';
+    readonly _nodetype: string = 'If';
     readonly neverSimicolon: boolean = true;
 
     cond: Expression;
@@ -1125,11 +1142,11 @@ export class If extends Node {
     }
 
     transformChildren(transform: TransformFunc): If {
-        this.cond = transform(this.cond);
+        this.cond = transform(this.cond, this);
         if (this.iffalse !== null) {
-            this.iffalse = transform(this.iffalse);
+            this.iffalse = transform(this.iffalse, this);
         }
-        this.iftrue = transform(this.iftrue);
+        this.iftrue = transform(this.iftrue, this);
         return this;
     }
 
@@ -1154,7 +1171,7 @@ export class If extends Node {
 }
 
 export class ExprList extends Node {
-    readonly _nodetype: 'ExprList';
+    readonly _nodetype: string = 'ExprList';
 
     exprs: Expression[];
 
@@ -1166,7 +1183,8 @@ export class ExprList extends Node {
     }
 
     transformChildren(transform: TransformFunc): ExprList {
-        this.exprs = this.exprs.map(transform);
+        this.exprs = this.exprs
+            .map((expr) => transform(expr, this));
         return this;
     }
 
@@ -1177,7 +1195,7 @@ export class ExprList extends Node {
 }
 
 export class Assignment extends Node {
-    readonly _nodetype: 'Assignment';
+    readonly _nodetype: string = 'Assignment';
 
     lvalue: ID | UnaryOp | StructRef | ArrayRef;
     readonly op: string;
@@ -1209,8 +1227,8 @@ export class Assignment extends Node {
     }
 
     transformChildren(transform: TransformFunc): Assignment {
-        this.lvalue = transform(this.lvalue);
-        this.rvalue = transform(this.rvalue);
+        this.lvalue = transform(this.lvalue, this);
+        this.rvalue = transform(this.rvalue, this);
         return this;
     }
 
@@ -1222,7 +1240,7 @@ export class Assignment extends Node {
 }
 
 export class Return extends Node {
-    readonly _nodetype: 'Return';
+    readonly _nodetype: string = 'Return';
 
     expr: Expression;
 
@@ -1234,7 +1252,7 @@ export class Return extends Node {
     }
 
     transformChildren(transform: TransformFunc): Return {
-        this.expr = transform(this.expr);
+        this.expr = transform(this.expr, this);
         return this;
     }
 
@@ -1244,7 +1262,7 @@ export class Return extends Node {
 }
 
 export class FileAST extends Node {
-    readonly _nodetype: 'FileAST';
+    readonly _nodetype: string = 'FileAST';
     readonly neverSimicolon: true;
 
     ext: Array<Decl | FuncDef>;
@@ -1268,7 +1286,8 @@ export class FileAST extends Node {
     }
 
     transformChildren(transform: TransformFunc): FileAST {
-        this.ext = this.ext.map(transform);
+        this.ext = this.ext
+            .map((node) => transform(node, this));
         return this;
     }
 
@@ -1282,7 +1301,7 @@ export class FileAST extends Node {
 }
 
 function unsupportedType(node: Node): Error {
-    return new Error(`unknown nodetype ${node._nodetype}, from ${node.coord}`);
+    return new Error(`unknown _nodetype ${node._nodetype}, from ${node.coord}`);
 }
 
 function indentCode(code: string): string {

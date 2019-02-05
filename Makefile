@@ -9,6 +9,10 @@ $(CEPHESDIR)/:
 
 parse: $(JSON_FILES)
 
+clean:
+	rm -f $(CEPHESDIR)/*.json
+	rm -f $(CEPHESDIR)/*.export.c
+
 download: | $(CEPHESDIR)/
 	rm -f $(CEPHESDIR)/*
 
