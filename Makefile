@@ -1,7 +1,7 @@
 .PHONY: download
 
 CEPHESDIR := cephes
-JSON_FILES := $(patsubst %.c,%.json,$(wildcard $(CEPHESDIR)/*.c))
+JSON_FILES := $(patsubst %.c,%.json,$(filter-out $(wildcard $(CEPHESDIR)/*.export.c), $(wildcard $(CEPHESDIR)/*.c)))
 PYTHON ?= python3
 
 $(CEPHESDIR)/:

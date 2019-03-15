@@ -1,14 +1,14 @@
 
 export type TransformFunc = (<T extends Node, TT extends Node>(child: T, parent: TT) => T);
 
-interface NodeInterface {
+export interface NodeInterface {
     readonly _nodetype: string;
     readonly coord: string | null;
 }
 
 export abstract class Node implements NodeInterface {
     readonly _nodetype: string;
-    readonly neverSimicolon: boolean = false;
+    readonly neverSemicolon: boolean = false;
     readonly coord: string | null;
 
     constructor(node: NodeInterface, expectedNodetype: string) {
@@ -25,7 +25,7 @@ export abstract class Node implements NodeInterface {
 
     abstract exportAsCode(): string;
 
-    abstract transformChildren(transform: TransformFunc): Node;
+    abstract transformChildren(transform: TransformFunc): this;
 
     protected assertEmpty(nodes: NodeInterface[]): Node[] {
         if (nodes.length !== 0) {
@@ -53,18 +53,24 @@ export abstract class Node implements NodeInterface {
         }
         return value;
     }
+
+    getMaybeSemicolon(): string {
+        return this.neverSemicolon ? '' : ';';
+    }
 }
 
-declare type AllDeclInterface = (
+export declare type AllDeclInterface = (
     DeclInterface | TypeDeclInterface | FuncDeclInterface |
     ArrayDeclInterface | PtrDeclInterface
 );
 export declare type AllDecl = Decl | TypeDecl | FuncDecl | ArrayDecl | PtrDecl;
 
-interface DeclInterface extends NodeInterface {
+export interface DeclInterface extends NodeInterface {
     readonly bitsize: null;
     readonly funcspec: Node[];
-    init: InitListInterface | ConstantInterface | UnaryOpInterface | null;
+    init: InitListInterface | ConstantInterface |
+          ArrayRefInterface | UnaryOpInterface | BinaryOpInterface |
+          null;
     readonly name: string;
     readonly quals: Node[];
     readonly storage: string[];
@@ -76,7 +82,7 @@ export class Decl extends Node implements DeclInterface {
 
     readonly bitsize: null;
     readonly funcspec: Node[];
-    init: InitList | Constant | UnaryOp | null;
+    init: InitList | Constant | ArrayRef | UnaryOp | BinaryOp | null;
     readonly name: string;
     readonly quals: Node[];
     readonly storage: string[];
@@ -92,9 +98,12 @@ export class Decl extends Node implements DeclInterface {
             this.init = null;
         } else {
             this.init = instantiate<
-                InitList | Constant | UnaryOp,
-                InitListInterface | ConstantInterface | UnaryOpInterface
-            >(node.init, ['InitList', 'Constant', 'UnaryOp']);
+                InitList | Constant | ArrayRef | UnaryOp | BinaryOp,
+                InitListInterface | ConstantInterface |
+                ArrayRefInterface | UnaryOpInterface | BinaryOpInterface
+            >(node.init, [
+                'InitList', 'Constant', 'ArrayRef', 'UnaryOp', 'BinaryOp'
+            ]);
         }
 
         this.name = this.assertString(node.name);
@@ -107,7 +116,7 @@ export class Decl extends Node implements DeclInterface {
         >(node.type, ['Decl', 'TypeDecl', 'FuncDecl', 'ArrayDecl', 'PtrDecl']);
     }
 
-    transformChildren(transform: TransformFunc): Decl {
+    transformChildren(transform: TransformFunc) {
         if (this.init !== null) {
             this.init = transform(this.init, this);
         }
@@ -125,7 +134,35 @@ export class Decl extends Node implements DeclInterface {
     }
 }
 
-interface FuncDeclInterface extends NodeInterface {
+export interface DeclListInterface extends NodeInterface {
+    decls: DeclInterface[];
+}
+
+export class DeclList extends Node implements DeclListInterface {
+    readonly _nodetype: 'DeclList';
+
+    decls: Decl[];
+
+    constructor(node: DeclListInterface) {
+        super(node, 'DeclList');
+
+        this.decls = node.decls.map((decl) => new Decl(decl));
+    }
+
+    transformChildren(transform: TransformFunc) {
+        this.decls = this.decls.map((decl) => transform(decl, this));
+
+        return this;
+    }
+
+    exportAsCode(): string {
+        return this.decls
+            .map((decl) => decl.exportAsCode())
+            .join(', ');
+    }
+}
+
+export interface FuncDeclInterface extends NodeInterface {
     args: ParamListInterface | null;
     type: TypeDeclInterface;
 }
@@ -148,7 +185,7 @@ export class FuncDecl extends Node implements FuncDeclInterface {
         this.type = new TypeDecl(node.type);
     }
 
-    transformChildren(transform: TransformFunc): FuncDecl {
+    transformChildren(transform: TransformFunc) {
         if (this.args !== null) {
             this.args = transform(this.args, this);
         }
@@ -167,7 +204,7 @@ export class FuncDecl extends Node implements FuncDeclInterface {
     }
 }
 
-interface TypeDeclInterface extends NodeInterface {
+export interface TypeDeclInterface extends NodeInterface {
     readonly declname: string | null;
     readonly quals: NodeInterface[];
     type: IdentifierTypeInterface;
@@ -188,7 +225,7 @@ export class TypeDecl extends Node implements TypeDeclInterface {
         this.type = new IdentifierType(node.type);
     }
 
-    transformChildren(transform: TransformFunc): TypeDecl {
+    transformChildren(transform: TransformFunc) {
         this.type = transform(this.type, this);
         return this;
     }
@@ -206,7 +243,7 @@ export class TypeDecl extends Node implements TypeDeclInterface {
     }
 }
 
-interface ArrayDeclInterface extends NodeInterface {
+export interface ArrayDeclInterface extends NodeInterface {
     dim: Constant | null;
     // tslint:disable-next-line:variable-name
     readonly dim_quals: Node[];
@@ -234,7 +271,7 @@ export class ArrayDecl extends Node implements ArrayDeclInterface {
         this.type = new TypeDecl(node.type);
     }
 
-    transformChildren(transform: TransformFunc): ArrayDecl {
+    transformChildren(transform: TransformFunc) {
         if (this.dim !== null) {
             this.dim = transform(this.dim, this);
         }
@@ -248,7 +285,7 @@ export class ArrayDecl extends Node implements ArrayDeclInterface {
     }
 }
 
-interface PtrDeclInterface extends NodeInterface {
+export interface PtrDeclInterface extends NodeInterface {
     readonly quals: Node[];
     type: TypeDeclInterface;
 }
@@ -266,7 +303,7 @@ export class PtrDecl extends Node implements PtrDeclInterface {
         this.type = new TypeDecl(node.type);
     }
 
-    transformChildren(transform: TransformFunc): PtrDecl {
+    transformChildren(transform: TransformFunc) {
         this.type = transform(this.type, this);
         return this;
     }
@@ -277,7 +314,7 @@ export class PtrDecl extends Node implements PtrDeclInterface {
     }
 }
 
-interface InitListInterface extends NodeInterface {
+export interface InitListInterface extends NodeInterface {
     exprs: ExpressionInterface[];
 }
 
@@ -292,7 +329,7 @@ export class InitList extends Node implements InitListInterface {
         this.exprs = node.exprs.map(expression);
     }
 
-    transformChildren(transform: TransformFunc): InitList {
+    transformChildren(transform: TransformFunc) {
         this.exprs = this.exprs.map((expr) => transform(expr, this));
         return this;
     }
@@ -303,7 +340,7 @@ export class InitList extends Node implements InitListInterface {
     }
 }
 
-interface IdentifierTypeInterface extends NodeInterface {
+export interface IdentifierTypeInterface extends NodeInterface {
     readonly names: string[];
 }
 
@@ -318,7 +355,7 @@ export class IdentifierType extends Node implements IdentifierTypeInterface {
         this.names = node.names;
     }
 
-    transformChildren(transform: TransformFunc): IdentifierType {
+    transformChildren(transform: TransformFunc) {
         return this;
     }
 
@@ -327,7 +364,7 @@ export class IdentifierType extends Node implements IdentifierTypeInterface {
     }
 }
 
-interface ParamListInterface extends NodeInterface {
+export interface ParamListInterface extends NodeInterface {
     params: Array<TypenameInterface | DeclInterface | AstIDInterface>;
 }
 
@@ -347,7 +384,7 @@ export class ParamList extends Node implements ParamListInterface {
         );
     }
 
-    transformChildren(transform: TransformFunc): ParamList {
+    transformChildren(transform: TransformFunc) {
         this.params = this.params.map((param) => transform(param, this));
         return this;
     }
@@ -359,7 +396,7 @@ export class ParamList extends Node implements ParamListInterface {
     }
 }
 
-interface TypenameInterface extends NodeInterface {
+export interface TypenameInterface extends NodeInterface {
     readonly name: null;
     readonly quals: Node[];
     type: TypeDeclInterface | PtrDeclInterface;
@@ -383,7 +420,7 @@ export class Typename extends Node implements TypenameInterface {
         >(node.type, ['TypeDecl', 'PtrDecl']);
     }
 
-    transformChildren(transform: TransformFunc): Typename {
+    transformChildren(transform: TransformFunc) {
         this.type = transform(this.type, this);
         return this;
     }
@@ -393,7 +430,7 @@ export class Typename extends Node implements TypenameInterface {
     }
 }
 
-interface FuncDefInterface extends NodeInterface {
+export interface FuncDefInterface extends NodeInterface {
     body: CompoundInterface;
     decl: DeclInterface;
     // tslint:disable-next-line:variable-name
@@ -402,7 +439,7 @@ interface FuncDefInterface extends NodeInterface {
 
 export class FuncDef extends Node implements FuncDefInterface {
     readonly _nodetype: 'FuncDef';
-    readonly neverSimicolon: boolean = true;
+    readonly neverSemicolon: boolean = true;
 
     body: Compound;
     decl: Decl;
@@ -423,7 +460,7 @@ export class FuncDef extends Node implements FuncDefInterface {
         }
     }
 
-    transformChildren(transform: TransformFunc): FuncDef {
+    transformChildren(transform: TransformFunc) {
         this.body = transform(this.body, this);
         this.decl = transform(this.decl, this);
         if (this.param_decls !== null) {
@@ -447,7 +484,7 @@ export class FuncDef extends Node implements FuncDefInterface {
     }
 }
 
-interface CastInterface extends NodeInterface {
+export interface CastInterface extends NodeInterface {
     expr: Expression;
     // tslint:disable-next-line:variable-name
     to_type: Typename;
@@ -467,7 +504,7 @@ export class Cast extends Node implements CastInterface {
         this.to_type = new Typename(node.to_type);
     }
 
-    transformChildren(transform: TransformFunc): Cast {
+    transformChildren(transform: TransformFunc) {
         this.expr = transform(this.expr, this);
         this.to_type = transform(this.to_type, this);
         return this;
@@ -478,7 +515,7 @@ export class Cast extends Node implements CastInterface {
     }
 }
 
-interface UnaryOpInterface extends NodeInterface {
+export interface UnaryOpInterface extends NodeInterface {
     expr: Expression;
     readonly op: string;
 }
@@ -496,7 +533,7 @@ export class UnaryOp extends Node implements UnaryOpInterface {
         this.op = this.assertString(node.op);
     }
 
-    transformChildren(transform: TransformFunc): UnaryOp {
+    transformChildren(transform: TransformFunc) {
         this.expr = transform(this.expr, this);
         return this;
     }
@@ -513,7 +550,7 @@ export class UnaryOp extends Node implements UnaryOpInterface {
     }
 }
 
-interface BinaryOpInterface extends NodeInterface {
+export interface BinaryOpInterface extends NodeInterface {
     left: ExpressionInterface;
     readonly op: string;
     right: ExpressionInterface;
@@ -534,7 +571,7 @@ export class BinaryOp extends Node implements BinaryOpInterface {
         this.right = expression(node.right);
     }
 
-    transformChildren(transform: TransformFunc): BinaryOp {
+    transformChildren(transform: TransformFunc) {
         this.left = transform(this.left, this);
         this.right = transform(this.right, this);
         return this;
@@ -547,7 +584,7 @@ export class BinaryOp extends Node implements BinaryOpInterface {
     }
 }
 
-interface TernaryOpInterface extends NodeInterface {
+export interface TernaryOpInterface extends NodeInterface {
     cond: ExpressionInterface;
     iffalse: ExpressionInterface;
     iftrue: ExpressionInterface;
@@ -568,7 +605,7 @@ export class TernaryOp extends Node implements TernaryOpInterface {
         this.iftrue = expression(node.iftrue);
     }
 
-    transformChildren(transform: TransformFunc): TernaryOp {
+    transformChildren(transform: TransformFunc) {
         this.cond = transform(this.cond, this);
         this.iffalse = transform(this.iffalse, this);
         this.iftrue = transform(this.iftrue, this);
@@ -584,7 +621,7 @@ export class TernaryOp extends Node implements TernaryOpInterface {
     }
 }
 
-interface ConstantInterface extends NodeInterface {
+export interface ConstantInterface extends NodeInterface {
     readonly type: string;
     readonly value: string;
 }
@@ -602,7 +639,7 @@ export class Constant extends Node implements ConstantInterface {
         this.value = this.assertString(node.value);
     }
 
-    transformChildren(transform: TransformFunc): Constant {
+    transformChildren(transform: TransformFunc) {
         return this;
     }
 
@@ -611,7 +648,7 @@ export class Constant extends Node implements ConstantInterface {
     }
 }
 
-interface AstIDInterface extends NodeInterface {
+export interface AstIDInterface extends NodeInterface {
     name: string;
 }
 
@@ -626,7 +663,7 @@ export class ID extends Node implements AstIDInterface {
         this.name = this.assertString(node.name);
     }
 
-    transformChildren(transform: TransformFunc): ID {
+    transformChildren(transform: TransformFunc) {
         return this;
     }
 
@@ -635,7 +672,7 @@ export class ID extends Node implements AstIDInterface {
     }
 }
 
-interface StructRefInterface extends NodeInterface {
+export interface StructRefInterface extends NodeInterface {
     field: AstIDInterface;
     name: AstIDInterface;
     readonly type: string;
@@ -656,7 +693,7 @@ export class StructRef extends Node implements StructRefInterface {
         this.type = node.type;
     }
 
-    transformChildren(transform: TransformFunc): StructRef {
+    transformChildren(transform: TransformFunc) {
         this.field = transform(this.field, this);
         this.name = transform(this.name, this);
         return this;
@@ -667,7 +704,7 @@ export class StructRef extends Node implements StructRefInterface {
     }
 }
 
-interface ArrayRefInterface extends NodeInterface {
+export interface ArrayRefInterface extends NodeInterface {
     name: AstIDInterface | StructRefInterface;
     subscript: ExpressionInterface;
 }
@@ -688,7 +725,7 @@ export class ArrayRef extends Node implements ArrayRefInterface {
         this.subscript = expression(node.subscript);
     }
 
-    transformChildren(transform: TransformFunc): ArrayRef {
+    transformChildren(transform: TransformFunc) {
         this.name = transform(this.name, this);
         this.subscript = transform(this.subscript, this);
         return this;
@@ -699,7 +736,7 @@ export class ArrayRef extends Node implements ArrayRefInterface {
     }
 }
 
-interface FuncCallInterface extends NodeInterface {
+export interface FuncCallInterface extends NodeInterface {
     name: AstIDInterface;
     args: ExprListInterface | null;
 }
@@ -722,7 +759,7 @@ export class FuncCall extends Node implements FuncCallInterface {
         }
     }
 
-    transformChildren(transform: TransformFunc): FuncCall {
+    transformChildren(transform: TransformFunc) {
         this.name = transform(this.name, this);
         if (this.args !== null) {
             this.args = transform(this.args, this);
@@ -739,7 +776,7 @@ export class FuncCall extends Node implements FuncCallInterface {
     }
 }
 
-interface EmptyStatementInterface extends NodeInterface {}
+export interface EmptyStatementInterface extends NodeInterface {}
 
 export class EmptyStatement extends Node implements EmptyStatementInterface {
     readonly _nodetype: 'EmptyStatement';
@@ -748,7 +785,7 @@ export class EmptyStatement extends Node implements EmptyStatementInterface {
         super(node, 'EmptyStatement');
     }
 
-    transformChildren(transform: TransformFunc): EmptyStatement {
+    transformChildren(transform: TransformFunc) {
         return this;
     }
 
@@ -757,7 +794,7 @@ export class EmptyStatement extends Node implements EmptyStatementInterface {
     }
 }
 
-declare type ExpressionInterface = (
+export declare type ExpressionInterface = (
     AstIDInterface | StructRefInterface | ArrayRefInterface |
     ConstantInterface | CastInterface | AssignmentInterface |
     FuncCallInterface | TypenameInterface | UnaryOpInterface |
@@ -777,7 +814,7 @@ function expression(node: ExpressionInterface): Expression {
     ]);
 }
 
-declare type CompoundItemInterface = (
+export declare type CompoundItemInterface = (
     DeclInterface | IfInterface | AssignmentInterface | UnaryOpInterface |
     ReturnInterface | FuncCallInterface | WhileInterface |
     DoWhileInterface | ForInterface | LabelInterface | GotoInterface |
@@ -799,7 +836,7 @@ function compoundItem(node: CompoundItemInterface): CompoundItem {
     ]);
 }
 
-declare type BlockInterface = CompoundInterface | CompoundItemInterface;
+export declare type BlockInterface = CompoundInterface | CompoundItemInterface;
 
 export declare type Block = Compound | CompoundItem;
 
@@ -811,35 +848,37 @@ function block(node: BlockInterface): Block {
     }
 }
 
-interface LabelInterface extends NodeInterface {
+export interface LabelInterface extends NodeInterface {
     readonly name: string;
-    stmt: BlockInterface;
+    stmt: CompoundItemInterface;
 }
 
 export class Label extends Node implements LabelInterface {
     readonly _nodetype: 'Label';
+    readonly neverSemicolon: boolean = true;
 
     readonly name: string;
-    stmt: Block;
+    stmt: CompoundItem;
 
     constructor(node: LabelInterface) {
         super(node, 'Label');
 
         this.name = this.assertString(node.name);
-        this.stmt = block(node.stmt);
+        this.stmt = compoundItem(node.stmt);
     }
 
-    transformChildren(transform: TransformFunc): Label {
+    transformChildren(transform: TransformFunc) {
         this.stmt = transform(this.stmt, this);
         return this;
     }
 
     exportAsCode(): string {
-        return `${this.name}: ${this.stmt.exportAsCode()}`;
+        return `${this.name}: ${this.stmt.exportAsCode()}` +
+               `${this.stmt.getMaybeSemicolon()}`;
     }
 }
 
-interface GotoInterface extends NodeInterface {
+export interface GotoInterface extends NodeInterface {
     readonly name: string;
 }
 
@@ -854,7 +893,7 @@ export class Goto extends Node implements GotoInterface {
         this.name = this.assertString(node.name);
     }
 
-    transformChildren(transform: TransformFunc): Goto {
+    transformChildren(transform: TransformFunc) {
         return this;
     }
 
@@ -863,14 +902,14 @@ export class Goto extends Node implements GotoInterface {
     }
 }
 
-interface CompoundInterface extends NodeInterface {
+export interface CompoundInterface extends NodeInterface {
     // tslint:disable-next-line:variable-name
-    block_items: CompoundItem[];
+    block_items: CompoundItemInterface[];
 }
 
 export class Compound extends Node implements CompoundInterface {
     readonly _nodetype: 'Compound';
-    readonly neverSimicolon: boolean = true;
+    readonly neverSemicolon: boolean = true;
 
     // tslint:disable-next-line:variable-name
     block_items: CompoundItem[];
@@ -882,16 +921,26 @@ export class Compound extends Node implements CompoundInterface {
             .map((node: Node) => compoundItem(node));
     }
 
-    transformChildren(transform: TransformFunc): Compound {
-        this.block_items = this.block_items
-            .map((block) => transform(block, this));
+    transformChildren(transform: TransformFunc) {
+        const newContent = [];
+        // if transform() returns a Compund flatten it into this Compund
+        for (const item of this.block_items) {
+            const itemTransform = transform(item, this);
+            if (itemTransform instanceof Compound) {
+                newContent.push(...itemTransform.block_items);
+            } else {
+                newContent.push(itemTransform);
+            }
+        }
+        this.block_items = newContent;
+
         return this;
     }
 
     exportAsCode(): string {
         const items = this.block_items.map((item) => (
             indentCode(item.exportAsCode()) +
-            (item.neverSimicolon ? '' : ';')
+            item.getMaybeSemicolon()
         ));
 
         return '{\n' +
@@ -900,14 +949,14 @@ export class Compound extends Node implements CompoundInterface {
     }
 }
 
-interface WhileInterface extends NodeInterface {
+export interface WhileInterface extends NodeInterface {
     cond: ExpressionInterface;
     stmt: BlockInterface;
 }
 
 export class While extends Node implements WhileInterface {
     readonly _nodetype: 'While';
-    readonly neverSimicolon: boolean = true;
+    readonly neverSemicolon: boolean = true;
 
     cond: Expression;
     stmt: Block;
@@ -919,7 +968,7 @@ export class While extends Node implements WhileInterface {
         this.stmt = block(node.stmt);
     }
 
-    transformChildren(transform: TransformFunc): While {
+    transformChildren(transform: TransformFunc) {
         this.cond = transform(this.cond, this);
         this.stmt = transform(this.stmt, this);
         return this;
@@ -932,7 +981,7 @@ export class While extends Node implements WhileInterface {
     }
 }
 
-interface DoWhileInterface extends NodeInterface {
+export interface DoWhileInterface extends NodeInterface {
     cond: ExpressionInterface;
     stmt: BlockInterface;
 }
@@ -950,7 +999,7 @@ export class DoWhile extends Node implements DoWhileInterface {
         this.stmt = block(node.stmt);
     }
 
-    transformChildren(transform: TransformFunc): DoWhile {
+    transformChildren(transform: TransformFunc) {
         this.cond = transform(this.cond, this);
         this.stmt = transform(this.stmt, this);
         return this;
@@ -963,18 +1012,18 @@ export class DoWhile extends Node implements DoWhileInterface {
     }
 }
 
-interface ForInterface extends NodeInterface {
-    init: AssignmentInterface | DeclInterface;
+export interface ForInterface extends NodeInterface {
+    init: AssignmentInterface | DeclInterface | DeclListInterface;
     next: ExpressionInterface;
     cond: ExpressionInterface;
     stmt: BlockInterface;
 }
 
 export class For extends Node implements ForInterface {
-    readonly neverSimicolon: boolean = true;
+    readonly neverSemicolon: boolean = true;
     readonly _nodetype: 'For';
 
-    init: Assignment | Decl;
+    init: Assignment | Decl | DeclList;
     next: Expression;
     cond: Expression;
     stmt: Block;
@@ -983,15 +1032,15 @@ export class For extends Node implements ForInterface {
         super(node, 'For');
 
         this.init = instantiate<
-            Assignment | Decl,
-            AssignmentInterface | DeclInterface
-        >(node.init, ['Assignment', 'Decl']);
+            Assignment | Decl | DeclList,
+            AssignmentInterface | DeclInterface | DeclListInterface
+        >(node.init, ['Assignment', 'Decl', 'DeclList']);
         this.next = expression(node.next);
         this.cond = expression(node.cond);
         this.stmt = block(node.stmt);
     }
 
-    transformChildren(transform: TransformFunc): For {
+    transformChildren(transform: TransformFunc) {
         this.init = transform(this.init, this);
         this.next = transform(this.next, this);
         this.cond = transform(this.cond, this);
@@ -1003,18 +1052,18 @@ export class For extends Node implements ForInterface {
         const init = this.init.exportAsCode();
         const next = this.next.exportAsCode();
         const cond = this.cond.exportAsCode();
-        const stmt = this.stmt.exportAsCode();
+        const stmt = this.stmt.exportAsCode() + this.stmt.getMaybeSemicolon();
         return `for (${init}; ${cond}; ${next}) ${stmt}\n`;
     }
 }
 
-interface SwitchInterface extends NodeInterface {
+export interface SwitchInterface extends NodeInterface {
     cond: ExpressionInterface;
     stmt: CompoundInterface;
 }
 
 export class Switch extends Node implements SwitchInterface {
-    readonly neverSimicolon: true;
+    readonly neverSemicolon: boolean = true;
     readonly _nodetype: 'Switch';
 
     cond: Expression;
@@ -1027,7 +1076,7 @@ export class Switch extends Node implements SwitchInterface {
         this.stmt = new Compound(node.stmt);
     }
 
-    transformChildren(transform: TransformFunc): Switch {
+    transformChildren(transform: TransformFunc) {
         this.cond = transform(this.cond, this);
         this.stmt = transform(this.stmt, this);
         return this;
@@ -1040,7 +1089,7 @@ export class Switch extends Node implements SwitchInterface {
     }
 }
 
-interface DefaultInterface extends NodeInterface {
+export interface DefaultInterface extends NodeInterface {
     stmts: CompoundItemInterface[] | null;
 }
 
@@ -1059,7 +1108,7 @@ export class Default extends Node implements DefaultInterface {
         }
     }
 
-    transformChildren(transform: TransformFunc): Default {
+    transformChildren(transform: TransformFunc) {
         if (this.stmts !== null) {
             this.stmts = this.stmts
                 .map((stmt) => transform(stmt, this));
@@ -1073,7 +1122,7 @@ export class Default extends Node implements DefaultInterface {
             stmts = this.stmts
                 .map((stmt) => (
                     indentCode(stmt.exportAsCode()) +
-                    stmt.neverSimicolon ? '' : ';'
+                    stmt.getMaybeSemicolon()
                 ))
                 .join('\n');
         }
@@ -1082,7 +1131,7 @@ export class Default extends Node implements DefaultInterface {
     }
 }
 
-interface CaseInterface extends NodeInterface {
+export interface CaseInterface extends NodeInterface {
     expr: ExpressionInterface;
     stmts: CompoundItemInterface[] | null;
 }
@@ -1105,7 +1154,7 @@ export class Case extends Node implements CaseInterface {
         }
     }
 
-    transformChildren(transform: TransformFunc): Case {
+    transformChildren(transform: TransformFunc) {
         this.expr = transform(this.expr, this);
         if (this.stmts !== null) {
             this.stmts = this.stmts
@@ -1120,7 +1169,7 @@ export class Case extends Node implements CaseInterface {
             stmts = this.stmts
             .map((stmt) => (
                 indentCode(stmt.exportAsCode()) +
-                stmt.neverSimicolon ? '' : ';'
+                stmt.getMaybeSemicolon()
             ))
             .join('\n');
         }
@@ -1129,7 +1178,7 @@ export class Case extends Node implements CaseInterface {
     }
 }
 
-interface BreakInterface extends NodeInterface {}
+export interface BreakInterface extends NodeInterface {}
 
 export class Break extends Node implements BreakInterface {
     readonly _nodetype: 'Break';
@@ -1138,7 +1187,7 @@ export class Break extends Node implements BreakInterface {
         super(node, 'Break');
     }
 
-    transformChildren(transform: TransformFunc): Break {
+    transformChildren(transform: TransformFunc) {
         return this;
     }
 
@@ -1147,7 +1196,7 @@ export class Break extends Node implements BreakInterface {
     }
 }
 
-interface ContinueInterface extends NodeInterface {}
+export interface ContinueInterface extends NodeInterface {}
 
 export class Continue extends Node implements ContinueInterface {
     readonly _nodetype: 'Continue';
@@ -1156,7 +1205,7 @@ export class Continue extends Node implements ContinueInterface {
         super(node, 'Continue');
     }
 
-    transformChildren(transform: TransformFunc): Continue {
+    transformChildren(transform: TransformFunc) {
         return this;
     }
 
@@ -1165,7 +1214,7 @@ export class Continue extends Node implements ContinueInterface {
     }
 }
 
-interface IfInterface extends NodeInterface {
+export interface IfInterface extends NodeInterface {
     cond: ExpressionInterface;
     iffalse: BlockInterface | null;
     iftrue: BlockInterface;
@@ -1173,7 +1222,7 @@ interface IfInterface extends NodeInterface {
 
 export class If extends Node implements IfInterface {
     readonly _nodetype: 'If';
-    readonly neverSimicolon: boolean = true;
+    readonly neverSemicolon: boolean = true;
 
     cond: Expression;
     iffalse: Block | null;
@@ -1192,7 +1241,7 @@ export class If extends Node implements IfInterface {
         this.iftrue = block(node.iftrue);
     }
 
-    transformChildren(transform: TransformFunc): If {
+    transformChildren(transform: TransformFunc) {
         this.cond = transform(this.cond, this);
         if (this.iffalse !== null) {
             this.iffalse = transform(this.iffalse, this);
@@ -1206,14 +1255,14 @@ export class If extends Node implements IfInterface {
 
         const iftrue = (
             this.iftrue.exportAsCode() +
-            (this.iftrue.neverSimicolon ? '' : ';')
+            this.iftrue.getMaybeSemicolon()
         );
 
         let elseblock = '';
         if (this.iffalse !== null) {
             elseblock = (
                 ' else ' + this.iffalse.exportAsCode() +
-                (this.iffalse.neverSimicolon ? '' : ';')
+                this.iffalse.getMaybeSemicolon()
             );
         }
 
@@ -1221,7 +1270,7 @@ export class If extends Node implements IfInterface {
     }
 }
 
-interface ExprListInterface extends NodeInterface {
+export interface ExprListInterface extends NodeInterface {
     exprs: ExpressionInterface[];
 }
 
@@ -1236,7 +1285,7 @@ export class ExprList extends Node implements ExprListInterface {
         this.exprs = node.exprs.map(expression);
     }
 
-    transformChildren(transform: TransformFunc): ExprList {
+    transformChildren(transform: TransformFunc) {
         this.exprs = this.exprs
             .map((expr) => transform(expr, this));
         return this;
@@ -1248,7 +1297,7 @@ export class ExprList extends Node implements ExprListInterface {
     }
 }
 
-interface AssignmentInterface extends NodeInterface {
+export interface AssignmentInterface extends NodeInterface {
     lvalue: AstIDInterface | UnaryOpInterface |
             StructRefInterface | ArrayRefInterface;
     readonly op: string;
@@ -1274,7 +1323,7 @@ export class Assignment extends Node implements AssignmentInterface {
         this.rvalue = expression(node.rvalue);
     }
 
-    transformChildren(transform: TransformFunc): Assignment {
+    transformChildren(transform: TransformFunc) {
         this.lvalue = transform(this.lvalue, this);
         this.rvalue = transform(this.rvalue, this);
         return this;
@@ -1287,7 +1336,7 @@ export class Assignment extends Node implements AssignmentInterface {
     }
 }
 
-interface ReturnInterface extends NodeInterface {
+export interface ReturnInterface extends NodeInterface {
     expr: ExpressionInterface;
 }
 
@@ -1302,7 +1351,7 @@ export class Return extends Node implements ReturnInterface {
         this.expr = expression(node.expr);
     }
 
-    transformChildren(transform: TransformFunc): Return {
+    transformChildren(transform: TransformFunc) {
         this.expr = transform(this.expr, this);
         return this;
     }
@@ -1312,13 +1361,13 @@ export class Return extends Node implements ReturnInterface {
     }
 }
 
-interface FileASTInterface extends NodeInterface {
+export interface FileASTInterface extends NodeInterface {
     ext: Array<DeclInterface | FuncDefInterface>;
 }
 
 export class FileAST extends Node implements FileASTInterface {
     readonly _nodetype: 'FileAST';
-    readonly neverSimicolon: true;
+    readonly neverSemicolon: boolean = true;
 
     ext: Array<Decl | FuncDef>;
 
@@ -1333,7 +1382,7 @@ export class FileAST extends Node implements FileASTInterface {
         );
     }
 
-    transformChildren(transform: TransformFunc): FileAST {
+    transformChildren(transform: TransformFunc) {
         this.ext = this.ext
             .map((node) => transform(node, this));
         return this;
@@ -1341,7 +1390,7 @@ export class FileAST extends Node implements FileASTInterface {
 
     exportAsCode(): string {
         const ext = this.ext.map((node) => (
-            node.exportAsCode() + (node.neverSimicolon ? '' : ';')
+            node.exportAsCode() + node.getMaybeSemicolon()
         ));
 
         return ext.join('\n');
@@ -1380,6 +1429,9 @@ function instantiate<T extends Node, I extends NodeInterface>(
 
     if (checkType<DeclInterface>(node, 'Decl')) {
         return new Decl(node) as Node as T;
+    }
+    if (checkType<DeclListInterface>(node, 'DeclList')) {
+        return new DeclList(node) as Node as T;
     }
     if (checkType<FuncDeclInterface>(node, 'FuncDecl')) {
         return new FuncDecl(node) as Node as T;

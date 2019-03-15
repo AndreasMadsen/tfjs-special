@@ -20,6 +20,7 @@ const cephes2webgl = new Map([
 ]);
 
 export function useBuiltinMath(ast: FileAST): FileAST {
+    // Remove function defintions and function prototypes of WebGL functions
     ast.ext = ast.ext.filter(function filter(child: Decl | FuncDef): boolean {
         if (child instanceof Decl && child.type instanceof FuncDecl) {
             return !cephes2webgl.has(child.name);
@@ -34,6 +35,7 @@ export function useBuiltinMath(ast: FileAST): FileAST {
 
     return ast.transformChildren(function transform(child) {
         if (child instanceof FuncCall) {
+            // Call WebGL functions instead of cepres functions
             if (cephes2webgl.has(child.name.name)) {
                 child.name.name = cephes2webgl.get(child.name.name);
             }
