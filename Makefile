@@ -1,7 +1,9 @@
 .PHONY: download
 
 CEPHESDIR := cephes
+KERNELDIR := src/kernels
 JSON_FILES := $(patsubst %.c,%.json,$(filter-out $(wildcard $(CEPHESDIR)/*.export.c), $(wildcard $(CEPHESDIR)/*.c)))
+OUT_FILES := $(patsubst $(CEPHESDIR)/%.c,$(KERNELDIR)/%.ts,$(filter-out $(wildcard $(CEPHESDIR)/*.export.c), $(wildcard $(CEPHESDIR)/*.c)))
 PYTHON ?= python3
 
 $(CEPHESDIR)/:
@@ -9,8 +11,11 @@ $(CEPHESDIR)/:
 
 parse: $(JSON_FILES)
 
+build: $(OUT_FILES)
+
 clean:
 	rm -f $(CEPHESDIR)/*.json
+	rm -f $(KERNELDIR)/*.ts
 	rm -f $(CEPHESDIR)/*.export.c
 
 download: | $(CEPHESDIR)/
@@ -42,6 +47,8 @@ download: | $(CEPHESDIR)/
 	@# Format the file so it looks readable
 	clang-format -style=llvm -i cephes/*.c
 
-%.json: %.c $(CEPHESDIR)/mconf.h
+$(CEPHESDIR)/%.json: $(CEPHESDIR)/%.c $(CEPHESDIR)/mconf.h
 	$(CC) -E $< | $(PYTHON) ./c_json.py > $@
 
+$(KERNELDIR)/%.ts: $(CEPHESDIR)/%.json
+	ts-node ./src/builder/build_kernel.ts $< $@

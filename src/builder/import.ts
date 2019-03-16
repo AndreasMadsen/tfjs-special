@@ -1,7 +1,7 @@
 
 import { ExportableScript } from './exportable';
 
-import { importAstFromJson } from './ast';
+import { importAstFromJson, FileAST } from './ast';
 import { arrayPointerToIndex } from './transform/array-pointer-to-index';
 import { castToCall } from './transform/cast-to-call';
 import { eliminateGoto } from './transform/eliminate-goto';
@@ -12,9 +12,17 @@ import { upgradeFunctionDefs } from './transform/upgrade-function-defs';
 import { useBuiltinMath } from './transform/use-builtin-math';
 import { whileToFor } from './transform/while-to-for';
 
-export function importExportableFromSourceCode(
+export function importAstFromSourceCode(
     basename: string, source: string
-): ExportableScript {
+): FileAST {
+    if (basename === 'jvf') {
+        return new FileAST({
+            _nodetype: 'FileAST',
+            coord: 'import.ts',
+            ext: []
+        });
+    }
+
     let ast = importAstFromJson(JSON.parse(source));
 
     ast = arrayPointerToIndex(ast);
@@ -27,5 +35,11 @@ export function importExportableFromSourceCode(
     ast = whileToFor(ast);
     ast = eliminateGoto(ast);
 
-    return new ExportableScript(ast);
+    return ast;
+}
+
+export function importExportableFromSourceCode(
+    basename: string, source: string
+): ExportableScript {
+    return new ExportableScript(importAstFromSourceCode(basename, source));
 }

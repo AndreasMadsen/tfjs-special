@@ -4,19 +4,11 @@ import * as path from 'path';
 
 import { importExportableFromSourceCode } from './import';
 
-for (const filename of process.argv.slice(2)) {
-    const basename = path.basename(filename, '.json');
-    const exportFilename = filename.slice(0, -5) + '.ts';
-    const source = fs.readFileSync(filename, 'utf-8');
+const inputFile = process.argv[2];
+const outputFile = process.argv[3];
 
-    // contains recursion
-    if (filename === 'cephes/jvf.json') {
-        continue;
-    }
+const basename = path.basename(inputFile, '.json');
+const source = fs.readFileSync(inputFile, 'utf-8');
 
-    const exportable = importExportableFromSourceCode(basename, source);
-
-    fs.writeFileSync(exportFilename, exportable.exportAsScript());
-}
-
-//fs.writeFileSync(outputFile, source.exportAsScript());
+const exportable = importExportableFromSourceCode(basename, source);
+fs.writeFileSync(outputFile, exportable.exportAsScript());
