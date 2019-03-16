@@ -1,36 +1,24 @@
 
-export enum KernelConstantType {
-    float = 'float'
-}
+export type ConstantValue = Float32Array | number;
 
-export type KernelConstantValue = Float32Array | number;
-
-export interface KernelConstantInterface {
+export interface GlobalInterface {
     name: string;
-    type: KernelConstantType;
-    value: KernelConstantValue;
-}
-
-export class KernelConstant implements KernelConstantInterface {
-    name: string;
-    type: KernelConstantType;
+    type: string;
     isArray: boolean;
-    value: KernelConstantValue;
+    value: ConstantValue;
+}
 
-    constructor(name: string,
-                type: KernelConstantType,
-                isArray: boolean,
-                value: KernelConstantValue) {
-        this.name = name;
-        this.type = type;
-        this.isArray = isArray;
-        this.value = value;
-    }
+export interface ConstantInterface extends GlobalInterface {
+    isConstant: true;
+}
+
+export interface VariableInterface extends GlobalInterface {
+    isConstant: false;
 }
 
 export interface KernelInterface {
     name: string;
     dependencies: string[];
-    constants: KernelConstantInterface[];
+    constants: string[];
     code: string;
 }
