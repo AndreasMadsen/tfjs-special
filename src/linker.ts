@@ -1,68 +1,123 @@
 
-class KernelVariableType {
-    type: string;
-    isArray: boolean;
-
-    constructor(type: string, isArray: boolean) {
-        this.type = type;
-        this.isArray = isArray;
-    }
-}
-
-export let types = {
-    array: {
-        float: new KernelVariableType("float", true)
-    },
-    scalar: {
-        float: new KernelVariableType("float", false)
-    }
-}
-
-class KernelConstant {
-    name: string;
-    type: KernelVariableType;
-    value: Array<number> | number;
-
-    constructor(name: string, type: KernelVariableType, value: Array<number> | number) {
-        this.name = name;
-        this.type = type;
-        this.value = value;
-    }
-}
-
-export function defineConstant(name: string, type: KernelVariableType, value: Array<number> | number) {
-    return new KernelConstant(name, type, value);
-}
-
-interface KernelDefintionInterface {
-    name: string;
-    dependencies: Array<Kernel>;
-    constants: Array<KernelConstant>;
-    code: string;
-}
-
-export class Kernel implements KernelDefintionInterface {
-    name: string;
-    dependencies: Array<Kernel>;
-    constants: Array<KernelConstant>;
-    code: string;
-
-    constructor(kernelDefintion: KernelDefintionInterface) {
-        this.name = kernelDefintion.name;
-        this.dependencies = kernelDefintion.dependencies;
-        this.constants = kernelDefintion.constants;
-        this.code = kernelDefintion.code;
-    }
-}
+import { KernelConstant, KernelVariable, KernelFunction, KernelPart } from './defintions';
 
 class Linker {
-    kernels: Array<Kernel>;
+    constants: Map<string, KernelConstant>;
+    variables: Map<string, KernelVariable>;
+    functions: Map<string, KernelFunction>;
 
-    addKernel(kernelDefintion: KernelDefintionInterface): Kernel {
-        const kernel = new Kernel(kernelDefintion);
-        this.kernels.push(kernel);
-        return kernel;
+    constructor() {
+        this.constants = new Map();
+        this.variables = new Map();
+        this.functions = new Map();
+    }
+
+    add(code: KernelPart): void {
+        if (code instanceof KernelConstant) {
+            this.constants.set(code.name, code);
+        } else if (code instanceof KernelVariable) {
+            this.variables.set(code.name, code);
+        } else if (code instanceof KernelFunction) {
+            this.functions.set(code.name, code);
+        } else {
+            throw new Error('unreachable');
+        }
+    }
+
+    export(kernelName: string): string {
+        if (!this.functions.has(kernelName)) {
+            throw new Error(`WebGL function ${kernelName} is not declared`);
+        }
+
+        const usedConstants = new Map<string, KernelConstant>();
+        const usedVariables = new Map<string, KernelVariable>();
+        const usedFunctions = new Map<string, KernelFunction>();
+
+        // Resolve depdendency tree by adding collecting all used
+        // constants, variables, and functions.
+        const todoFunctions = [
+            this.functions.get(kernelName)
+        ];
+
+        while (todoFunctions.length > 0) {
+            const thisFunction = todoFunctions.pop();
+            if (usedFunctions.has(thisFunction.name)) {
+                // Function is allready added, just skip
+                continue;
+            }
+            usedFunctions.set(thisFunction.name, thisFunction);
+
+            for (const constantName of thisFunction.constants) {
+                if (!this.constants.has(constantName)) {
+                    throw new Error(`WebGL constant ${constantName} used `+
+                                    `by ${thisFunction.name} is not declared`);
+                }
+                usedConstants.set(constantName,
+                                  this.constants.get(constantName));
+            }
+
+            for (const variableName of thisFunction.variables) {
+                if (!this.variables.has(variableName)) {
+                    throw new Error(`WebGL variable ${variableName} used `+
+                                    `by ${thisFunction.name} is not declared`);
+                }
+                usedVariables.set(variableName,
+                                  this.variables.get(variableName));
+            }
+
+            for (const functionName of thisFunction.dependencies) {
+                if (!this.functions.has(functionName)) {
+                    throw new Error(`WebGL function ${functionName} used `+
+                                    `by ${thisFunction.name} is not declared`);
+                }
+                if (!usedFunctions.has(functionName)) {
+                    todoFunctions.push(this.functions.get(functionName));
+                }
+            }
+        }
+
+        // transform into code
+        const constantCode = Array.from(usedConstants.values())
+            .map((kernelConstant) => kernelConstant.exportAsWebGL())
+            .join('\n');
+
+        const variableCode =  Array.from(usedVariables.values())
+            .map((kernelVariable) => kernelVariable.exportAsWebGL())
+            .join('\n');
+
+        const signatureCode = Array.from(usedFunctions.values())
+            .map((kernelFunction) => kernelFunction.exportSignatureAsWebGL())
+            .join('\n');
+
+        const functionCode =  Array.from(usedFunctions.values())
+            .map((kernelFunction) => kernelFunction.exportAsWebGL())
+            .join('\n\n');
+
+        return [
+            `// compiled kernel for ${kernelName}`,
+            '',
+            '//',
+            '// constant declarations',
+            '//',
+            constantCode,
+            '',
+            '//',
+            '// global variable declarations :(',
+            '//',
+            variableCode,
+            '',
+            '//',
+            '// function signatures',
+            '//',
+            signatureCode,
+            '',
+            '//',
+            '// function declarations',
+            '//',
+            functionCode,
+            ''
+        ].join('\n');
     }
 }
 
-export default new Linker();
+export const linker = new Linker();

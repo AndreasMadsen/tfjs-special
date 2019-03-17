@@ -1,5 +1,5 @@
 
-import { Global, Kernel, Constant, Variable } from '../defintions';
+import { KernelGlobal, KernelFunction, KernelConstant, KernelVariable } from '../defintions';
 import {
     FileAST, Node,
     Decl, ArrayDecl, TypeDecl, FuncDecl,
@@ -25,10 +25,9 @@ interface ExportableInterface {
     exportAsScript(): string;
 }
 
-abstract class ExportableGlobal extends Global implements ExportableInterface {
-    // The source string for the value is used to ensure that the float
-    // represenation is completly identical to the C source code.
-    valueSource: string;
+abstract class ExportableKernelGlobal
+         extends KernelGlobal
+         implements ExportableInterface {
     constructorName: string;
 
     constructor(constructorName: string, node: Decl) {
@@ -40,25 +39,24 @@ abstract class ExportableGlobal extends Global implements ExportableInterface {
             throw new Error('unreachable');
         }
         const type = typeDecl.type.names[0];
-        let value, valueSource;
+        let value, valueString;
 
         if (isArray) {
             if (node.init instanceof InitList && type === 'float') {
                 const values = node.init.exprs.map(getValueFromExpression);
 
-                valueSource = `[${values.join(', ')}]`;
-                value = new Float32Array(JSON.parse(valueSource));
+                valueString = `${values.join(', ')}`;
+                value = new Float32Array(JSON.parse(`[${valueString}]`));
             } else {
                 throw new Error(`unsupported array type ${type}`);
             }
         } else {
-            valueSource = getValueFromExpression(node.init);
-            value = JSON.parse(valueSource);
+            valueString = getValueFromExpression(node.init);
+            value = JSON.parse(valueString);
         }
 
-        super({ name, type, isArray, value });
+        super({ name, type, value, valueString });
         this.constructorName = constructorName;
-        this.valueSource = valueSource;
     }
 
     static match(node: Node): node is Decl {
@@ -69,58 +67,58 @@ abstract class ExportableGlobal extends Global implements ExportableInterface {
 
     exportAsScript(): string {
         let valueIdentifer;
-        if (!this.isArray) {
-            valueIdentifer = `${this.valueSource}`;
-        } else if (this.isArray && this.type === 'float') {
-            valueIdentifer = `new Float32Array(${this.valueSource})`;
+        if (this.value instanceof Float32Array) {
+            valueIdentifer = `new Float32Array([${this.valueString}])`;
+        } else {
+            valueIdentifer = `${this.valueString}`;
         }
 
         return `linker.add(new ${this.constructorName}({\n` +
         `  name: ${tsStringifyValue(this.name)},\n` +
         `  type: ${tsStringifyValue(this.type)},\n` +
-        `  isArray: ${this.isArray},\n` +
-        `  value: ${valueIdentifer}\n` +
+        `  value: ${valueIdentifer},\n` +
+        `  valueString: ${tsStringifyValue(this.valueString)}\n` +
         `}));`;
     }
 }
 
-export class ExportableConstant extends ExportableGlobal implements Constant {
+export class ExportableKernelConstant extends ExportableKernelGlobal implements KernelConstant {
     isConstant: true;
 
     constructor(node: Decl) {
-        super('Constant', node);
+        super('KernelConstant', node);
     }
 
     static match(node: Node): node is Decl {
-        return (ExportableGlobal.match(node) &&
-                /^[0-9a-z]+_[0-9A-Z]+$/.test(node.name));
+        return (ExportableKernelGlobal.match(node) &&
+                /^([0-9a-z]+_)?[0-9A-Z]+$/.test(node.name));
     }
 
     exportAsWebGL(): string {
-        return Constant.prototype.exportAsWebGL.call(this);
+        return KernelConstant.prototype.exportAsWebGL.call(this);
     }
 }
 
-export class ExportableVariable extends ExportableGlobal implements Variable {
+export class ExportableKernelVariable extends ExportableKernelGlobal implements KernelVariable {
     isConstant: false;
 
     constructor(node: Decl) {
-        super('Variable', node);
+        super('KernelVariable', node);
     }
 
-    static KNOWN_VARIABLES = ['sgngamf'];
+    static KNOWN_VARIABLES = new Set(['sgngamf']);
 
     static match(node: Node): node is Decl {
-        return (ExportableGlobal.match(node) &&
-                ExportableVariable.KNOWN_VARIABLES.indexOf(node.name) !== -1);
+        return (ExportableKernelGlobal.match(node) &&
+                ExportableKernelVariable.KNOWN_VARIABLES.has(node.name));
     }
 
     exportAsWebGL(): string {
-        return Variable.prototype.exportAsWebGL.call(this);
+        return KernelVariable.prototype.exportAsWebGL.call(this);
     }
 }
 
-export class ExportableKernel extends Kernel implements ExportableInterface {
+export class ExportableKernelFunction extends KernelFunction implements ExportableInterface {
     name: string;
     dependencies: string[];
     constants: string[];
@@ -134,6 +132,7 @@ export class ExportableKernel extends Kernel implements ExportableInterface {
         const constants: string[] = [];
         const variables: string[] = [];
         const code = node.exportAsCode();
+        const signature = node.decl.type.exportAsCode();
 
         node.body.transformChildren(function scan(child) {
             if (child instanceof ID) {
@@ -150,7 +149,7 @@ export class ExportableKernel extends Kernel implements ExportableInterface {
             return child;
         });
 
-        super({ name, dependencies, constants, variables, code });
+        super({ name, dependencies, constants, variables, signature, code });
     }
 
     static match(node: Node): node is FuncDef {
@@ -158,38 +157,39 @@ export class ExportableKernel extends Kernel implements ExportableInterface {
     }
 
     exportAsScript(): string {
-        return `linker.add(new Kernel({\n` +
+        return `linker.add(new KernelFunction({\n` +
         `  name: ${tsStringifyValue(this.name)},\n` +
         `  dependencies: ${tsStringifyValue(this.dependencies)},\n` +
         `  constants: ${tsStringifyValue(this.constants)},\n` +
         `  variables: ${tsStringifyValue(this.variables)},\n` +
+        `  signature: ${tsStringifyValue(this.signature)},\n` +
         `  code: \`${this.code}\`\n` +
         `}));`;
     }
 }
 
-declare type Exportable = ExportableConstant | ExportableVariable |
-                          ExportableKernel;
+declare type Exportable = ExportableKernelConstant | ExportableKernelVariable |
+                          ExportableKernelFunction;
 
 export class ExportableScript implements ExportableInterface {
     exportables: Exportable[];
 
     constructor(ast: FileAST) {
-        const functions = new Set();
-        const constants = new Set();
-        const variables = new Set();
+        const allFunctions = new Set();
+        const allConstants = new Set();
+        const allVariables = new Set();
 
         for (const child of ast.ext) {
             if (child instanceof Decl &&
-                ExportableVariable.KNOWN_VARIABLES.indexOf(child.name) !== -1) {
-                variables.add(child.name);
+                ExportableKernelVariable.KNOWN_VARIABLES.has(child.name)) {
+                allVariables.add(child.name);
             } else if (child instanceof Decl &&
                        child.type instanceof FuncDecl) {
-                functions.add(child.name);
+                allFunctions.add(child.name);
             } else if (child instanceof FuncDef) {
-                functions.add(child.decl.name);
+                allFunctions.add(child.decl.name);
             } else if (child instanceof Decl) {
-                constants.add(child.name);
+                allConstants.add(child.name);
             } else {
                 throw new Error('unreachable');
             }
@@ -197,13 +197,14 @@ export class ExportableScript implements ExportableInterface {
 
         this.exportables = [];
         for (const child of ast.ext) {
-            if (ExportableConstant.match(child)) {
-                this.exportables.push(new ExportableConstant(child));
-            } else if (ExportableVariable.match(child)) {
-                this.exportables.push(new ExportableVariable(child));
-            } else if (ExportableKernel.match(child)) {
+            if (ExportableKernelConstant.match(child)) {
+                this.exportables.push(new ExportableKernelConstant(child));
+            } else if (ExportableKernelVariable.match(child)) {
+                this.exportables.push(new ExportableKernelVariable(child));
+            } else if (ExportableKernelFunction.match(child)) {
                 this.exportables.push(
-                    new ExportableKernel(functions, constants, variables, child)
+                    new ExportableKernelFunction(
+                        allFunctions, allConstants, allVariables, child)
                 );
             }
         }
@@ -213,21 +214,24 @@ export class ExportableScript implements ExportableInterface {
         const defintionsImports = new Set();
 
         for (const exportable of this.exportables) {
-            if (exportable instanceof ExportableConstant) {
-                defintionsImports.add('Constant');
-            } else if (exportable instanceof ExportableVariable) {
-                defintionsImports.add('Variable');
-            } else if (exportable instanceof ExportableKernel) {
-                defintionsImports.add('Kernel');
+            if (exportable instanceof ExportableKernelConstant) {
+                defintionsImports.add('KernelConstant');
+            } else if (exportable instanceof ExportableKernelVariable) {
+                defintionsImports.add('KernelVariable');
+            } else if (exportable instanceof ExportableKernelFunction) {
+                defintionsImports.add('KernelFunction');
             }
         }
 
-        const imports = [
-            `import { `
-                + Array.from(defintionsImports).join(', ') +
-            ` } from '../defintions';`,
-            `import { linker } from '../linker';`
-        ];
+        const imports = [];
+        if (defintionsImports.size > 0) {
+            imports.push(
+                `import { `
+                    + Array.from(defintionsImports).join(', ') +
+                ` } from '../defintions';`
+            );
+            imports.push(`import { linker } from '../linker';`);
+        }
 
         return [
             '// tslint:disable:max-line-length',

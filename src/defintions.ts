@@ -1,89 +1,108 @@
 
-export type ConstantValue = Float32Array | number;
+export type KernelConstantValue = Float32Array | number;
 
-export interface GlobalInterface {
+export interface KernelGlobalInterface {
     name: string;
     type: string;
-    isArray: boolean;
-    value: ConstantValue;
+    value: KernelConstantValue;
+    valueString: string;
 }
 
 export interface WebGLExport {
     exportAsWebGL(): string;
 }
 
-export abstract class Global implements GlobalInterface, WebGLExport {
+export abstract class KernelGlobal implements KernelGlobalInterface, WebGLExport {
     name: string;
     type: string;
-    isArray: boolean;
-    value: ConstantValue;
+    value: KernelConstantValue;
+    valueString: string;
 
-    constructor(object: GlobalInterface) {
+    constructor(object: KernelGlobalInterface) {
         this.name = object.name;
         this.type = object.type;
-        this.isArray = object.isArray;
         this.value = object.value;
+        this.valueString = object.valueString;
     }
 
     abstract exportAsWebGL(): string;
 }
 
-export interface ConstantInterface extends GlobalInterface {
+export interface ConstantInterface extends KernelGlobalInterface {
     isConstant: true;
 }
 
-export class Constant extends Global implements ConstantInterface {
+export class KernelConstant extends KernelGlobal implements ConstantInterface {
     isConstant: true;
 
-    constructor(object: GlobalInterface) {
+    constructor(object: KernelGlobalInterface) {
         super(object);
     }
 
     exportAsWebGL(): string {
-        return '';
+        if (this.value instanceof Float32Array) {
+            return `const float ${this.name}[${this.value.length}] = ` +
+                `float[](${this.valueString});`;
+        } else {
+            return `const ${this.type} ${this.name} = ${this.valueString};`;
+        }
     }
 }
 
-export interface VariableInterface extends GlobalInterface {
+export interface KernelVariableInterface extends KernelGlobalInterface {
     isConstant: false;
 }
 
-export class Variable extends Global implements VariableInterface {
+export class KernelVariable extends KernelGlobal implements KernelVariableInterface {
     isConstant: false;
 
-    constructor(object: GlobalInterface) {
+    constructor(object: KernelGlobalInterface) {
         super(object);
     }
 
     exportAsWebGL(): string {
-        return '';
+        if (this.value instanceof Float32Array) {
+            return `float ${this.name}[${this.value.length}] = ` +
+                `float[](${this.valueString});`;
+        } else {
+            return `${this.type} ${this.name} = ${this.valueString};`;
+        }
     }
 }
 
-export interface KernelInterface {
+export interface KernelFunctionInterface {
     name: string;
     dependencies: string[];
     constants: string[];
     variables: string[];
+    signature: string;
     code: string;
 }
 
-export class Kernel implements KernelInterface, WebGLExport {
+export class KernelFunction implements KernelFunctionInterface, WebGLExport {
     name: string;
     dependencies: string[];
     constants: string[];
     variables: string[];
+    signature: string;
     code: string;
 
-   constructor(object: KernelInterface) {
+   constructor(object: KernelFunctionInterface) {
         this.name = object.name;
         this.dependencies = object.dependencies;
         this.constants = object.constants;
         this.variables = object.variables;
+        this.signature = object.signature;
         this.code = object.code;
     }
 
+    exportSignatureAsWebGL(): string {
+        return this.signature + ';';
+    }
+
     exportAsWebGL(): string {
-        return '';
+        return this.code;
     }
 }
+
+export declare type KernelPart = KernelConstant | KernelVariable | KernelFunction;
