@@ -7,7 +7,11 @@ const imports = fs.readdirSync(path.resolve(__dirname, '../kernels'))
     .map(function importString(filename) {
         const basename = path.basename(filename, '.ts');
         return `import './${basename}';`;
-    })
-    .join('\n') + '\n';
+    });
 
-fs.writeFileSync(path.resolve(__dirname, '../kernels/index.ts'), imports);
+imports.push(`import '../special_kernels';`);
+
+fs.writeFileSync(
+    path.resolve(__dirname, '../kernels/index.ts'),
+    imports.join('\n') + '\n'
+);

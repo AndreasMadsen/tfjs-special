@@ -28,7 +28,7 @@ download: | $(CEPHESDIR)/
 	cd $(CEPHESDIR) && \
 		rm -f *.mak *.MAK *.bat *.rsp *.rf *.mms README *.doc ftilib.* Makefile \
 		setprec.* setprelf.387 singledoc.html floatlib.h powtst.c mtherr.c \
-		drand.c floorf.c mtstf.c nantst.c polynf.c \
+		drand.c floorf.c mtstf.c nantst.c polynf.c chbevlf.c polevlf.c \
 		cabsf.c caddf.c cacosf.c casinf.c catanf.c ccosf.c ccotf.c cdivf.c cexpf.c clogf.c \
 		cmovf.c cmulf.c cnegf.c csubf.c csinf.c csqrtf.c ctanf.c cmplxf.c
 

@@ -128,20 +128,20 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
     constructor(allFunctions: Set<string>, allConstants: Set<string>,
                 allVariables: Set<string>, node: FuncDef) {
         const name = node.decl.name;
-        const dependencies: string[] = [];
-        const constants: string[] = [];
-        const variables: string[] = [];
+        const dependencies = new Set<string>();
+        const constants = new Set<string>();
+        const variables = new Set<string>();
         const code = node.exportAsCode();
         const signature = node.decl.type.exportAsCode();
 
         node.body.transformChildren(function scan(child) {
             if (child instanceof ID) {
                 if (allFunctions.has(child.name)) {
-                    dependencies.push(child.name);
+                    dependencies.add(child.name);
                 } else if (allConstants.has(child.name)) {
-                    constants.push(child.name);
+                    constants.add(child.name);
                 } else if (allVariables.has(child.name)) {
-                    variables.push(child.name);
+                    variables.add(child.name);
                 }
             }
 
@@ -149,7 +149,14 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
             return child;
         });
 
-        super({ name, dependencies, constants, variables, signature, code });
+        super({
+            'name': name,
+            'dependencies': Array.from(dependencies),
+            'constants': Array.from(constants),
+            'variables': Array.from(variables),
+            'signature': signature,
+            'code': code
+        });
     }
 
     static match(node: Node): node is FuncDef {

@@ -1383,8 +1383,24 @@ export class FileAST extends Node implements FileASTInterface {
     }
 
     transformChildren(transform: TransformFunc) {
-        this.ext = this.ext
-            .map((node) => transform(node, this));
+        // if transform() returns a Compund flatten it into the FileAST
+        const newContent: Array<Decl | FuncDef> = [];
+        for (const item of this.ext) {
+            const itemTransform = transform(item, this);
+            if (itemTransform instanceof Compound) {
+                for (const item of itemTransform.block_items) {
+                    if (item instanceof Decl || item instanceof FuncDef) {
+                        newContent.push(item);
+                    } else {
+                        throw new Error(
+                            'Forbidding Compound content for FileAST');
+                    }
+                }
+            } else {
+                newContent.push(itemTransform);
+            }
+        }
+        this.ext = newContent;
         return this;
     }
 
