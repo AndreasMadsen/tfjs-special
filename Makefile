@@ -4,6 +4,7 @@ CEPHESDIR := cephes
 KERNELDIR := src/kernels
 JSON_FILES := $(patsubst %.c,%.json,$(filter-out $(wildcard $(CEPHESDIR)/*.export.c), $(wildcard $(CEPHESDIR)/*.c)))
 OUT_FILES := $(patsubst $(CEPHESDIR)/%.c,$(KERNELDIR)/%.ts,$(filter-out $(wildcard $(CEPHESDIR)/*.export.c), $(wildcard $(CEPHESDIR)/*.c)))
+BUILD_FILES := $(wildcard builder/*.js) $(wildcard builder/transform/*.js)
 PYTHON ?= python3
 
 $(CEPHESDIR)/:
@@ -11,12 +12,15 @@ $(CEPHESDIR)/:
 
 parse: $(JSON_FILES)
 
-build: $(OUT_FILES)
+build: $(OUT_FILES) $(KERNELDIR)/index.ts
 
 clean:
 	rm -f $(CEPHESDIR)/*.json
 	rm -f $(KERNELDIR)/*.ts
 	rm -f $(CEPHESDIR)/*.export.c
+
+clean-ts:
+	rm -f $(KERNELDIR)/*.ts
 
 download: | $(CEPHESDIR)/
 	rm -f $(CEPHESDIR)/*
@@ -50,5 +54,8 @@ download: | $(CEPHESDIR)/
 $(CEPHESDIR)/%.json: $(CEPHESDIR)/%.c $(CEPHESDIR)/mconf.h
 	$(CC) -E $< | $(PYTHON) ./c_json.py > $@
 
-$(KERNELDIR)/%.ts: $(CEPHESDIR)/%.json
+$(KERNELDIR)/%.ts: $(CEPHESDIR)/%.json $(BUILD_FILES)
 	ts-node ./src/builder/build_kernel.ts $< $@
+
+$(KERNELDIR)/index.ts: $(JSON_FILES) $(BUILD_FILES)
+	ts-node ./src/builder/build_index.ts

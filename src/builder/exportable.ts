@@ -149,6 +149,9 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
             return child;
         });
 
+        // All always present dependencies
+        dependencies.add('mtherr');
+
         super({
             'name': name,
             'dependencies': Array.from(dependencies),

@@ -2,10 +2,10 @@
 import { ExportableScript } from './exportable';
 
 import { importAstFromJson, FileAST } from './ast';
-//import { arrayPointerToIndex } from './transform/array-pointer-to-index';
 import { castToCall } from './transform/cast-to-call';
+import { editMtherr } from './transform/edit-mtherr';
 import { eliminateGoto } from './transform/eliminate-goto';
-import { removeMtherr } from './transform/remove-mtherr';
+import { explicitTypeConversion } from './transform/explicit-type-conversion';
 import { renameStatic } from './transform/rename-static';
 import { ternaryToAbs } from './transform/ternary-to-abs';
 import { upgradeFunctionDefs } from './transform/upgrade-function-defs';
@@ -26,15 +26,17 @@ export function importAstFromSourceCode(
 
     let ast = importAstFromJson(JSON.parse(source));
 
-    //ast = arrayPointerToIndex(ast);
-    ast = useStaticSizeArrayFunctions(ast);
+    ast = upgradeFunctionDefs(ast);
     ast = useBuiltinMath(ast);
     ast = castToCall(ast);
-    ast = removeMtherr(ast);
+
+    ast = editMtherr(ast);
+    ast = useStaticSizeArrayFunctions(ast);
+    ast = explicitTypeConversion(ast);
     ast = renameStatic(basename, ast);
     ast = ternaryToAbs(ast);
-    ast = upgradeFunctionDefs(ast);
     ast = whileToFor(ast);
+
     ast = eliminateGoto(ast);
 
     return ast;

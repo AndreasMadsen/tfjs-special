@@ -1,6 +1,15 @@
 import { KernelFunction } from './defintions';
 import { linker } from './linker';
 
+linker.add(new KernelFunction({
+    name: 'mtherr',
+    dependencies: [],
+    constants: [],
+    variables: [],
+    signature: `void mtherr(int code)`,
+    code: `void mtherr(int code) { }`
+}));
+
 for (let i = 1; i <= 20; i++) {
     linker.add(new KernelFunction({
         name: `chbevlf_${i}`,
