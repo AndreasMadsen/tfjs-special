@@ -14,9 +14,9 @@ export function ternaryToAbs(ast: FileAST): FileAST {
                     child.iftrue instanceof UnaryOp &&
                     child.iftrue.op === '-') {
 
-                    const cond = child.cond.left.exportAsCode();
-                    const negIftrue = child.iftrue.expr.exportAsCode();
-                    const iffalse = child.iffalse.exportAsCode();
+                    const cond = child.cond.left.exportAsWebGL();
+                    const negIftrue = child.iftrue.expr.exportAsWebGL();
+                    const iffalse = child.iffalse.exportAsWebGL();
 
                     if (cond === negIftrue && cond === iffalse) {
                         const call = new FuncCall({

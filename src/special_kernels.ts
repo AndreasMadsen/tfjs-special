@@ -6,8 +6,8 @@ linker.add(new KernelFunction({
     dependencies: [],
     constants: [],
     variables: [],
-    signature: `void mtherr(int code)`,
-    code: `void mtherr(int code) { }`
+    signatureWebGL: `void mtherr(int code)`,
+    codeWebGL: `void mtherr(int code) { }`
 }));
 
 for (let i = 1; i <= 20; i++) {
@@ -16,8 +16,8 @@ for (let i = 1; i <= 20; i++) {
         dependencies: [],
         constants: [],
         variables: [],
-        signature: `float chbevlf_${i}(float x, float array[${i}], int n)`,
-        code:
+        signatureWebGL: `float chbevlf_${i}(float x, float array[${i}], int n)`,
+        codeWebGL:
         `float chbevlf_${i}(float x, float array[${i}], int n) {
             float b0 = array[0];
             float b1 = 0.0;
@@ -37,8 +37,8 @@ for (let i = 1; i <= 20; i++) {
         dependencies: [],
         constants: [],
         variables: [],
-        signature: `float polevlf_${i}(float xx, float coef[${i}], int N)`,
-        code:
+        signatureWebGL: `float polevlf_${i}(float xx, float coef[${i}], int N)`,
+        codeWebGL:
         `float polevlf_${i}(float xx, float coef[${i}], int N) {
             float ans = coef[0];
             for (int i = 1; (i <= N); i++) {
@@ -54,8 +54,8 @@ for (let i = 1; i <= 20; i++) {
         dependencies: [],
         constants: [],
         variables: [],
-        signature: `float p1evlf_${i}(float xx, float coef[${i}], int N)`,
-        code:
+        signatureWebGL: `float p1evlf_${i}(float xx, float coef[${i}], int N)`,
+        codeWebGL:
         `float p1evlf_${i}(float xx, float coef[${i}], int N) {
             float ans = (xx + coef[0]);
             for (int i = 1; (i < N); i++) {

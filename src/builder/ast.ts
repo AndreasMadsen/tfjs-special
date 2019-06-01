@@ -23,7 +23,7 @@ export abstract class Node implements NodeInterface {
         this.coord = node.coord;
     }
 
-    abstract exportAsCode(): string;
+    abstract exportAsWebGL(): string;
 
     abstract transformChildren(transform: TransformFunc): this;
 
@@ -125,10 +125,10 @@ export class Decl extends Node implements DeclInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         const stroage = this.storage.join(' ');
-        const type = this.type.exportAsCode();
-        const init = this.init === null ? '' : `= ${this.init.exportAsCode()}`;
+        const type = this.type.exportAsWebGL();
+        const init = this.init === null ? '' : `= ${this.init.exportAsWebGL()}`;
 
         return `${stroage} ${type} ${init}`.trim();
     }
@@ -155,9 +155,9 @@ export class DeclList extends Node implements DeclListInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         return this.decls
-            .map((decl) => decl.exportAsCode())
+            .map((decl) => decl.exportAsWebGL())
             .join(', ');
     }
 }
@@ -194,13 +194,13 @@ export class FuncDecl extends Node implements FuncDeclInterface {
         return this;
     }
 
-    exportAsCode() {
+    exportAsWebGL() {
         let args = '()';
         if (this.args !== null) {
-            args = this.args.exportAsCode();
+            args = this.args.exportAsWebGL();
         }
 
-        return `${this.type.exportAsCode()}${args}`;
+        return `${this.type.exportAsWebGL()}${args}`;
     }
 }
 
@@ -231,14 +231,14 @@ export class TypeDecl extends Node implements TypeDeclInterface {
     }
 
     getType(): string {
-        return this.type.exportAsCode();
+        return this.type.exportAsWebGL();
     }
 
     getName(): string {
         return this.declname || '';
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         return `${this.getType()} ${this.getName()}`.trim();
     }
 }
@@ -279,9 +279,9 @@ export class ArrayDecl extends Node implements ArrayDeclInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const type = this.type.exportAsCode();
-        return `${type}[${this.dim === null ? '' : this.dim.exportAsCode()}]`;
+    exportAsWebGL(): string {
+        const type = this.type.exportAsWebGL();
+        return `${type}[${this.dim === null ? '' : this.dim.exportAsWebGL()}]`;
     }
 }
 
@@ -308,7 +308,7 @@ export class PtrDecl extends Node implements PtrDeclInterface {
         return this;
     }
 
-    exportAsCode() {
+    exportAsWebGL() {
         const name = this.type.getName();
         return `${this.type.getType()}*${name === '' ? '' : ' ' + name}`;
     }
@@ -334,8 +334,10 @@ export class InitList extends Node implements InitListInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const values = this.exprs.map((expr) => expr.exportAsCode()).join(', ');
+    exportAsWebGL(): string {
+        const values = this.exprs
+            .map((expr) => expr.exportAsWebGL())
+            .join(', ');
         return '{' + values + '}';
     }
 }
@@ -359,7 +361,7 @@ export class IdentifierType extends Node implements IdentifierTypeInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         return this.names.join(' ');
     }
 }
@@ -389,9 +391,9 @@ export class ParamList extends Node implements ParamListInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         const params = this.params
-            .map((param) => param.exportAsCode()).join(', ');
+            .map((param) => param.exportAsWebGL()).join(', ');
         return `(${params})`;
     }
 }
@@ -425,8 +427,8 @@ export class Typename extends Node implements TypenameInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        return this.type.exportAsCode();
+    exportAsWebGL(): string {
+        return this.type.exportAsWebGL();
     }
 }
 
@@ -470,13 +472,13 @@ export class FuncDef extends Node implements FuncDefInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const body = this.body.exportAsCode();
-        const decl = this.decl.exportAsCode();
+    exportAsWebGL(): string {
+        const body = this.body.exportAsWebGL();
+        const decl = this.decl.exportAsWebGL();
         let decls = '';
         if (this.param_decls !== null) {
             decls = ' ' + this.param_decls
-                .map((decl) => decl.exportAsCode())
+                .map((decl) => decl.exportAsWebGL())
                 .join(', ');
         }
 
@@ -510,8 +512,8 @@ export class Cast extends Node implements CastInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        return `(${this.to_type.exportAsCode()})${this.expr.exportAsCode()}`;
+    exportAsWebGL(): string {
+        return `(${this.to_type.exportAsWebGL()})${this.expr.exportAsWebGL()}`;
     }
 }
 
@@ -538,14 +540,14 @@ export class UnaryOp extends Node implements UnaryOpInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         switch (this.op) {
             case 'p++':
-                return `${this.expr.exportAsCode()}++`;
+                return `${this.expr.exportAsWebGL()}++`;
             case '++p':
-                return `++${this.expr.exportAsCode()}`;
+                return `++${this.expr.exportAsWebGL()}`;
             default:
-                return `${this.op}${this.expr.exportAsCode()}`;
+                return `${this.op}${this.expr.exportAsWebGL()}`;
         }
     }
 }
@@ -577,9 +579,9 @@ export class BinaryOp extends Node implements BinaryOpInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const left = this.left.exportAsCode();
-        const right = this.right.exportAsCode();
+    exportAsWebGL(): string {
+        const left = this.left.exportAsWebGL();
+        const right = this.right.exportAsWebGL();
         return `(${left} ${this.op} ${right})`;
     }
 }
@@ -612,10 +614,10 @@ export class TernaryOp extends Node implements TernaryOpInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const cond = this.cond.exportAsCode();
-        const iffalse = this.iffalse.exportAsCode();
-        const iftrue = this.iftrue.exportAsCode();
+    exportAsWebGL(): string {
+        const cond = this.cond.exportAsWebGL();
+        const iffalse = this.iffalse.exportAsWebGL();
+        const iftrue = this.iftrue.exportAsWebGL();
 
         return `(${cond} ? ${iftrue} : ${iffalse})`;
     }
@@ -643,7 +645,7 @@ export class Constant extends Node implements ConstantInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         return this.value;
     }
 }
@@ -667,7 +669,7 @@ export class ID extends Node implements AstIDInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         return this.name;
     }
 }
@@ -699,8 +701,8 @@ export class StructRef extends Node implements StructRefInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        return `${this.name.exportAsCode()}.${this.field.exportAsCode()}`;
+    exportAsWebGL(): string {
+        return `${this.name.exportAsWebGL()}.${this.field.exportAsWebGL()}`;
     }
 }
 
@@ -731,8 +733,9 @@ export class ArrayRef extends Node implements ArrayRefInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        return `${this.name.exportAsCode()}[${this.subscript.exportAsCode()}]`;
+    exportAsWebGL(): string {
+        const subscript = this.subscript.exportAsWebGL();
+        return `${this.name.exportAsWebGL()}[${subscript}]`;
     }
 }
 
@@ -767,12 +770,12 @@ export class FuncCall extends Node implements FuncCallInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         let args = '';
         if (this.args !== null) {
-            args = this.args.exportAsCode();
+            args = this.args.exportAsWebGL();
         }
-        return `${this.name.exportAsCode()}${args}`;
+        return `${this.name.exportAsWebGL()}${args}`;
     }
 }
 
@@ -789,7 +792,7 @@ export class EmptyStatement extends Node implements EmptyStatementInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         return '';
     }
 }
@@ -872,8 +875,8 @@ export class Label extends Node implements LabelInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        return `${this.name}: ${this.stmt.exportAsCode()}` +
+    exportAsWebGL(): string {
+        return `${this.name}: ${this.stmt.exportAsWebGL()}` +
                `${this.stmt.getMaybeSemicolon()}`;
     }
 }
@@ -897,7 +900,7 @@ export class Goto extends Node implements GotoInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         return `goto ${this.name}`;
     }
 }
@@ -937,9 +940,9 @@ export class Compound extends Node implements CompoundInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         const items = this.block_items.map((item) => (
-            indentCode(item.exportAsCode()) +
+            indentCode(item.exportAsWebGL()) +
             item.getMaybeSemicolon()
         ));
 
@@ -974,9 +977,9 @@ export class While extends Node implements WhileInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const cond = this.cond.exportAsCode();
-        const stmt = this.stmt.exportAsCode();
+    exportAsWebGL(): string {
+        const cond = this.cond.exportAsWebGL();
+        const stmt = this.stmt.exportAsWebGL();
         return `while(${cond}) ${stmt}\n`;
     }
 }
@@ -1005,9 +1008,9 @@ export class DoWhile extends Node implements DoWhileInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const cond = this.cond.exportAsCode();
-        const stmt = this.stmt.exportAsCode();
+    exportAsWebGL(): string {
+        const cond = this.cond.exportAsWebGL();
+        const stmt = this.stmt.exportAsWebGL();
         return `do ${stmt} while(${cond})`;
     }
 }
@@ -1048,11 +1051,11 @@ export class For extends Node implements ForInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const init = this.init.exportAsCode();
-        const next = this.next.exportAsCode();
-        const cond = this.cond.exportAsCode();
-        const stmt = this.stmt.exportAsCode() + this.stmt.getMaybeSemicolon();
+    exportAsWebGL(): string {
+        const init = this.init.exportAsWebGL();
+        const next = this.next.exportAsWebGL();
+        const cond = this.cond.exportAsWebGL();
+        const stmt = this.stmt.exportAsWebGL() + this.stmt.getMaybeSemicolon();
         return `for (${init}; ${cond}; ${next}) ${stmt}\n`;
     }
 }
@@ -1082,9 +1085,9 @@ export class Switch extends Node implements SwitchInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const cond = this.cond.exportAsCode();
-        const stmt = this.stmt.exportAsCode();
+    exportAsWebGL(): string {
+        const cond = this.cond.exportAsWebGL();
+        const stmt = this.stmt.exportAsWebGL();
         return `swtich(${cond}) ${stmt}\n`;
     }
 }
@@ -1116,12 +1119,12 @@ export class Default extends Node implements DefaultInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         let stmts = '';
         if (this.stmts !== null) {
             stmts = this.stmts
                 .map((stmt) => (
-                    indentCode(stmt.exportAsCode()) +
+                    indentCode(stmt.exportAsWebGL()) +
                     stmt.getMaybeSemicolon()
                 ))
                 .join('\n');
@@ -1163,17 +1166,17 @@ export class Case extends Node implements CaseInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         let stmts = '';
         if (this.stmts !== null) {
             stmts = this.stmts
             .map((stmt) => (
-                indentCode(stmt.exportAsCode()) +
+                indentCode(stmt.exportAsWebGL()) +
                 stmt.getMaybeSemicolon()
             ))
             .join('\n');
         }
-        return `case ${this.expr.exportAsCode()}:\n` +
+        return `case ${this.expr.exportAsWebGL()}:\n` +
                `${stmts}`;
     }
 }
@@ -1191,7 +1194,7 @@ export class Break extends Node implements BreakInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         return `break`;
     }
 }
@@ -1209,7 +1212,7 @@ export class Continue extends Node implements ContinueInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         return `continue`;
     }
 }
@@ -1250,18 +1253,18 @@ export class If extends Node implements IfInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const cond = this.cond.exportAsCode();
+    exportAsWebGL(): string {
+        const cond = this.cond.exportAsWebGL();
 
         const iftrue = (
-            this.iftrue.exportAsCode() +
+            this.iftrue.exportAsWebGL() +
             this.iftrue.getMaybeSemicolon()
         );
 
         let elseblock = '';
         if (this.iffalse !== null) {
             elseblock = (
-                ' else ' + this.iffalse.exportAsCode() +
+                ' else ' + this.iffalse.exportAsWebGL() +
                 this.iffalse.getMaybeSemicolon()
             );
         }
@@ -1291,8 +1294,8 @@ export class ExprList extends Node implements ExprListInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const exprs = this.exprs.map((expr) => expr.exportAsCode());
+    exportAsWebGL(): string {
+        const exprs = this.exprs.map((expr) => expr.exportAsWebGL());
         return `(${exprs.join(', ')})`;
     }
 }
@@ -1329,9 +1332,9 @@ export class Assignment extends Node implements AssignmentInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        const lvalue = this.lvalue.exportAsCode();
-        const rvalue = this.rvalue.exportAsCode();
+    exportAsWebGL(): string {
+        const lvalue = this.lvalue.exportAsWebGL();
+        const rvalue = this.rvalue.exportAsWebGL();
         return `${lvalue} ${this.op} ${rvalue}`;
     }
 }
@@ -1356,8 +1359,8 @@ export class Return extends Node implements ReturnInterface {
         return this;
     }
 
-    exportAsCode(): string {
-        return `return ${this.expr.exportAsCode()}`;
+    exportAsWebGL(): string {
+        return `return ${this.expr.exportAsWebGL()}`;
     }
 }
 
@@ -1404,9 +1407,9 @@ export class FileAST extends Node implements FileASTInterface {
         return this;
     }
 
-    exportAsCode(): string {
+    exportAsWebGL(): string {
         const ext = this.ext.map((node) => (
-            node.exportAsCode() + node.getMaybeSemicolon()
+            node.exportAsWebGL() + node.getMaybeSemicolon()
         ));
 
         return ext.join('\n');

@@ -7,7 +7,7 @@ import {
 } from './ast';
 
 function getValueFromExpression(node: Node) {
-    let str = node.exportAsCode();
+    let str = node.exportAsWebGL();
     if (str.endsWith('f')) {
         str = str.slice(0, -1);
     }
@@ -131,8 +131,8 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
         const dependencies = new Set<string>();
         const constants = new Set<string>();
         const variables = new Set<string>();
-        const code = node.exportAsCode();
-        const signature = node.decl.type.exportAsCode();
+        const signatureWebGL = node.decl.type.exportAsWebGL();
+        const codeWebGL = node.exportAsWebGL();
 
         node.body.transformChildren(function scan(child) {
             if (child instanceof ID) {
@@ -157,8 +157,8 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
             'dependencies': Array.from(dependencies),
             'constants': Array.from(constants),
             'variables': Array.from(variables),
-            'signature': signature,
-            'code': code
+            'signatureWebGL': signatureWebGL,
+            'codeWebGL': codeWebGL
         });
     }
 
@@ -172,8 +172,8 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
         `  dependencies: ${tsStringifyValue(this.dependencies)},\n` +
         `  constants: ${tsStringifyValue(this.constants)},\n` +
         `  variables: ${tsStringifyValue(this.variables)},\n` +
-        `  signature: ${tsStringifyValue(this.signature)},\n` +
-        `  code: \`${this.code}\`\n` +
+        `  signatureWebGL: ${tsStringifyValue(this.signatureWebGL)},\n` +
+        `  codeWebGL: \`${this.codeWebGL}\`\n` +
         `}));`;
     }
 }

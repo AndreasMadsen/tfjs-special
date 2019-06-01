@@ -16,7 +16,7 @@ for (const inputFile of process.argv.slice(2)) {
     const source = fs.readFileSync(inputFile, 'utf-8');
 
     const ast = importAstFromSourceCode(basename, source);
-    fs.writeFileSync(cOutputFile, ast.exportAsCode());
+    fs.writeFileSync(cOutputFile, ast.exportAsWebGL());
 
     const exportable = new ExportableScript(ast);
     fs.writeFileSync(tsOutputFile, exportable.exportAsScript());

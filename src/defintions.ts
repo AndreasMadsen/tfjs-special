@@ -75,8 +75,8 @@ export interface KernelFunctionInterface {
     dependencies: string[];
     constants: string[];
     variables: string[];
-    signature: string;
-    code: string;
+    signatureWebGL: string;
+    codeWebGL: string;
 }
 
 export class KernelFunction implements KernelFunctionInterface, WebGLExport {
@@ -84,24 +84,24 @@ export class KernelFunction implements KernelFunctionInterface, WebGLExport {
     dependencies: string[];
     constants: string[];
     variables: string[];
-    signature: string;
-    code: string;
+    signatureWebGL: string;
+    codeWebGL: string;
 
    constructor(object: KernelFunctionInterface) {
         this.name = object.name;
         this.dependencies = object.dependencies;
         this.constants = object.constants;
         this.variables = object.variables;
-        this.signature = object.signature;
-        this.code = object.code;
+        this.signatureWebGL = object.signatureWebGL;
+        this.codeWebGL = object.codeWebGL;
     }
 
     exportSignatureAsWebGL(): string {
-        return this.signature + ';';
+        return this.signatureWebGL + ';';
     }
 
     exportAsWebGL(): string {
-        return this.code;
+        return this.codeWebGL;
     }
 }
 
