@@ -1,5 +1,5 @@
 
-import { KernelConstant, KernelVariable, KernelFunction, KernelPart } from './defintions';
+import { Language, KernelConstant, KernelVariable, KernelFunction, KernelPart } from './defintions';
 
 class Linker {
     constants: Map<string, KernelConstant>;
@@ -24,7 +24,15 @@ class Linker {
         }
     }
 
-    export(kernelName: string): string {
+    exportAsWebGL(kernelName: string): string {
+        return this.exportAs(kernelName, 'WebGL');
+    }
+
+    exportAsJS(kernelName: string): string {
+        return this.exportAs(kernelName, 'JS');
+    }
+
+    exportAs(kernelName: string, language: Language): string {
         if (!this.functions.has(kernelName)) {
             throw new Error(`WebGL function ${kernelName} is not declared`);
         }
@@ -78,19 +86,21 @@ class Linker {
 
         // transform into code
         const constantCode = Array.from(usedConstants.values())
-            .map((kernelConstant) => kernelConstant.exportAsWebGL())
+            .map((kernelConstant) => kernelConstant.exportAs(language))
             .join('\n');
 
         const variableCode =  Array.from(usedVariables.values())
-            .map((kernelVariable) => kernelVariable.exportAsWebGL())
+            .map((kernelVariable) => kernelVariable.exportAs(language))
             .join('\n');
 
         const signatureCode = Array.from(usedFunctions.values())
-            .map((kernelFunction) => kernelFunction.exportSignatureAsWebGL())
+            .map((kernelFunction) => kernelFunction.exportSignatureAs(language))
+            .filter((signatureCode) => signatureCode !== null)
             .join('\n');
 
         const functionCode =  Array.from(usedFunctions.values())
-            .map((kernelFunction) => kernelFunction.exportAsWebGL())
+            .map((kernelFunction) => kernelFunction.exportAs(language))
+            .filter((code) => code !== null)
             .join('\n\n');
 
         return [

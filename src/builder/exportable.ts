@@ -97,6 +97,10 @@ export class ExportableKernelConstant extends ExportableKernelGlobal implements 
     exportAsWebGL(): string {
         return KernelConstant.prototype.exportAsWebGL.call(this);
     }
+
+    exportAsJS(): string {
+        return KernelConstant.prototype.exportAsJS.call(this);
+    }
 }
 
 export class ExportableKernelVariable extends ExportableKernelGlobal implements KernelVariable {
@@ -116,6 +120,10 @@ export class ExportableKernelVariable extends ExportableKernelGlobal implements 
     exportAsWebGL(): string {
         return KernelVariable.prototype.exportAsWebGL.call(this);
     }
+
+    exportAsJS(): string {
+        return KernelVariable.prototype.exportAsJS.call(this);
+    }
 }
 
 export class ExportableKernelFunction extends KernelFunction implements ExportableInterface {
@@ -133,6 +141,7 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
         const variables = new Set<string>();
         const signatureWebGL = node.decl.type.exportAsWebGL();
         const codeWebGL = node.exportAsWebGL();
+        const codeJS = node.exportAsJS();
 
         node.body.transformChildren(function scan(child) {
             if (child instanceof ID) {
@@ -149,16 +158,14 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
             return child;
         });
 
-        // All always present dependencies
-        dependencies.add('mtherr');
-
         super({
             'name': name,
             'dependencies': Array.from(dependencies),
             'constants': Array.from(constants),
             'variables': Array.from(variables),
             'signatureWebGL': signatureWebGL,
-            'codeWebGL': codeWebGL
+            'codeWebGL': codeWebGL,
+            'codeJS': codeJS
         });
     }
 
@@ -173,7 +180,8 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
         `  constants: ${tsStringifyValue(this.constants)},\n` +
         `  variables: ${tsStringifyValue(this.variables)},\n` +
         `  signatureWebGL: ${tsStringifyValue(this.signatureWebGL)},\n` +
-        `  codeWebGL: \`${this.codeWebGL}\`\n` +
+        `  codeWebGL: \`${this.codeWebGL}\`,\n` +
+        `  codeJS: \`${this.codeJS}\`,\n` +
         `}));`;
     }
 }
@@ -185,9 +193,11 @@ export class ExportableScript implements ExportableInterface {
     exportables: Exportable[];
 
     constructor(ast: FileAST) {
-        const allFunctions = new Set();
-        const allConstants = new Set();
-        const allVariables = new Set();
+        const allFunctions = new Set<string>(
+            ['mtherr', 'float', 'int', 'bool']
+        );
+        const allConstants = new Set<string>();
+        const allVariables = new Set<string>();
 
         for (const child of ast.ext) {
             if (child instanceof Decl &&
@@ -205,7 +215,7 @@ export class ExportableScript implements ExportableInterface {
             }
         }
 
-        this.exportables = [];
+        this.exportables = [] as Exportable[];
         for (const child of ast.ext) {
             if (ExportableKernelConstant.match(child)) {
                 this.exportables.push(new ExportableKernelConstant(child));
@@ -221,7 +231,7 @@ export class ExportableScript implements ExportableInterface {
     }
 
     exportAsScript(): string {
-        const defintionsImports = new Set();
+        const defintionsImports = new Set<string>();
 
         for (const exportable of this.exportables) {
             if (exportable instanceof ExportableKernelConstant) {

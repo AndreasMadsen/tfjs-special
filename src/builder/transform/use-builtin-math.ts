@@ -8,7 +8,7 @@ const cephes2webgl = new Map([
     ['asinf', 'asin'],
     ['acosf', 'acos'],
     ['atanf', 'atan'],
-    ['atan2f', 'atan'],
+    ['atan2f', 'atan2'],
     ['powf', 'pow'],
     ['expf', 'exp'],
     ['exp2f', 'exp2'],
@@ -20,11 +20,15 @@ const cephes2webgl = new Map([
 ]);
 
 export function useBuiltinMath(ast: FileAST): FileAST {
-    // Remove function defintions and function prototypes of WebGL functions
     ast.ext = ast.ext.filter(function filter(child: Decl | FuncDef): boolean {
+        // Rename function prototypes
         if (child instanceof Decl && child.type instanceof FuncDecl) {
-            return !cephes2webgl.has(child.name);
+            if (cephes2webgl.has(child.name)) {
+                child.name = cephes2webgl.get(child.name);
+            }
+            return true;
         }
+        // Remove function defintions functions
         else if (child instanceof FuncDef) {
             return !cephes2webgl.has(child.decl.name);
         }
