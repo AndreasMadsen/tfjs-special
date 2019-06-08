@@ -2,6 +2,7 @@
 import { ExportableScript } from './exportable';
 
 import { importAstFromJson, FileAST } from './ast';
+import { binaryToOddCheck } from './transform/binary-to-odd-check';
 import { castToCall } from './transform/cast-to-call';
 import { editMtherr } from './transform/edit-mtherr';
 import { eliminateGoto } from './transform/eliminate-goto';
@@ -30,6 +31,7 @@ export function importAstFromSourceCode(
     ast = useBuiltinMath(ast);
     ast = castToCall(ast);
 
+    ast = binaryToOddCheck(ast);
     ast = editMtherr(ast);
     ast = useStaticSizeArrayFunctions(ast);
     ast = explicitTypeConversion(ast);

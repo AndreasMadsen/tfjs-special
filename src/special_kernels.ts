@@ -1,4 +1,4 @@
-import { KernelFunction } from './defintions';
+import { KernelFunction, WebGLVersion } from './defintions';
 import { linker } from './linker';
 
 // Add type cast functions
@@ -65,7 +65,33 @@ linker.add(new KernelFunction({
     codeJS: `function exp2(value) { return Math.pow(2, value); }`,
 }));
 
-// Add special functions
+// Add replacement functions
+linker.add(new (class IsOddKernelFunction extends KernelFunction {
+    constructor() {
+        super({
+            name: 'is_odd',
+            dependencies: [],
+            constants: [],
+            variables: [],
+            signatureWebGL: `int is_odd(int value)`,
+            codeWebGL: null,
+            codeJS: `function is_odd(value) { return value & 1; }`
+        });
+    }
+
+    exportAsWebGL(version: WebGLVersion): string {
+        if (version === 2) {
+            return `int is_odd(int value) { return value & 1; }`;
+        } else {
+            return (
+            `int is_odd(int value) {
+                return int(mod(float(value), 2.0));
+            }`);
+        }
+    }
+})());
+
+// Add error function
 linker.add(new KernelFunction({
     name: 'mtherr',
     dependencies: [],
@@ -89,7 +115,7 @@ for (let i = 1; i <= 20; i++) {
             float b0 = array[0];
             float b1 = 0.0;
             float b2;
-            for (let i = 1; (i < n); i++) {
+            for (let i = 1; (i < ${i}); i++) {
                 b2 = b1;
                 b1 = b0;
                 b0 = (((x * b1) - b2) + array[i]);
@@ -102,7 +128,7 @@ for (let i = 1; i <= 20; i++) {
             let b0 = array[0];
             let b1 = 0.0;
             let b2;
-            for (let i = 1; (i < n); i++) {
+            for (let i = 1; (i < ${i}); i++) {
                 b2 = b1;
                 b1 = b0;
                 b0 = (((x * b1) - b2) + array[i]);
@@ -121,7 +147,7 @@ for (let i = 1; i <= 20; i++) {
         codeWebGL:
         `float polevlf_${i}(float xx, float coef[${i}], int N) {
             float ans = coef[0];
-            for (int i = 1; (i <= N); i++) {
+            for (int i = 1; (i <= ${i - 1}); i++) {
                 ans = ((ans * xx) + coef[i]);
             }
 
@@ -130,7 +156,7 @@ for (let i = 1; i <= 20; i++) {
         codeJS:
         `function polevlf_${i}(xx, coef, N) {
             let ans = coef[0];
-            for (let i = 1; (i <= N); i++) {
+            for (let i = 1; (i <= ${i - 1}); i++) {
                 ans = ((ans * xx) + coef[i]);
             }
 
@@ -147,7 +173,7 @@ for (let i = 1; i <= 20; i++) {
         codeWebGL:
         `float p1evlf_${i}(float xx, float coef[${i}], int N) {
             float ans = (xx + coef[0]);
-            for (int i = 1; (i < N); i++) {
+            for (int i = 1; (i < ${i}); i++) {
                 ans = ((ans * xx) + coef[i]);
             }
 
@@ -155,7 +181,7 @@ for (let i = 1; i <= 20; i++) {
         }`,
         codeJS: `function p1evlf_${i}(xx, coef, N) {
             let ans = (xx + coef[0]);
-            for (let i = 1; (i < N); i++) {
+            for (let i = 1; (i < ${i}); i++) {
                 ans = ((ans * xx) + coef[i]);
             }
 

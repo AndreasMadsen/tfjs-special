@@ -1,6 +1,8 @@
 
+export type Language = 'WebGL2' | 'WebGL1' | 'JS';
+export type WebGLVersion = 1 | 2;
+
 export type KernelConstantValue = Float32Array | number;
-export type Language = 'WebGL' | 'JS';
 
 export interface KernelGlobalInterface {
     name: string;
@@ -12,8 +14,10 @@ export interface KernelGlobalInterface {
 export abstract class Export {
     exportAs(language: Language): string {
         switch (language) {
-            case 'WebGL':
-                return this.exportAsWebGL();
+            case 'WebGL1':
+                return this.exportAsWebGL(1);
+            case 'WebGL2':
+                return this.exportAsWebGL(2);
             case 'JS':
                 return this.exportAsJS();
             default:
@@ -21,7 +25,7 @@ export abstract class Export {
         }
     }
 
-    abstract exportAsWebGL(): string;
+    abstract exportAsWebGL(version: WebGLVersion): string;
     abstract exportAsJS(): string;
 }
 
@@ -52,10 +56,14 @@ export class KernelConstant extends KernelGlobal implements ConstantInterface {
         super(object);
     }
 
-    exportAsWebGL(): string {
+    exportAsWebGL(version: WebGLVersion): string {
         if (this.value instanceof Float32Array) {
-            return `const float ${this.name}[${this.value.length}] = ` +
-                `float[](${this.valueString});`;
+            if (version === 2) {
+                return `float ${this.name}[${this.value.length}] = ` +
+                    `float[](${this.valueString});`;
+            } else {
+                return `uniform float ${this.name}[${this.value.length}];`;
+            }
         } else {
             return `const ${this.type} ${this.name} = ${this.valueString};`;
         }
@@ -82,10 +90,14 @@ export class KernelVariable extends KernelGlobal implements KernelVariableInterf
         super(object);
     }
 
-    exportAsWebGL(): string {
+    exportAsWebGL(version: WebGLVersion): string {
         if (this.value instanceof Float32Array) {
-            return `float ${this.name}[${this.value.length}] = ` +
-                `float[](${this.valueString});`;
+            if (version === 2) {
+                return `float ${this.name}[${this.value.length}] = ` +
+                    `float[](${this.valueString});`;
+            } else {
+                return `uniform float ${this.name}[${this.value.length}];`;
+            }
         } else {
             return `${this.type} ${this.name} = ${this.valueString};`;
         }
@@ -134,8 +146,10 @@ export class KernelFunction extends Export implements KernelFunctionInterface {
 
     exportSignatureAs(language: Language): string {
         switch (language) {
-            case 'WebGL':
-                return this.exportSignatureAsWebGL();
+            case 'WebGL1':
+                return this.exportSignatureAsWebGL(1);
+            case 'WebGL2':
+                return this.exportSignatureAsWebGL(2);
             case 'JS':
                 return this.exportSignatureAsJS();
             default:
@@ -143,7 +157,14 @@ export class KernelFunction extends Export implements KernelFunctionInterface {
         }
     }
 
-    // This does nothing but helps with abstraction
+    exportSignatureAsWebGL(version: WebGLVersion): string {
+        if (this.signatureWebGL === null) {
+            return null;
+        }
+        return this.signatureWebGL + ';';
+    }
+
+    // This does nothing, but helps with abstraction
     exportSignatureAsJS(): string {
         if (this.signatureWebGL === null) {
             return null;
@@ -151,14 +172,7 @@ export class KernelFunction extends Export implements KernelFunctionInterface {
         return '//' + this.signatureWebGL;
     }
 
-    exportSignatureAsWebGL(): string {
-        if (this.signatureWebGL === null) {
-            return null;
-        }
-        return this.signatureWebGL + ';';
-    }
-
-    exportAsWebGL(): string {
+    exportAsWebGL(version: WebGLVersion): string {
         if (this.codeWebGL === null) {
             return null;
         }

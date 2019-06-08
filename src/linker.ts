@@ -1,5 +1,7 @@
 
-import { Language, KernelConstant, KernelVariable, KernelFunction, KernelPart } from './defintions';
+import { Language, WebGLVersion,
+         KernelConstant, KernelVariable,
+         KernelFunction, KernelPart } from './defintions';
 
 class Linker {
     constants: Map<string, KernelConstant>;
@@ -24,15 +26,23 @@ class Linker {
         }
     }
 
-    exportAsWebGL(kernelName: string): string {
-        return this.exportAs(kernelName, 'WebGL');
+    exportAsWebGL(kernelName: string, version: WebGLVersion): string {
+        if (version === 2) {
+            return this.exportAs(kernelName, 'WebGL2');
+        } else {
+            return this.exportAs(kernelName, 'WebGL1');
+        }
     }
 
     exportAsJS(kernelName: string): string {
         return this.exportAs(kernelName, 'JS');
     }
 
-    exportAs(kernelName: string, language: Language): string {
+    private getKernelParts(kernelName: string): {
+        usedConstants: Map<string, KernelConstant>,
+        usedVariables: Map<string, KernelVariable>,
+        usedFunctions: Map<string, KernelFunction>
+    } {
         if (!this.functions.has(kernelName)) {
             throw new Error(`WebGL function ${kernelName} is not declared`);
         }
@@ -83,6 +93,39 @@ class Linker {
                 }
             }
         }
+
+        return {
+            usedConstants,
+            usedVariables,
+            usedFunctions
+        };
+    }
+
+    exportUniforms(kernelName: string): Map<string, Float32Array> {
+        const { usedConstants,
+                usedVariables } = this.getKernelParts(kernelName);
+
+        const uniforms = new Map<string, Float32Array>();
+
+        for (const kernel of usedConstants.values()) {
+            if (kernel.value instanceof Float32Array) {
+                uniforms.set(kernel.name, kernel.value);
+            }
+        }
+
+        for (const kernel of usedVariables.values()) {
+            if (kernel.value instanceof Float32Array) {
+                uniforms.set(kernel.name, kernel.value);
+            }
+        }
+
+        return uniforms;
+    }
+
+    exportAs(kernelName: string, language: Language): string {
+        const { usedConstants,
+                usedVariables,
+                usedFunctions } = this.getKernelParts(kernelName);
 
         // transform into code
         const constantCode = Array.from(usedConstants.values())

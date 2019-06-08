@@ -1,7 +1,7 @@
 
-export type TransformFunc = (<T extends Node, TT extends Node>(child: T, parent: TT) => T);
+import { Language } from '../defintions';
 
-declare type Language = 'WebGL' | 'JS';
+export type TransformFunc = (<T extends Node, TT extends Node>(child: T, parent: TT) => T);
 
 export interface NodeInterface {
     readonly _nodetype: string;
@@ -27,7 +27,9 @@ export abstract class Node implements NodeInterface {
 
     exportAs(language: Language): string {
         switch (language) {
-            case 'WebGL':
+            case 'WebGL1':
+                return this.exportAsWebGL();
+            case 'WebGL2':
                 return this.exportAsWebGL();
             case 'JS':
                 return this.exportAsJS();
@@ -37,7 +39,7 @@ export abstract class Node implements NodeInterface {
     }
 
     exportAsWebGL(): string {
-        return this.exportAs('WebGL');
+        return this.exportAs('WebGL2');
     }
 
     exportAsJS(): string {
@@ -147,7 +149,10 @@ export class Decl extends Node implements DeclInterface {
     exportAsWebGL(): string {
         const stroage = this.storage.join(' ');
         const type = this.type.exportAsWebGL();
-        const init = this.init === null ? '' : `= ${this.init.exportAsWebGL()}`;
+        let init = '';
+        if (this.init !== null) {
+            init = `= ${this.init.exportAsWebGL()}`;
+        }
 
         return `${stroage} ${type} ${init}`.trim();
     }
@@ -587,7 +592,8 @@ export class Cast extends Node implements CastInterface {
     }
 
     exportAsWebGL(): string {
-        return `(${this.to_type.exportAsWebGL()})${this.expr.exportAsWebGL()}`;
+        return (`(${this.to_type.exportAsWebGL()})` +
+                `${this.expr.exportAsWebGL()}`);
     }
 
     exportAsJS(): string {
