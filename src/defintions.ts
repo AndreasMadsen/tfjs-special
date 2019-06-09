@@ -105,10 +105,10 @@ export class KernelVariable extends KernelGlobal implements KernelVariableInterf
 
     exportAsJS(): string {
         if (this.value instanceof Float32Array) {
-            return `const ${this.name} = ` +
+            return `let ${this.name} = ` +
                 `new Float32Array([${this.valueString}]);`;
         } else {
-            return `const ${this.name} = ${this.valueString};`;
+            return `let ${this.name} = ${this.valueString};`;
         }
     }
 }

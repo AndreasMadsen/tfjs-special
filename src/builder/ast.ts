@@ -146,25 +146,29 @@ export class Decl extends Node implements DeclInterface {
         return this;
     }
 
+    exportAsParameter(language: Language) {
+        const type = this.type.exportAs(language);
+        const init = (this.init === null ?
+            '' :
+            `= ${this.init.exportAs(language)}`);
+
+        return `${type} ${init}`.trim();
+    }
+
     exportAsWebGL(): string {
         const stroage = this.storage.join(' ');
-        const type = this.type.exportAsWebGL();
-        let init = '';
-        if (this.init !== null) {
-            init = `= ${this.init.exportAsWebGL()}`;
-        }
+        const decl = this.exportAsParameter('WebGL2');
 
-        return `${stroage} ${type} ${init}`.trim();
+        return `${stroage} ${decl}`.trim();
     }
 
     exportAsJS(): string {
-        const type = this.type.exportAsJS();
-        const init = this.init === null ? '' : `= ${this.init.exportAsJS()}`;
+        const decl = this.exportAsParameter('JS');
 
         if (this.type instanceof FuncDecl) {
-            return `function ${type} ${init}`.trim();
+            return `function ${decl}`.trim();
         } else {
-            return `let ${type} ${init}`.trim();
+            return `let ${decl}`.trim();
         }
     }
 }
@@ -466,7 +470,12 @@ export class ParamList extends Node implements ParamListInterface {
 
     exportAs(language: Language): string {
         const params = this.params
-            .map((param) => param.exportAs(language)).join(', ');
+            .map((param) => (
+                param instanceof Decl ?
+                param.exportAsParameter(language) :
+                param.exportAs(language)
+            ))
+            .join(', ');
         return `(${params})`;
     }
 }
