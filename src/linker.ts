@@ -1,5 +1,6 @@
 
 import { Language, WebGLVersion,
+         KernelFunctionSignature,
          KernelConstant, KernelVariable,
          KernelFunction, KernelPart } from './defintions';
 
@@ -26,6 +27,14 @@ class Linker {
         }
     }
 
+    getSignature(kernelName: string): KernelFunctionSignature {
+        if (!this.functions.has(kernelName)) {
+            throw new Error(`function ${kernelName} is not declared`);
+        }
+
+        return this.functions.get(kernelName).signature;
+    }
+
     exportAsWebGL(kernelName: string, version: WebGLVersion): string {
         if (version === 2) {
             return this.exportAs(kernelName, 'WebGL2');
@@ -44,7 +53,7 @@ class Linker {
         usedFunctions: Map<string, KernelFunction>
     } {
         if (!this.functions.has(kernelName)) {
-            throw new Error(`WebGL function ${kernelName} is not declared`);
+            throw new Error(`function ${kernelName} is not declared`);
         }
 
         const usedConstants = new Map<string, KernelConstant>();
@@ -67,7 +76,7 @@ class Linker {
 
             for (const constantName of thisFunction.constants) {
                 if (!this.constants.has(constantName)) {
-                    throw new Error(`WebGL constant ${constantName} used `+
+                    throw new Error(`constant ${constantName} used `+
                                     `by ${thisFunction.name} is not declared`);
                 }
                 usedConstants.set(constantName,
@@ -76,7 +85,7 @@ class Linker {
 
             for (const variableName of thisFunction.variables) {
                 if (!this.variables.has(variableName)) {
-                    throw new Error(`WebGL variable ${variableName} used `+
+                    throw new Error(`variable ${variableName} used `+
                                     `by ${thisFunction.name} is not declared`);
                 }
                 usedVariables.set(variableName,
@@ -85,7 +94,7 @@ class Linker {
 
             for (const functionName of thisFunction.dependencies) {
                 if (!this.functions.has(functionName)) {
-                    throw new Error(`WebGL function ${functionName} used `+
+                    throw new Error(`function ${functionName} used `+
                                     `by ${thisFunction.name} is not declared`);
                 }
                 if (!usedFunctions.has(functionName)) {

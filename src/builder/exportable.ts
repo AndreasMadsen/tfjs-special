@@ -1,5 +1,9 @@
 
-import { KernelGlobal, KernelFunction, KernelConstant, KernelVariable } from '../defintions';
+import {
+    KernelGlobal,
+    KernelFunction, KernelConstant, KernelVariable,
+    KernelFunctionSignatureArgumentInterface
+} from '../defintions';
 import {
     FileAST, Node,
     Decl, ArrayDecl, TypeDecl, FuncDecl,
@@ -17,7 +21,9 @@ function getValueFromExpression(node: Node) {
     return str;
 }
 
-function tsStringifyValue(array: string | string[]) {
+function tsStringifyValue(
+    array: string | string[] | KernelFunctionSignatureArgumentInterface
+): string {
     return JSON.stringify(array).replace(/"/g, '\'');
 }
 
@@ -127,19 +133,15 @@ export class ExportableKernelVariable extends ExportableKernelGlobal implements 
 }
 
 export class ExportableKernelFunction extends KernelFunction implements ExportableInterface {
-    name: string;
-    dependencies: string[];
-    constants: string[];
-    variables: string[];
-    code: string;
-
     constructor(allFunctions: Set<string>, allConstants: Set<string>,
                 allVariables: Set<string>, node: FuncDef) {
-        const name = node.decl.name;
+        if (!(node.decl.type instanceof FuncDecl)) {
+            throw new TypeError('expected FuncDecl type');
+        }
+
         const dependencies = new Set<string>();
         const constants = new Set<string>();
         const variables = new Set<string>();
-        const signatureWebGL = node.decl.type.exportAsWebGL();
         const codeWebGL = node.exportAsWebGL();
         const codeJS = node.exportAsJS();
 
@@ -158,12 +160,28 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
             return child;
         });
 
+        let parameters: Decl[] = [];
+        if (node.decl.type.args !== null) {
+            parameters = node.decl.type.args.params
+                .filter((arg): arg is Decl => arg instanceof Decl);
+        }
+
+        const signature = {
+            'name': node.decl.name,
+            'type': node.decl.type.type.type.exportAsWebGL(),
+            'arguments': parameters
+                .map((arg, index) => ({
+                    'name': arg.name,
+                    'type': arg.type.type.exportAsWebGL(),
+                    'index': index
+                }))
+        };
+
         super({
-            'name': name,
             'dependencies': Array.from(dependencies),
             'constants': Array.from(constants),
             'variables': Array.from(variables),
-            'signatureWebGL': signatureWebGL,
+            'signature': signature,
             'codeWebGL': codeWebGL,
             'codeJS': codeJS
         });
@@ -175,11 +193,18 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
 
     exportAsScript(): string {
         return `linker.add(new KernelFunction({\n` +
-        `  name: ${tsStringifyValue(this.name)},\n` +
         `  dependencies: ${tsStringifyValue(this.dependencies)},\n` +
         `  constants: ${tsStringifyValue(this.constants)},\n` +
         `  variables: ${tsStringifyValue(this.variables)},\n` +
-        `  signatureWebGL: ${tsStringifyValue(this.signatureWebGL)},\n` +
+        `  signature: {\n` +
+        `    name: ${tsStringifyValue(this.signature.name)},\n` +
+        `    type: ${tsStringifyValue(this.signature.type)},\n` +
+        `    arguments: [\n` +
+        `      ${this.signature.arguments
+                  .map((arg) => tsStringifyValue(arg))
+                  .join(',\n      ')},\n` +
+        `    ],\n` +
+        `  },\n` +
         `  codeWebGL: \`${this.codeWebGL}\`,\n` +
         `  codeJS: \`${this.codeJS}\`,\n` +
         `}));`;

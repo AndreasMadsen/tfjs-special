@@ -3,31 +3,46 @@ import { linker } from './linker';
 
 // Add type cast functions
 linker.add(new KernelFunction({
-    name: 'float',
+    signature: {
+        name: 'float',
+        type: 'float',
+        arguments: [
+            {name: 'value', type: 'T', index: 0}
+        ]
+    },
     dependencies: [],
     constants: [],
     variables: [],
-    signatureWebGL: null,
     codeWebGL: null,
     codeJS: `function float(value) { return value; }`,
 }));
 
 linker.add(new KernelFunction({
-    name: 'int',
     dependencies: [],
     constants: [],
     variables: [],
-    signatureWebGL: null,
+    signature: {
+        name: 'int',
+        type: 'int',
+        arguments: [
+            {name: 'value', type: 'T', index: 0}
+        ]
+    },
     codeWebGL: null,
     codeJS: `function int(value) { return value | 0; }`,
 }));
 
 linker.add(new KernelFunction({
-    name: 'bool',
+    signature: {
+        name: 'bool',
+        type: 'bool',
+        arguments: [
+            {name: 'value', type: 'T', index: 0}
+        ]
+    },
     dependencies: [],
     constants: [],
     variables: [],
-    signatureWebGL: null,
     codeWebGL: null,
     codeJS: `function bool(value) { return (value !== 0); }`,
 }));
@@ -37,30 +52,46 @@ for (const name of ['sin', 'cos', 'tan', 'asin', 'acos', 'atan',
                     'pow', 'exp', 'log', 'log2', 'sqrt',
                     'floor', 'ceil']) {
     linker.add(new KernelFunction({
-        name,
+        signature: {
+            name,
+            type: 'T',
+            arguments: [
+                {name: 'value', type: 'T', index: 0}
+            ]
+        },
         dependencies: [],
         constants: [],
         variables: [],
-        signatureWebGL: null,
         codeWebGL: null,
         codeJS: `function ${name}(value) { return Math.${name}(value); }`,
     }));
 }
 linker.add(new KernelFunction({
-    name: 'atan2',
+    signature: {
+        name: 'atan2',
+        type: 'float',
+        arguments: [
+            {name: 'x', type: 'float', index: 0},
+            {name: 'y', type: 'float', index: 0}
+        ]
+    },
     dependencies: [],
     constants: [],
     variables: [],
-    signatureWebGL: `atan2(float x, float y) { return atan(x, y); }`,
     codeWebGL: `atan2(float x, float y) { return atan(x, y); }`,
     codeJS: `function atan2(x, y) { return Math.atan2(x, y); }`,
 }));
 linker.add(new KernelFunction({
-    name: 'exp2',
+    signature: {
+        name: 'exp2',
+        type: 'float',
+        arguments: [
+            {name: 'value', type: 'float', index: 0}
+        ]
+    },
     dependencies: [],
     constants: [],
     variables: [],
-    signatureWebGL: null,
     codeWebGL: null,
     codeJS: `function exp2(value) { return Math.pow(2, value); }`,
 }));
@@ -69,12 +100,17 @@ linker.add(new KernelFunction({
 linker.add(new (class IsOddKernelFunction extends KernelFunction {
     constructor() {
         super({
-            name: 'is_odd',
+            signature: {
+                name: 'is_odd',
+                type: 'int',
+                arguments: [
+                    {name: 'value', type: 'int', index: 0}
+                ]
+            },
             dependencies: [],
             constants: [],
             variables: [],
-            signatureWebGL: `int is_odd(int value)`,
-            codeWebGL: null,
+            codeWebGL: `// replaced by exportAsWebGL`,
             codeJS: `function is_odd(value) { return value & 1; }`
         });
     }
@@ -93,11 +129,16 @@ linker.add(new (class IsOddKernelFunction extends KernelFunction {
 
 // Add error function
 linker.add(new KernelFunction({
-    name: 'mtherr',
+    signature: {
+        name: 'mtherr',
+        type: 'void',
+        arguments: [
+            {name: 'code', type: 'int', index: 0}
+        ]
+    },
     dependencies: [],
     constants: [],
     variables: [],
-    signatureWebGL: `void mtherr(int code)`,
     codeWebGL: `void mtherr(int code) { }`,
     codeJS: `function mtherr(code) { }`,
 }));
@@ -105,11 +146,18 @@ linker.add(new KernelFunction({
 // Add array functions
 for (let i = 1; i <= 20; i++) {
     linker.add(new KernelFunction({
-        name: `chbevlf_${i}`,
+        signature: {
+            name: `chbevlf_${i}`,
+            type: 'float',
+            arguments: [
+                {name: 'x', type: 'float', index: 0},
+                {name: 'array', type: `float[${i}]`, index: 2},
+                {name: 'n', type: 'int', index: 2}
+            ]
+        },
         dependencies: [],
         constants: [],
         variables: [],
-        signatureWebGL: `float chbevlf_${i}(float x, float array[${i}], int n)`,
         codeWebGL:
         `float chbevlf_${i}(float x, float array[${i}], int n) {
             float b0 = array[0];
@@ -139,11 +187,18 @@ for (let i = 1; i <= 20; i++) {
     }));
 
     linker.add(new KernelFunction({
-        name: `polevlf_${i}`,
+        signature: {
+            name: `polevlf_${i}`,
+            type: 'float',
+            arguments: [
+                {name: 'xx', type: 'float', index: 0},
+                {name: 'coef', type: `float[${i}]`, index: 2},
+                {name: 'N', type: 'int', index: 2}
+            ]
+        },
         dependencies: [],
         constants: [],
         variables: [],
-        signatureWebGL: `float polevlf_${i}(float xx, float coef[${i}], int N)`,
         codeWebGL:
         `float polevlf_${i}(float xx, float coef[${i}], int N) {
             float ans = coef[0];
@@ -165,11 +220,18 @@ for (let i = 1; i <= 20; i++) {
     }));
 
     linker.add(new KernelFunction({
-        name: `p1evlf_${i}`,
+        signature: {
+            name: `p1evlf_${i}`,
+            type: 'float',
+            arguments: [
+                {name: 'xx', type: 'float', index: 0},
+                {name: 'coef', type: `float[${i}]`, index: 2},
+                {name: 'N', type: 'int', index: 2}
+            ]
+        },
         dependencies: [],
         constants: [],
         variables: [],
-        signatureWebGL: `float p1evlf_${i}(float xx, float coef[${i}], int N)`,
         codeWebGL:
         `float p1evlf_${i}(float xx, float coef[${i}], int N) {
             float ans = (xx + coef[0]);

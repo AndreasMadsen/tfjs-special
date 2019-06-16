@@ -3,21 +3,30 @@ import * as tfc from '@tensorflow/tfjs-core';
 
 import { linker } from '../linker';
 import { Evaluator } from './abstract';
+import { broadcastedOp } from './broadcast';
 
 export class CPUEvaluator extends Evaluator {
-    private program: (x: number) => number;
+    private program: (...scalars: Array<number | string>) => number;
 
     constructor(fnname: string) {
         super(fnname);
 
+        const signature = linker.getSignature(fnname);
+        const argumentsAsString = signature.arguments
+            .map((arg) => arg.name)
+            .join(', ');
+
         const sourceCode = `
             'strict mode';
 
+            const NAN = Number.NaN;
+            const INFINITY = Number.Infinity;
+
             ${linker.exportAsJS(fnname)}
 
-            function main(x) {
+            function main(${argumentsAsString}) {
                 sgngamf = 0; // Reset global variables
-                return gammaf(x);
+                return ${signature.name}(${argumentsAsString});
             }
 
             return main;
@@ -26,15 +35,7 @@ export class CPUEvaluator extends Evaluator {
         this.program = (new Function(sourceCode))();
     }
 
-    run<R extends tfc.Rank>(input: tfc.Tensor<R>): tfc.Tensor<R> {
-        const values = input.dataSync<'float32'>();
-        const newValues = new Float32Array(values.length);
-
-        for (let i = 0; i < values.length; ++i) {
-            const value = values[i];
-            newValues[i] = this.program(value);
-        }
-
-        return tfc.Tensor.make(input.shape, {values: newValues});
+    run(...inputs: tfc.Tensor[]): tfc.Tensor {
+        return broadcastedOp(inputs, 'float32', this.program);
     }
 }

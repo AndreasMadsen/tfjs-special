@@ -8,5 +8,5 @@ export abstract class Evaluator {
         this.name = fnmame;
     }
 
-    abstract run<R extends tfc.Rank>(input: tfc.Tensor<R>): tfc.Tensor<R>;
+    abstract run(...inputs: tfc.Tensor[]): tfc.Tensor;
 }
