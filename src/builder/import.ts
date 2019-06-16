@@ -7,8 +7,10 @@ import { castToCall } from './transform/cast-to-call';
 import { editMtherr } from './transform/edit-mtherr';
 import { eliminateGoto } from './transform/eliminate-goto';
 import { explicitTypeConversion } from './transform/explicit-type-conversion';
+import { removeStaticVariableStroage } from './transform/remove-static-variable-storage';
 import { renameStatic } from './transform/rename-static';
 import { ternaryToAbs } from './transform/ternary-to-abs';
+import { unrollRecursiveCall } from './transform/unroll-recursive-call';
 import { upgradeFunctionDefs } from './transform/upgrade-function-defs';
 import { useBuiltinMath } from './transform/use-builtin-math';
 import { useStaticSizeArrayFunctions } from './transform/use-static-size-array-functions';
@@ -35,8 +37,10 @@ export function importAstFromSourceCode(
     ast = editMtherr(ast);
     ast = useStaticSizeArrayFunctions(ast);
     ast = explicitTypeConversion(ast);
+    ast = removeStaticVariableStroage(ast);
     ast = renameStatic(basename, ast);
     ast = ternaryToAbs(ast);
+    ast = unrollRecursiveCall(basename, ast);
     ast = whileToFor(ast);
 
     ast = eliminateGoto(ast);
