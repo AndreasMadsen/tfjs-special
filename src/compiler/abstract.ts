@@ -9,4 +9,5 @@ export abstract class Evaluator {
     }
 
     abstract run(...inputs: tfc.Tensor[]): tfc.Tensor;
+    abstract runUnary<R extends tfc.Rank>(input: tfc.Tensor<R>): tfc.Tensor<R>;
 }

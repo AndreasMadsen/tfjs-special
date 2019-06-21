@@ -116,4 +116,12 @@ export class WebGLEvaluator extends Evaluator {
         const webglBackend = tfc.backend() as tfc.webgl.MathBackendWebGL;
         return webglBackend.compileAndRun(program, inputs);
     }
+
+    runUnary<R extends tfc.Rank>(input: tfc.Tensor<R>): tfc.Tensor<R> {
+        const program = new this.program(
+            input.shape, this.variableNames, this.source, this.uniforms
+        );
+        const webglBackend = tfc.backend() as tfc.webgl.MathBackendWebGL;
+        return webglBackend.compileAndRun(program, [input]);
+    }
 }
