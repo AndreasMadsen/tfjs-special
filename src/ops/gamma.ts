@@ -4,17 +4,20 @@ import { compile } from '../compiler';
 import { runKernel } from './_define_op';
 
 export function gamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
-    const gamma = compile('gammaf');
+    const gammaKernel = compile('gammaf');
     return runKernel(
         function forwardFunc([x], save) {
-            const out = gamma.runUnary(x);
-            save([x, out]);
-            return out;
+            // NOTE: saving the gamma output here, prevents
+            // backpropergation as only the tensor output is stored
+            // as a constant and not as a function result. This
+            // is possibly a bug in tfjs-core.
+            save([x]);
+            return gammaKernel.runUnary(x);
         },
         function backwardPass(
-            dy, [x, out]: Array<tfc.Tensor<R>>
+            dy, [x]: Array<tfc.Tensor<R>>
         ): Array<tfc.Tensor<R>> {
-            return [dy.mul(digamma(x).mul(out))];
+            return [dy.mul(digamma(x).mul(gamma(x)))];
         },
         [x]
     ) as tfc.Tensor<R>;
