@@ -49,7 +49,7 @@ linker.add(new KernelFunction({
 
 // Add bultin math functions
 for (const name of ['sin', 'cos', 'tan', 'asin', 'acos', 'atan',
-                    'pow', 'exp', 'log', 'log2', 'sqrt',
+                    'exp', 'log', 'log2', 'sqrt',
                     'floor', 'ceil']) {
     linker.add(new KernelFunction({
         signature: {
@@ -66,6 +66,21 @@ for (const name of ['sin', 'cos', 'tan', 'asin', 'acos', 'atan',
         codeJS: `function ${name}(value) { return Math.${name}(value); }`,
     }));
 }
+linker.add(new KernelFunction({
+    signature: {
+        name: 'pow',
+        type: 'float',
+        arguments: [
+            {name: 'x', type: 'float', index: 0},
+            {name: 'n', type: 'float', index: 0}
+        ]
+    },
+    dependencies: [],
+    constants: [],
+    variables: [],
+    codeWebGL: null,
+    codeJS: `function pow(x, n) { return Math.pow(x, n); }`,
+}));
 linker.add(new KernelFunction({
     signature: {
         name: 'atan2',
