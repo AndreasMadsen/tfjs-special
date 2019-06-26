@@ -1,17 +1,38 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 
+import { Evaluator } from './abstract';
 import { CPUEvaluator } from './cpu';
 import { WebGLEvaluator } from './webgl';
 
 import { WebGLVersion } from '../defintions';
 
-const defaultWebGLVersion = tfc.ENV.getNumber('WEBGL_VERSION') as WebGLVersion;
+const cache = [
+    new Map<string, Evaluator>(),
+    new Map<string, Evaluator>(),
+    new Map<string, Evaluator>()
+];
 
 export function compile(
     fnname: string,
-    webGLVersion: WebGLVersion = defaultWebGLVersion
+    webGLVersion: 0 | 1 | 2 = null
 ) {
-    const evaluator = webGLVersion > 0 ? WebGLEvaluator : CPUEvaluator;
-    return new evaluator(fnname, webGLVersion);
+    if (webGLVersion === null) {
+        webGLVersion = tfc.getBackend() === 'cpu'
+            ? 0
+            : tfc.ENV.getNumber('WEBGL_VERSION') as WebGLVersion;
+    }
+
+    let kernel = cache[webGLVersion].get(fnname);
+
+    if (kernel === undefined) {
+        if (webGLVersion > 0) {
+            kernel = new WebGLEvaluator(fnname, webGLVersion as WebGLVersion);
+        } else {
+            kernel = new CPUEvaluator(fnname);
+        }
+        cache[webGLVersion].set(fnname, kernel);
+    }
+
+    return kernel;
 }
