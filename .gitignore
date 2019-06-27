@@ -1,3 +1,2 @@
-node_modules/
-tfjs-core/
-cephes/
+/node_modules
+/deps
