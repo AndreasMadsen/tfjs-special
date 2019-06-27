@@ -13,59 +13,34 @@ declare type UniformInfo = {
 
 declare type UniformMap = Map<string, UniformInfo>;
 
-class WebGL2Compiler implements tfc.webgl.GPGPUProgram {
+class WebGLCompiler implements tfc.webgl.GPGPUProgram {
     variableNames: string[];
     userCode: string;
     outputShape: number[];
-    uniforms: UniformMap;
 
     constructor(outputShape: number[],
                 variableNames: string[],
-                source: string,
-                uniforms: UniformMap) {
+                source: string) {
         this.outputShape = outputShape;
         this.variableNames = variableNames;
         this.userCode = source;
-        this.uniforms = uniforms;
     }
 }
-
-class WebGL1ompiler extends WebGL2Compiler {
-    customSetup(gpgpu: tfc.webgl.GPGPUContext,
-                webGLProgram: WebGLProgram): void {
-        const shouldThrow = false;
-        for (let [name, {loc, value}] of this.uniforms.entries()) {
-            if (loc === undefined) {
-                loc = gpgpu.getUniformLocation(
-                    webGLProgram, name, shouldThrow);
-                this.uniforms.set(name, { loc, value });
-            }
-            gpgpu.gl.uniform1fv(loc, value);
-        }
-    }
-}
-const webglCompiler = [null, WebGL1ompiler, WebGL2Compiler];
 
 export class WebGLEvaluator extends Evaluator {
+    private version: WebGLVersion;
     private variableNames: string[];
     private source: string;
     private uniforms: UniformMap;
 
-    private program: new(
-        outputShape: number[],
-        variableNames: string[],
-        source: string,
-        uniforms: UniformMap
-    ) => tfc.webgl.GPGPUProgram;
-
     constructor(fnname: string, version: WebGLVersion) {
         super(fnname);
-        this.program = webglCompiler[version];
+        this.version = version;
 
         // pre fetch uniforms, these will be used instead of const arrays
         // if the WebGLVersion < 1.
         this.uniforms = new Map();
-        if (version < 2) {
+        if (this.version < 2) {
             for (const [name, value] of linker.exportUniforms(fnname)) {
                 this.uniforms.set(name, { value });
             }
@@ -106,22 +81,46 @@ export class WebGLEvaluator extends Evaluator {
         `;
     }
 
+    private customSetup(gpgpu: tfc.webgl.GPGPUContext,
+                webGLProgram: WebGLProgram): void {
+        const shouldThrow = false;
+        for (let [name, {loc, value}] of this.uniforms.entries()) {
+            if (loc === undefined) {
+                loc = gpgpu.getUniformLocation(
+                    webGLProgram, name, shouldThrow);
+                this.uniforms.set(name, { loc, value });
+            }
+            gpgpu.gl.uniform1fv(loc, value);
+        }
+    }
+
+    private compileAndRun(
+        outputShape: number[], inputs: tfc.Tensor[]
+    ): tfc.Tensor {
+        const program = new WebGLCompiler(
+            outputShape, this.variableNames, this.source
+        );
+
+        const webglBackend = tfc.backend() as tfc.webgl.MathBackendWebGL;
+        if (this.version < 2) {
+            return webglBackend.compileAndRun(
+                program, inputs,
+                null, this.customSetup.bind(this));
+        } else {
+            return webglBackend.compileAndRun(
+                program, inputs);
+        }
+    }
+
     run(...inputs: tfc.Tensor[]): tfc.Tensor {
         const outputShape = assertAndGetBroadcastShape(
             ...inputs.map((t) => t.shape)
         );
-        const program = new this.program(
-            outputShape, this.variableNames, this.source, this.uniforms
-        );
-        const webglBackend = tfc.backend() as tfc.webgl.MathBackendWebGL;
-        return webglBackend.compileAndRun(program, inputs);
+
+        return this.compileAndRun(outputShape, inputs);
     }
 
     runUnary<R extends tfc.Rank>(input: tfc.Tensor<R>): tfc.Tensor<R> {
-        const program = new this.program(
-            input.shape, this.variableNames, this.source, this.uniforms
-        );
-        const webglBackend = tfc.backend() as tfc.webgl.MathBackendWebGL;
-        return webglBackend.compileAndRun(program, [input]);
+        return this.compileAndRun(input.shape, [input]) as tfc.Tensor<R>;
     }
 }
