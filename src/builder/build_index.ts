@@ -9,8 +9,6 @@ const imports = fs.readdirSync(path.resolve(__dirname, '../kernels'))
         return `import './${basename}';`;
     });
 
-imports.push(`import '../special_kernels';`);
-
 fs.writeFileSync(
     path.resolve(__dirname, '../kernels/index.ts'),
     imports.join('\n') + '\n'

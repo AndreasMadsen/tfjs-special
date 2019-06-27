@@ -1,6 +1,7 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 import '../kernels';
+import '../special_kernels';
 
 declare type SaveFunc<S extends tfc.Tensor[]> = (save: S) => void;
 
