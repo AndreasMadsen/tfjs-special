@@ -4,6 +4,8 @@ import { ExportableScript } from './exportable';
 import { importAstFromJson, FileAST } from './ast';
 import { binaryToOddCheck } from './transform/binary-to-odd-check';
 import { castToCall } from './transform/cast-to-call';
+import { constComparisonInFor } from './transform/const-comparion-in-for';
+import { declareForInitialization } from './transform/declare-for-initialization';
 import { editMtherr } from './transform/edit-mtherr';
 import { eliminateGoto } from './transform/eliminate-goto';
 import { explicitTypeConversion } from './transform/explicit-type-conversion';
@@ -33,6 +35,8 @@ export function importAstFromSourceCode(
     ast = useBuiltinMath(ast);
     ast = castToCall(ast);
 
+    ast = constComparisonInFor(ast);
+    ast = declareForInitialization(ast);
     ast = binaryToOddCheck(ast);
     ast = editMtherr(ast);
     ast = useStaticSizeArrayFunctions(ast);

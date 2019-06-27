@@ -1,27 +1,45 @@
-import { FileAST, Node, Decl, Expression,
+import { FileAST, Node, Decl, Expression, Compound,
          FuncDecl, ParamList, FuncDef, AllDecl, IdentifierType,
          TernaryOp, BinaryOp, UnaryOp,
          ID, Constant, FuncCall, If, Return, Assignment } from '../ast';
 
 declare type VariableMap = Map<string, string>;
 
-function addVariableDeclarations(content: Node[], variables: VariableMap) {
+function getTypeName(decl: Decl): string {
+    let type: AllDecl | IdentifierType = decl.type;
+    while (!(type instanceof IdentifierType)) {
+        type = type.type;
+    }
+
+    return type.names[0];
+}
+
+function addGlobalVariableDeclarations(
+    content: Node[], variables: VariableMap
+) {
     for (const node of content) {
         let decl = node;
         if (node instanceof FuncDef) {
             decl = node.decl;
         }
-        if (!(decl instanceof Decl)) {
-            continue;
+        if (decl instanceof Decl) {
+            variables.set(decl.name, getTypeName(decl));
         }
-
-        let type: AllDecl | IdentifierType = decl.type;
-        while (!(type instanceof IdentifierType)) {
-            type = type.type;
-        }
-
-        variables.set(decl.name, type.names[0]);
     }
+}
+
+function addLocalVariableDeclarations(
+    content: Compound, variables: VariableMap
+) {
+    content.transformChildren(
+        function scan<T extends Node>(child: T): T {
+            if (child instanceof Decl) {
+                variables.set(child.name, getTypeName(child));
+            }
+
+            return child.transformChildren(scan);
+        }
+    );
 }
 
 function addArgumentDeclarations(func: FuncDef, variables: VariableMap) {
@@ -177,14 +195,14 @@ export function explicitTypeConversion(ast: FileAST): FileAST {
     const globalVariables = new Map<string, string>();
     const functionVariables = new Map<string, Map<string, string>>();
 
-    addVariableDeclarations(ast.ext, globalVariables);
+    addGlobalVariableDeclarations(ast.ext, globalVariables);
 
     for (const func of ast.ext) {
         if (func instanceof FuncDef) {
             const variables = new Map<string, string>();
             functionVariables.set(func.decl.name, variables);
             addArgumentDeclarations(func, variables);
-            addVariableDeclarations(func.body.block_items, variables);
+            addLocalVariableDeclarations(func.body, variables);
         }
     }
 

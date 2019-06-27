@@ -1,5 +1,6 @@
 
-import { For, BlockInterface, Decl, ID } from '../ast';
+import { For, BlockInterface, Decl, ID, Compound,
+         CompoundInterface, Block, Expression, IfInterface } from '../ast';
 
 export function makeStaticFor(incrementerName: string, maxIter: number,
                               compound: BlockInterface): For {
@@ -60,4 +61,35 @@ export function makeStaticFor(incrementerName: string, maxIter: number,
         },
         stmt: compound
     });
+}
+
+export function convertBlockToCompound(stmt: Block): CompoundInterface {
+    // convert CompoundItem to Compound
+    if (stmt instanceof Compound) {
+        return stmt;
+    }
+
+    return {
+        _nodetype: 'Compound',
+        coord: 'transform/while-to-for.ts',
+        block_items: [stmt]
+    };
+}
+
+export function convertCondToIfBreak(cond: Expression): IfInterface {
+    return {
+        _nodetype: 'If',
+        coord: 'transform/while-to-for.ts',
+        cond: {
+            _nodetype: 'UnaryOp',
+            coord: 'transform/while-to-for.ts',
+            expr: cond,
+            op: '!'
+        },
+        iffalse: null,
+        iftrue: {
+            _nodetype: 'Break',
+            coord: 'transform/while-to-for.ts'
+        }
+    };
 }
