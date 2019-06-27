@@ -1,7 +1,5 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
-import { getBroadcastDims } from './boardcast_tfjs_copy';
-export { getBroadcastDims, getReductionAxes} from './boardcast_tfjs_copy';
 
 export function assertAndGetBroadcastShape(...inShapes: number[][]): number[] {
   const outShape: number[] = [];
@@ -67,7 +65,7 @@ export function broadcastedOp(
 
   // get dimentions which should be broadcasted
   const broadcastDims = inputs
-    .map((t) => getBroadcastDims(t.shape, outShape));
+    .map((t) => tfc.backend_util.getBroadcastDims(t.shape, outShape));
 
   //
   for (let i = 0; i < outputData.length; ++i) {
