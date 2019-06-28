@@ -2,13 +2,19 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { importExportableFromSourceCode } from './import';
+import { importAstFromSourceCode } from './import';
+import { ExportableScript } from './exportable';
 
-const inputFile = process.argv[2];
-const outputFile = process.argv[3];
+const KERNELDIR = path.resolve(__dirname, '../kernels');
 
-const basename = path.basename(inputFile, '.json');
-const source = fs.readFileSync(inputFile, 'utf-8');
+for (const inputFile of process.argv.slice(2)) {
+    console.log(`transpiling ${inputFile}`);
 
-const exportable = importExportableFromSourceCode(basename, source);
-fs.writeFileSync(outputFile, exportable.exportAsScript());
+    const basename = path.basename(inputFile, '.json');
+    const outputFile = path.join(KERNELDIR, basename + '.ts');
+    const source = fs.readFileSync(inputFile, 'utf-8');
+
+    const ast = importAstFromSourceCode(basename, source);
+    const exportable = new ExportableScript(ast);
+    fs.writeFileSync(outputFile, exportable.exportAsScript());
+}
