@@ -3,7 +3,7 @@ import * as tfc from '@tensorflow/tfjs-core';
 
 import { linker } from '../linker';
 import { Evaluator } from './abstract';
-import { broadcastedOp } from './broadcast';
+import { broadcastedOp } from '../broadcast';
 
 export class CPUEvaluator extends Evaluator {
     private program: (...scalars: Array<number | string>) => number;
