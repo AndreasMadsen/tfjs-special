@@ -4,11 +4,11 @@ import * as tfc from '@tensorflow/tfjs-core';
 import { WebGLVersion } from '../defintions';
 import { linker } from '../linker';
 import { Evaluator } from './abstract';
-import { assertAndGetBroadcastShape } from './broadcast';
+import { assertAndGetBroadcastShape } from '../broadcast';
 
 declare type UniformInfo = {
     value: Float32Array,
-    loc?: WebGLUniformLocation
+    loc: Map<string, WebGLUniformLocation>
 };
 
 declare type UniformMap = Map<string, UniformInfo>;
@@ -42,7 +42,7 @@ export class WebGLEvaluator extends Evaluator {
         this.uniforms = new Map();
         if (this.version < 2) {
             for (const [name, value] of linker.exportUniforms(fnname)) {
-                this.uniforms.set(name, { value });
+                this.uniforms.set(name, { value, loc: new Map() });
             }
         }
 
@@ -81,21 +81,35 @@ export class WebGLEvaluator extends Evaluator {
         `;
     }
 
-    private customSetup(gpgpu: tfc.webgl.GPGPUContext,
-                webGLProgram: WebGLProgram): void {
+    private makeProgramLocKey(
+        inputs: tfc.Tensor[], outputShape: number[]
+    ): string {
+        return [
+            ...inputs.map((t) => t.shape.join(',')),
+            outputShape.join(',')
+        ].join('|');
+    }
+
+    private customSetup(
+        programLocKey: string,
+        gpgpu: tfc.webgl.GPGPUContext,
+        webGLProgram: WebGLProgram
+    ): void {
         const shouldThrow = false;
-        for (let [name, {loc, value}] of this.uniforms.entries()) {
-            if (loc === undefined) {
-                loc = gpgpu.getUniformLocation(
+        for (const [name, {loc, value}] of this.uniforms.entries()) {
+            let locValue = loc.get(programLocKey);
+            // Fetch if cache is empty
+            if (locValue === undefined) {
+                locValue = gpgpu.getUniformLocation(
                     webGLProgram, name, shouldThrow);
-                this.uniforms.set(name, { loc, value });
+                loc.set(programLocKey, locValue);
             }
-            gpgpu.gl.uniform1fv(loc, value);
+            gpgpu.gl.uniform1fv(locValue, value);
         }
     }
 
     private compileAndRun(
-        outputShape: number[], inputs: tfc.Tensor[]
+        inputs: tfc.Tensor[], outputShape: number[]
     ): tfc.Tensor {
         const program = new WebGLCompiler(
             outputShape, this.variableNames, this.source
@@ -104,8 +118,14 @@ export class WebGLEvaluator extends Evaluator {
         const webglBackend = tfc.backend() as tfc.webgl.MathBackendWebGL;
         if (this.version < 2) {
             return webglBackend.compileAndRun(
-                program, inputs,
-                null, this.customSetup.bind(this));
+                program,
+                inputs,
+                null,
+                (gpgpu, program) => this.customSetup(
+                    this.makeProgramLocKey(inputs, outputShape),
+                    gpgpu,
+                    program)
+            );
         } else {
             return webglBackend.compileAndRun(
                 program, inputs);
@@ -117,10 +137,10 @@ export class WebGLEvaluator extends Evaluator {
             ...inputs.map((t) => t.shape)
         );
 
-        return this.compileAndRun(outputShape, inputs);
+        return this.compileAndRun(inputs, outputShape);
     }
 
     runUnary<R extends tfc.Rank>(input: tfc.Tensor<R>): tfc.Tensor<R> {
-        return this.compileAndRun(input.shape, [input]) as tfc.Tensor<R>;
+        return this.compileAndRun([input], input.shape) as tfc.Tensor<R>;
     }
 }
