@@ -1,5 +1,6 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
+import { assertAndGetBroadcastShape } from '../broadcast';
 import '../kernels';
 import '../special_kernels';
 
@@ -21,4 +22,30 @@ export function runKernel<
         };
     });
     return op(...inputs);
+}
+
+export function reduceGradient<
+    G extends tfc.Tensor[],
+    I extends number[][]
+>(grad: G, inputShapes: I): G {
+    const outShape = assertAndGetBroadcastShape(
+        ...inputShapes
+    );
+
+    return grad.map(function reduce(grad, index) {
+        const inputShape = inputShapes[index];
+
+        if (grad === null) {
+            grad = tfc.zeros(inputShape);
+        }
+
+        const reduceAxes = tfc.backend_util
+            .getReductionAxes(inputShape, outShape);
+
+        if (reduceAxes.length > 0) {
+            grad = grad.sum(reduceAxes).reshape(inputShape);
+        }
+
+        return grad;
+    }) as G;
 }
