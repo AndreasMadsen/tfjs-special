@@ -1,39 +1,35 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 import { compile } from '../compiler';
-import { runKernel } from './_define_op';
+import { runKernel, reduceGradient } from './_define_op';
 
-export function gamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
-    const gammaKernel = compile('gammaf');
+export function lgamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
+    const lgamKernel = compile('lgamf');
     return runKernel(
         function forwardFunc([x], save) {
-            // NOTE: saving the gamma output here, prevents
-            // backpropergation as only the tensor output is stored
-            // as a constant and not as a function result. This
-            // is possibly a bug in tfjs-core.
             save([x]);
-            return gammaKernel.runUnary(x);
+            return lgamKernel.runUnary(x);
         },
         function backwardPass(
             dy, [x]: Array<tfc.Tensor<R>>
         ): Array<tfc.Tensor<R>> {
-            return [dy.mul(digamma(x).mul(gamma(x)))];
+            return [dy.mul(digamma(x))];
         },
         [x]
     ) as tfc.Tensor<R>;
 }
 
 export function digamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
-    const digamma = compile('psif');
+    const digammaKernel = compile('psif');
     return runKernel(
         function forwardFunc([x], save) {
             save([x]);
-            return digamma.runUnary(x);
+            return digammaKernel.runUnary(x);
         },
         function backwardPass(
             dy, [x]: Array<tfc.Tensor<R>>
         ): Array<tfc.Tensor<R>> {
-            return [dy.mul(polygamma(1, x))];
+            return [dy.mul(fast_polygamma_positive_scalar_order(1, x))];
         },
         [x]
     ) as tfc.Tensor<R>;
@@ -42,27 +38,63 @@ export function digamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
 // The polygamma function can be expressed as:
 // psi^{(m)}(x) = (-1)^(m+1) * m! * zeta(m+1, x)
 // See: https://en.wikipedia.org/wiki/Polygamma_function
-//
-// This is not a part of dephes and thus not exposed directly, however it
-// can be computed using tf.grad((x) => digamma(x)) and higher order gradients.
-function polygamma<R extends tfc.Rank>(
-    order: number, x: tfc.Tensor<R>
-): tfc.Tensor<R> {
-    const gamma = compile('gammaf');
-    const zeta = compile('zetaf');
+export function polygamma(
+    m: tfc.Tensor, x: tfc.Tensor
+): tfc.Tensor {
+    const digammaKernel = compile('psif');
+    const gammaKernel = compile('gammaf');
+    const zetaKernel = compile('zetaf');
+    return runKernel(
+        function forwardFunc([m, x], save) {
+            save([m, x]);
+            const mequal0 = digammaKernel.runUnary(x)
+                .mul(tfc.onesLike(m));
+
+            const mp1 = m.add(1);
+            const mabove0 = tfc.pow(-1, mp1)
+                .mul(gammaKernel.runUnary(mp1))
+                .mul(zetaKernel.run(mp1, x));
+
+            return tfc.where(
+                m.add(tfc.zerosLike(x)).equal(0),
+                mequal0,
+                mabove0
+            );
+        },
+        function backwardPass(
+            dy, [m, x]: tfc.Tensor[]
+        ): tfc.Tensor[] {
+            return reduceGradient([
+                null,
+                dy.mul(polygamma(m.add(1), x))
+            ], [m.shape, x.shape]);
+        },
+        [m, x]
+    );
+}
+
+// Assumes number is a scalar above 0, this avoids computing both
+// psi and zeta.
+function fast_polygamma_positive_scalar_order(
+    order: number /* > 0 */, x: tfc.Tensor
+): tfc.Tensor {
+    const gammaKernel = compile('gammaf');
+    const zetaKernel = compile('zetaf');
     return runKernel(
         function forwardFunc([x], save) {
             save([x]);
             const mp1 = tfc.scalar(order + 1);
             return tfc.pow(-1, mp1)
-                .mul(gamma.runUnary(mp1))
-                .mul(zeta.run(mp1, x));
+                .mul(gammaKernel.runUnary(mp1))
+                .mul(zetaKernel.run(mp1, x));
         },
         function backwardPass(
-            dy, [x]: Array<tfc.Tensor<R>>
-        ): Array<tfc.Tensor<R>> {
-            return [dy.mul(polygamma(order + 1, x))];
+            dy, [x]: tfc.Tensor[]
+        ): tfc.Tensor[] {
+            return [
+                dy.mul(polygamma(tfc.scalar(order + 1), x))
+            ];
         },
         [x]
-    ) as tfc.Tensor<R>;
+    );
 }

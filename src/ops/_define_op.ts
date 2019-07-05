@@ -36,12 +36,11 @@ export function reduceGradient<
         const inputShape = inputShapes[index];
 
         if (grad === null) {
-            grad = tfc.zeros(inputShape);
+            return tfc.zeros(inputShape);
         }
 
         const reduceAxes = tfc.backend_util
             .getReductionAxes(inputShape, outShape);
-
         if (reduceAxes.length > 0) {
             grad = grad.sum(reduceAxes).reshape(inputShape);
         }
