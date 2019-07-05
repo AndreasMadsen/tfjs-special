@@ -178,7 +178,7 @@ for (let i = 1; i <= 20; i++) {
             float b0 = array[0];
             float b1 = 0.0;
             float b2;
-            for (let i = 1; (i < ${i}); i++) {
+            for (int i = 1; (i < ${i}); i++) {
                 b2 = b1;
                 b1 = b0;
                 b0 = (((x * b1) - b2) + array[i]);
