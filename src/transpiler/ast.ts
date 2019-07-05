@@ -82,9 +82,9 @@ export abstract class Node implements NodeInterface {
 
 export declare type AllDeclInterface = (
     DeclInterface | TypeDeclInterface | FuncDeclInterface |
-    ArrayDeclInterface | PtrDeclInterface
+    ArrayDeclInterface | PtrDeclInterface | InOutDeclInterface
 );
-export declare type AllDecl = Decl | TypeDecl | FuncDecl | ArrayDecl | PtrDecl;
+export declare type AllDecl = Decl | TypeDecl | FuncDecl | ArrayDecl | PtrDecl | InOutDecl;
 
 export interface DeclInterface extends NodeInterface {
     readonly bitsize: null;
@@ -134,7 +134,10 @@ export class Decl extends Node implements DeclInterface {
         this.type = instantiate<
             AllDecl,
             AllDeclInterface
-        >(node.type, ['Decl', 'TypeDecl', 'FuncDecl', 'ArrayDecl', 'PtrDecl']);
+        >(node.type, [
+            'Decl', 'TypeDecl', 'FuncDecl',
+            'ArrayDecl', 'PtrDecl', 'InOutDecl'
+        ]);
     }
 
     transformChildren(transform: TransformFunc) {
@@ -380,6 +383,36 @@ export class PtrDecl extends Node implements PtrDeclInterface {
     }
 }
 
+export interface InOutDeclInterface extends NodeInterface {
+    type: TypeDeclInterface;
+}
+
+// Custom Decl type for supporting multiple return values
+export class InOutDecl extends Node implements InOutDeclInterface {
+    readonly _nodetype: 'InOutDecl';
+
+    type: TypeDecl;
+
+    constructor(node: InOutDeclInterface) {
+        super(node, 'InOutDecl');
+
+        this.type = new TypeDecl(node.type);
+    }
+
+    transformChildren(transform: TransformFunc) {
+        this.type = transform(this.type, this);
+        return this;
+    }
+
+    exportAsWebGL() {
+        return `inout ${this.type.exportAsWebGL()}`;
+    }
+
+    exportAsJS() {
+        return this.type.exportAsJS();
+    }
+}
+
 export interface InitListInterface extends NodeInterface {
     exprs: ExpressionInterface[];
 }
@@ -483,7 +516,7 @@ export class ParamList extends Node implements ParamListInterface {
 export interface TypenameInterface extends NodeInterface {
     readonly name: null;
     readonly quals: Node[];
-    type: TypeDeclInterface | PtrDeclInterface;
+    type: TypeDeclInterface | PtrDeclInterface | InOutDeclInterface;
 }
 
 export class Typename extends Node implements TypenameInterface {
@@ -491,7 +524,7 @@ export class Typename extends Node implements TypenameInterface {
 
     readonly name: null;
     readonly quals: Node[];
-    type: TypeDecl | PtrDecl;
+    type: TypeDecl | PtrDecl | InOutDecl;
 
     constructor(node: TypenameInterface) {
         super(node, 'Typename');
@@ -499,9 +532,9 @@ export class Typename extends Node implements TypenameInterface {
         this.name = this.assertNull(node.name);
         this.quals = this.assertEmpty(node.quals);
         this.type = instantiate<
-            TypeDecl | PtrDecl,
-            TypeDeclInterface | PtrDeclInterface
-        >(node.type, ['TypeDecl', 'PtrDecl']);
+            TypeDecl | PtrDecl | InOutDecl,
+            TypeDeclInterface | PtrDeclInterface | InOutDeclInterface
+        >(node.type, ['TypeDecl', 'PtrDecl', 'InOutDecl']);
     }
 
     transformChildren(transform: TransformFunc) {
@@ -886,6 +919,69 @@ export class FuncCall extends Node implements FuncCallInterface {
     }
 }
 
+export interface FuncCallMultipleReturnsInterface extends NodeInterface {
+    name: AstIDInterface;
+    args: ExprListInterface;
+    extra: AstIDInterface[];
+}
+
+export class FuncCallMultipleReturns extends Node implements FuncCallMultipleReturnsInterface {
+    readonly _nodetype: 'FuncCallMultipleReturns';
+
+    name: ID;
+    args: ExprList;
+    extra: ID[];
+
+    constructor(node: FuncCallMultipleReturnsInterface) {
+        super(node, 'FuncCallMultipleReturns');
+
+        this.name = new ID(node.name);
+        this.args = new ExprList(node.args);
+        this.extra = node.extra.map((arg) => new ID(arg));
+    }
+
+    transformChildren(transform: TransformFunc) {
+        this.name = transform(this.name, this);
+        this.args = transform(this.args, this);
+        this.extra = this.extra.map((child) => transform(child, this));
+        return this;
+    }
+
+    exportAsWebGL(): string {
+        const args = this.args.exportAsWebGL();
+        return `${this.name.exportAsWebGL()}${args}`;
+    }
+
+    exportAsJS(): string {
+        const args = this.args.exportAsWebGL();
+        const extra = this.extra.map((child) => child.exportAsJS()).join(', ');
+        const fncall = `${this.name.exportAsWebGL()}${args}`;
+        return `([_mainReturn, ${extra}] = ${fncall}, _mainReturn)`;
+    }
+}
+
+export interface FuncCallMultipleReturnTempVariableInterface extends NodeInterface {}
+
+export class FuncCallMultipleReturnTempVariable extends Node implements FuncCallMultipleReturnTempVariableInterface {
+    readonly _nodetype: 'FuncCallMultipleReturnTempVariable';
+
+    constructor(node: FuncCallMultipleReturnTempVariableInterface) {
+        super(node, 'FuncCallMultipleReturnTempVariable');
+    }
+
+    transformChildren(transform: TransformFunc) {
+        return this;
+    }
+
+    exportAsWebGL(): string {
+        return '// func call multiple return is not used in WebGL';
+    }
+
+    exportAsJS(): string {
+        return `let _mainReturn = NaN`;
+    }
+}
+
 export interface EmptyStatementInterface extends NodeInterface {}
 
 export class EmptyStatement extends Node implements EmptyStatementInterface {
@@ -907,42 +1003,48 @@ export class EmptyStatement extends Node implements EmptyStatementInterface {
 export declare type ExpressionInterface = (
     AstIDInterface | StructRefInterface | ArrayRefInterface |
     ConstantInterface | CastInterface | AssignmentInterface |
-    FuncCallInterface | TypenameInterface | UnaryOpInterface |
-    BinaryOpInterface | TernaryOpInterface
+    FuncCallInterface | FuncCallMultipleReturnsInterface |
+    TypenameInterface | UnaryOpInterface | BinaryOpInterface |
+    TernaryOpInterface
 );
 
 export declare type Expression = (
     ID | StructRef | ArrayRef | Constant | Cast | Assignment | FuncCall |
-    Typename | UnaryOp | BinaryOp | TernaryOp
+    FuncCallMultipleReturns | Typename | UnaryOp | BinaryOp | TernaryOp
 );
 
 function expression(node: ExpressionInterface): Expression {
     return instantiate<Expression, ExpressionInterface>(node, [
         'ID', 'StructRef', 'ArrayRef', 'Constant', 'Cast',
-        'Assignment', 'FuncCall', 'Typename', 'UnaryOp', 'BinaryOp',
-        'TernaryOp'
+        'Assignment', 'FuncCall', 'FuncCallMultipleReturns',
+        'Typename', 'UnaryOp', 'BinaryOp', 'TernaryOp'
     ]);
 }
 
 export declare type CompoundItemInterface = (
     DeclInterface | IfInterface | AssignmentInterface | UnaryOpInterface |
-    ReturnInterface | FuncCallInterface | WhileInterface |
+    ReturnInterface | ReturnMultipleValuesInterface |
+    FuncCallMultipleReturnTempVariableInterface |
+    FuncCallInterface | FuncCallMultipleReturnsInterface | WhileInterface |
     DoWhileInterface | ForInterface | LabelInterface | GotoInterface |
     SwitchInterface | DefaultInterface | ContinueInterface |
     CaseInterface | BreakInterface | EmptyStatementInterface
 );
 
 export declare type CompoundItem = (
-    Decl | If | Assignment | UnaryOp | Return | FuncCall |
+    Decl | If | Assignment | UnaryOp | Return | ReturnMultipleValues |
+    FuncCallMultipleReturnTempVariable | FuncCall | FuncCallMultipleReturns |
     While | DoWhile | For | Label | Goto | Switch | Default | Continue |
     Case | Break | EmptyStatement
 );
 
 function compoundItem(node: CompoundItemInterface): CompoundItem {
     return instantiate<CompoundItem, CompoundItemInterface>(node, [
-        'Decl', 'If', 'Assignment', 'UnaryOp', 'Return', 'FuncCall',
-        'While', 'DoWhile', 'For', 'Label', 'Goto', 'Switch', 'Default',
-        'Continue', 'Case', 'Break', 'EmptyStatement'
+        'Decl', 'If', 'Assignment', 'UnaryOp', 'Return', 'ReturnMultipleValues',
+        'FuncCall', 'FuncCallMultipleReturns',
+        'FuncCallMultipleReturnTempVariable', 'While', 'DoWhile', 'For',
+        'Label', 'Goto', 'Switch', 'Default', 'Continue', 'Case',
+        'Break', 'EmptyStatement'
     ]);
 }
 
@@ -1200,7 +1302,7 @@ export class Switch extends Node implements SwitchInterface {
     exportAs(language: Language): string {
         const cond = this.cond.exportAs(language);
         const stmt = this.stmt.exportAs(language);
-        return `swtich(${cond}) ${stmt}\n`;
+        return `switch(${cond}) ${stmt}\n`;
     }
 }
 
@@ -1476,6 +1578,39 @@ export class Return extends Node implements ReturnInterface {
     }
 }
 
+export interface ReturnMultipleValuesInterface extends NodeInterface {
+    main: ExpressionInterface;
+    extra: ExpressionInterface[];
+}
+
+export class ReturnMultipleValues extends Node implements ReturnMultipleValuesInterface {
+    readonly _nodetype: 'ReturnMultipleValues';
+
+    main: Expression;
+    extra: Expression[];
+
+    constructor(node: ReturnMultipleValuesInterface) {
+        super(node, 'ReturnMultipleValues');
+
+        this.main = expression(node.main);
+        this.extra = node.extra.map((child) => expression(child));
+    }
+
+    transformChildren(transform: TransformFunc) {
+        this.main = transform(this.main, this);
+        return this;
+    }
+
+    exportAsWebGL(): string {
+        return `return ${this.main.exportAsWebGL()}`;
+    }
+
+    exportAsJS(): string {
+        const values = [this.main, ...this.extra];
+        return `return [${values.map((v) => v.exportAsJS()).join(', ')}]`;
+    }
+}
+
 export interface FileASTInterface extends NodeInterface {
     ext: Array<DeclInterface | FuncDefInterface>;
 }
@@ -1576,6 +1711,9 @@ function instantiate<T extends Node, I extends NodeInterface>(
     if (checkType<PtrDeclInterface>(node, 'PtrDecl')) {
         return new PtrDecl(node) as Node as T;
     }
+    if (checkType<InOutDeclInterface>(node, 'InOutDecl')) {
+        return new InOutDecl(node) as Node as T;
+    }
     if (checkType<InitListInterface>(node, 'InitList')) {
         return new InitList(node) as Node as T;
     }
@@ -1617,6 +1755,16 @@ function instantiate<T extends Node, I extends NodeInterface>(
     }
     if (checkType<FuncCallInterface>(node, 'FuncCall')) {
         return new FuncCall(node) as Node as T;
+    }
+    if (checkType<FuncCallMultipleReturnsInterface>(
+        node, 'FuncCallMultipleReturns'
+    )) {
+        return new FuncCallMultipleReturns(node) as Node as T;
+    }
+    if (checkType<FuncCallMultipleReturnTempVariableInterface>(
+        node, 'FuncCallMultipleReturnTempVariable'
+    )) {
+        return new FuncCallMultipleReturnTempVariable(node) as Node as T;
     }
     if (checkType<EmptyStatementInterface>(node, 'EmptyStatement')) {
         return new EmptyStatement(node) as Node as T;
@@ -1665,6 +1813,11 @@ function instantiate<T extends Node, I extends NodeInterface>(
     }
     if (checkType<ReturnInterface>(node, 'Return')) {
         return new Return(node) as Node as T;
+    }
+    if (checkType<ReturnMultipleValuesInterface>(
+        node, 'ReturnMultipleValues'
+    )) {
+        return new ReturnMultipleValues(node) as Node as T;
     }
     if (checkType<FileASTInterface>(node, 'FileAST')) {
         return new FileAST(node) as Node as T;

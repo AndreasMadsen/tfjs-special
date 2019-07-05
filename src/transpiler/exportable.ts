@@ -7,7 +7,7 @@ import {
 import {
     FileAST, Node,
     Decl, ArrayDecl, TypeDecl, FuncDecl,
-    ID, InitList, FuncDef
+    ID, InitList, FuncDef, InOutDecl
 } from './ast';
 
 function getValueFromExpression(node: Node) {
@@ -170,11 +170,18 @@ export class ExportableKernelFunction extends KernelFunction implements Exportab
             'name': node.decl.name,
             'type': node.decl.type.type.type.exportAsWebGL(),
             'arguments': parameters
-                .map((arg, index) => ({
-                    'name': arg.name,
-                    'type': arg.type.type.exportAsWebGL(),
-                    'index': index
-                }))
+                .map(function arg(arg, index) {
+                    let argType = arg.type.type.exportAsWebGL();
+                    if (arg.type instanceof InOutDecl) {
+                        argType = `inout ${arg.type.type.type.exportAsWebGL()}`;
+                    }
+
+                    return {
+                        'name': arg.name,
+                        'type': argType,
+                        'index': index
+                    };
+                })
         };
 
         super({

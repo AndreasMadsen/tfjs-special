@@ -1,7 +1,7 @@
 import { FileAST, Node, Decl, Expression, Compound,
          FuncDecl, ParamList, FuncDef, AllDecl, IdentifierType,
          TernaryOp, BinaryOp, UnaryOp,
-         ID, Constant, FuncCall, If, Return, Assignment } from '../ast';
+         ID, Constant, FuncCall, If, Return, Assignment, FuncCallMultipleReturns } from '../ast';
 
 declare type VariableMap = Map<string, string>;
 
@@ -106,6 +106,8 @@ function transformFunction(func: FuncDef, variables: Map<string, string>) {
                 else {
                     typeInference.set(child, variables.get(child.name.name));
                 }
+            } else if (child instanceof FuncCallMultipleReturns) {
+                typeInference.set(child, variables.get(child.name.name));
             } else if (child instanceof UnaryOp) {
                 if (child.op === '!') {
                     typeInference.set(child, 'bool');
