@@ -9,6 +9,7 @@ import { declareForInitialization } from './transform/declare-for-initialization
 import { editMtherr } from './transform/edit-mtherr';
 import { eliminateGoto } from './transform/eliminate-goto';
 import { explicitTypeConversion } from './transform/explicit-type-conversion';
+import { removeFloatSuffix } from './transform/remove-float-suffix';
 import { removeStaticVariableStroage } from './transform/remove-static-variable-storage';
 import { renameStatic } from './transform/rename-static';
 import { ternaryToAbs } from './transform/ternary-to-abs';
@@ -41,6 +42,7 @@ export function importAstFromSourceCode(
     ast = editMtherr(ast);
     ast = useStaticSizeArrayFunctions(ast);
     ast = explicitTypeConversion(ast);
+    ast = removeFloatSuffix(ast);
     ast = removeStaticVariableStroage(ast);
     ast = renameStatic(basename, ast);
     ast = ternaryToAbs(ast);
