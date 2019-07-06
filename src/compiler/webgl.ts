@@ -99,11 +99,13 @@ export class WebGLEvaluator extends Evaluator {
         for (const [name, {loc, value}] of this.uniforms.entries()) {
             let locValue = loc.get(programLocKey);
             // Fetch if cache is empty
-            if (locValue === undefined) {
-                locValue = gpgpu.getUniformLocation(
-                    webGLProgram, name, shouldThrow);
-                loc.set(programLocKey, locValue);
-            }
+            // TODO: For some reason this does not work across different
+            // programs even if the program source code should be identical.
+            //if (locValue === undefined) {
+            locValue = gpgpu.getUniformLocation(
+                webGLProgram, name, shouldThrow);
+            loc.set(programLocKey, locValue);
+            //}
             gpgpu.gl.uniform1fv(locValue, value);
         }
     }
