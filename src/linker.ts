@@ -131,6 +131,14 @@ class Linker {
         return uniforms;
     }
 
+    exportResetAs(kernelName: string, language: Language): string {
+        const { usedVariables } = this.getKernelParts(kernelName);
+
+        return Array.from(usedVariables.values())
+            .map((kernelVariable) => kernelVariable.exportResetAs(language))
+            .join('\n');
+    }
+
     exportAs(kernelName: string, language: Language): string {
         const { usedConstants,
                 usedVariables,

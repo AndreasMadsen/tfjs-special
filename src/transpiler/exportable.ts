@@ -2,7 +2,8 @@
 import {
     KernelGlobal,
     KernelFunction, KernelConstant, KernelVariable,
-    KernelFunctionSignatureArgumentInterface
+    KernelFunctionSignatureArgumentInterface,
+    Language
 } from '../defintions';
 import {
     FileAST, Node,
@@ -121,6 +122,18 @@ export class ExportableKernelVariable extends ExportableKernelGlobal implements 
     static match(node: Node): node is Decl {
         return (ExportableKernelGlobal.match(node) &&
                 ExportableKernelVariable.KNOWN_VARIABLES.has(node.name));
+    }
+
+    exportResetAs(language: Language): string {
+        return KernelVariable.prototype.exportResetAs.call(this, language);
+    }
+
+    exportResetAsWebGL(): string {
+        return KernelVariable.prototype.exportResetAsWebGL.call(this);
+    }
+
+    exportResetAsJS(): string {
+        return KernelVariable.prototype.exportResetAsJS.call(this);
     }
 
     exportAsWebGL(): string {

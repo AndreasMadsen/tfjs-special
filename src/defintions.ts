@@ -90,6 +90,31 @@ export class KernelVariable extends KernelGlobal implements KernelVariableInterf
         super(object);
     }
 
+    exportResetAs(language: Language): string {
+        switch (language) {
+            case 'WebGL1':
+                return this.exportResetAsWebGL(1);
+            case 'WebGL2':
+                return this.exportResetAsWebGL(2);
+            case 'JS':
+                return this.exportResetAsJS();
+            default:
+                throw new Error('unreachable');
+        }
+    }
+
+    exportResetAsWebGL(version: WebGLVersion): string {
+        return `// WebGL does not need resetting of ${this.name}`;
+    }
+
+    // This does nothing, but helps with abstraction
+    exportResetAsJS(): string {
+        if (this.value instanceof Float32Array) {
+            throw new Error(`can not reset ${this.name}`);
+        }
+        return `${this.name} = ${this.valueString};`;
+    }
+
     exportAsWebGL(version: WebGLVersion): string {
         if (this.value instanceof Float32Array) {
             if (version === 2) {

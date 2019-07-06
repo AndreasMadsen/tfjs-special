@@ -15,6 +15,7 @@ export class CPUEvaluator extends Evaluator {
         const argumentsAsString = signature.arguments
             .map((arg) => arg.name)
             .join(', ');
+        const resetCode = linker.exportResetAs(fnname, 'JS');
 
         const sourceCode = `
             'strict mode';
@@ -25,7 +26,10 @@ export class CPUEvaluator extends Evaluator {
             ${linker.exportAsJS(fnname)}
 
             function main(${argumentsAsString}) {
-                sgngamf = 0; // Reset global variables
+                // Reset global variables
+                ${resetCode}
+
+                // run function
                 return ${signature.name}(${argumentsAsString});
             }
 
