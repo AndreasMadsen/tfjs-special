@@ -10,6 +10,7 @@ import {
     Decl, ArrayDecl, TypeDecl, FuncDecl,
     ID, InitList, FuncDef, InOutDecl
 } from './ast';
+import { Linker } from '../linker';
 
 function getValueFromExpression(node: Node) {
     let str = node.exportAsWebGL();
@@ -90,7 +91,7 @@ abstract class ExportableKernelGlobal
 }
 
 export class ExportableKernelConstant extends ExportableKernelGlobal implements KernelConstant {
-    isConstant: true;
+    kernelType: 'Constant' = 'Constant';
 
     constructor(node: Decl) {
         super('KernelConstant', node);
@@ -111,7 +112,7 @@ export class ExportableKernelConstant extends ExportableKernelGlobal implements 
 }
 
 export class ExportableKernelVariable extends ExportableKernelGlobal implements KernelVariable {
-    isConstant: false;
+    kernelType: 'Variable' = 'Variable';
 
     constructor(node: Decl) {
         super('KernelVariable', node);
@@ -235,7 +236,7 @@ declare type Exportable = ExportableKernelConstant | ExportableKernelVariable |
                           ExportableKernelFunction;
 
 export class ExportableScript implements ExportableInterface {
-    exportables: Exportable[];
+    exportables: Map<string, Exportable>;
 
     constructor(ast: FileAST) {
         const allFunctions = new Set<string>(
@@ -260,25 +261,47 @@ export class ExportableScript implements ExportableInterface {
             }
         }
 
-        this.exportables = [] as Exportable[];
+        this.exportables = new Map();
         for (const child of ast.ext) {
+            let exportable = null;
+
             if (ExportableKernelConstant.match(child)) {
-                this.exportables.push(new ExportableKernelConstant(child));
+                exportable = new ExportableKernelConstant(child);
             } else if (ExportableKernelVariable.match(child)) {
-                this.exportables.push(new ExportableKernelVariable(child));
+                exportable = new ExportableKernelVariable(child);
             } else if (ExportableKernelFunction.match(child)) {
-                this.exportables.push(
-                    new ExportableKernelFunction(
-                        allFunctions, allConstants, allVariables, child)
-                );
+                exportable = new ExportableKernelFunction(
+                    allFunctions, allConstants, allVariables, child);
+            }
+
+            if (exportable !== null) {
+                this.exportables.set(exportable.name, exportable);
             }
         }
+    }
+
+    addToLinker(linker: Linker) {
+        for (const kernelPart of this.exportables.values()) {
+            linker.add(kernelPart);
+        }
+    }
+
+    reduceExportables(keepSymbols: Set<string>) {
+        for (const kernelSymbol of this.exportables.keys()) {
+            if (!keepSymbols.has(kernelSymbol)) {
+                this.exportables.delete(kernelSymbol);
+            }
+        }
+    }
+
+    hasContent(): boolean {
+        return this.exportables.size > 0;
     }
 
     exportAsScript(): string {
         const defintionsImports = new Set<string>();
 
-        for (const exportable of this.exportables) {
+        for (const exportable of this.exportables.values()) {
             if (exportable instanceof ExportableKernelConstant) {
                 defintionsImports.add('KernelConstant');
             } else if (exportable instanceof ExportableKernelVariable) {
@@ -301,7 +324,7 @@ export class ExportableScript implements ExportableInterface {
         return [
             '// tslint:disable:max-line-length',
             imports.join('\n'),
-            ...this.exportables
+            ...Array.from(this.exportables.values())
                 .map((exportable) => exportable.exportAsScript())
         ].join('\n\n');
     }

@@ -4,7 +4,7 @@ import { Language, WebGLVersion,
          KernelConstant, KernelVariable,
          KernelFunction, KernelPart } from './defintions';
 
-class Linker {
+export class Linker {
     constants: Map<string, KernelConstant>;
     variables: Map<string, KernelVariable>;
     functions: Map<string, KernelFunction>;
@@ -16,14 +16,18 @@ class Linker {
     }
 
     add(code: KernelPart): void {
-        if (code instanceof KernelConstant) {
-            this.constants.set(code.name, code);
-        } else if (code instanceof KernelVariable) {
-            this.variables.set(code.name, code);
-        } else if (code instanceof KernelFunction) {
-            this.functions.set(code.name, code);
-        } else {
-            throw new Error('unreachable');
+        switch(code.kernelType) {
+            case 'Constant':
+                this.constants.set(code.name, code);
+                break;
+            case 'Variable':
+                this.variables.set(code.name, code);
+                break;
+            case 'Function':
+                this.functions.set(code.name, code);
+                break;
+            default:
+                throw new Error('unreachable');
         }
     }
 
@@ -33,6 +37,18 @@ class Linker {
         }
 
         return this.functions.get(kernelName).signature;
+    }
+
+    getUsedSymbols(kernelName: string): Set<string> {
+        const { usedConstants,
+                usedVariables,
+                usedFunctions } = this.getKernelParts(kernelName);
+
+        return new Set([
+            ...usedConstants.keys(),
+            ...usedVariables.keys(),
+            ...usedFunctions.keys()
+        ]);
     }
 
     exportAsWebGL(kernelName: string, version: WebGLVersion): string {

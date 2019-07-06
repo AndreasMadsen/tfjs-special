@@ -1,6 +1,7 @@
 
 export type Language = 'WebGL2' | 'WebGL1' | 'JS';
 export type WebGLVersion = 1 | 2;
+export type KernelType = 'Constant' | 'Variable' | 'Function';
 
 export type KernelConstantValue = Float32Array | number;
 
@@ -34,6 +35,7 @@ export abstract class KernelGlobal extends Export implements KernelGlobalInterfa
     type: string;
     value: KernelConstantValue;
     valueString: string;
+    kernelType: KernelType;
 
     constructor(object: KernelGlobalInterface) {
         super();
@@ -45,12 +47,8 @@ export abstract class KernelGlobal extends Export implements KernelGlobalInterfa
     }
 }
 
-export interface ConstantInterface extends KernelGlobalInterface {
-    isConstant: true;
-}
-
-export class KernelConstant extends KernelGlobal implements ConstantInterface {
-    isConstant: true;
+export class KernelConstant extends KernelGlobal implements KernelGlobalInterface {
+    kernelType: 'Constant' = 'Constant';
 
     constructor(object: KernelGlobalInterface) {
         super(object);
@@ -79,12 +77,8 @@ export class KernelConstant extends KernelGlobal implements ConstantInterface {
     }
 }
 
-export interface KernelVariableInterface extends KernelGlobalInterface {
-    isConstant: false;
-}
-
-export class KernelVariable extends KernelGlobal implements KernelVariableInterface {
-    isConstant: false;
+export class KernelVariable extends KernelGlobal implements KernelGlobalInterface {
+    kernelType: 'Variable' = 'Variable';
 
     constructor(object: KernelGlobalInterface) {
         super(object);
@@ -227,6 +221,7 @@ export class KernelFunction extends Export implements KernelFunctionInterface {
     signature: KernelFunctionSignature;
     codeWebGL: string;
     codeJS: string;
+    kernelType: 'Function' = 'Function';
 
    constructor(object: KernelFunctionInterface) {
         super();
