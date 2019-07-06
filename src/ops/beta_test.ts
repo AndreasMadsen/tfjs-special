@@ -1,50 +1,50 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 import { describeAllEnvs, expectArraysClose } from '../test_util';
-import { beta, betainc } from './beta';
+import { lbeta, betainc } from './beta';
 
 describeAllEnvs('beta', () => {
-    it('beta(a, b) is correct', async () => {
+    it('lbeta(a, b) is correct', async () => {
         const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
         const b = tfc.tensor2d([1, 2, 3, 4], [1, 4]);
         expectArraysClose(
-            await beta(a, b).array(),
-            [[1,   1/2,  1/3,  1/4],
-             [1/2, 1/6,  1/12, 1/20],
-             [1/3, 1/12, 1/30, 1/60],
-             [1/4, 1/20, 1/60, 1/140]]
+            await lbeta(a, b).array(),
+            [[0,            -Math.log(2),  -Math.log(3),  -Math.log(4)],
+             [-Math.log(2), -Math.log(6),  -Math.log(12), -Math.log(20)],
+             [-Math.log(3), -Math.log(12), -Math.log(30), -Math.log(60)],
+             [-Math.log(4), -Math.log(20), -Math.log(60), -Math.log(140)]]
         );
     });
 
-    it('beta\'(a, b) is correct', async () => {
+    it('lbeta\'(a, b) is correct', async () => {
         const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
         const b = tfc.tensor2d([1, 2, 3, 4], [1, 4]);
-        const betadx = tfc.grads((a, b) => beta(a, b).sum());
+        const betadx = tfc.grads((a, b) => lbeta(a, b).sum());
         const [betada, betadb] = betadx([a, b]);
         expectArraysClose(
             await betada.array(),
-            [[-415/144], [-163/300], [-121/600], [-4441/44100]]
+            [[-77/12], [-37/10], [-53/20], [-218/105]]
         );
         expectArraysClose(
             await betadb.array(),
-            [[-415/144, -163/300, -121/600, -4441/44100]]
+            [[-77/12, -37/10, -53/20, -218/105]]
         );
     });
 
-    it('beta\'\'(a, b) is correct', async () => {
+    it('lbeta\'\'(a, b) is correct', async () => {
         const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
         const b = tfc.tensor2d([1, 2, 3, 4], [1, 4]);
-        const betada = tfc.grad((a) => beta(a, b).sum());
-        const betadada = tfc.grad((a) => betada(a));
-        const betadb = tfc.grad((b) => beta(a, b).sum());
-        const betadbdb = tfc.grad((b) => betadb(b));
+        const lbetada = tfc.grad((a) => lbeta(a, b).sum());
+        const lbetadada = tfc.grad((a) => lbetada(a));
+        const lbetadb = tfc.grad((b) => lbeta(a, b).sum());
+        const lbetadbdb = tfc.grad((b) => lbetadb(b));
         expectArraysClose(
-             await betadada(a).array(),
-             [[5845/864], [5981/9000], [8831/54000], [557569/9261000]]
+             await lbetadada(a).array(),
+             [[725/144], [899/600], [2663/3600], [19667/44100]]
         );
         expectArraysClose(
-             await betadbdb(b).array(),
-             [[5845/864, 5981/9000, 8831/54000, 557569/9261000]]
+             await lbetadbdb(b).array(),
+             [[725/144, 899/600, 2663/3600, 19667/44100]]
         );
     });
 });
@@ -100,19 +100,15 @@ describeAllEnvs('betainc', () => {
     });
 
     it('betainc\'\'(a, b, x) is correct', async () => {
-        const a = tfc.tensor2d([1, 2, 3, 4], [1, 4]);
-        const b = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
-        const betada = tfc.grad((a) => beta(a, b).sum());
-        const betadada = tfc.grad((a) => betada(a));
-        const betadb = tfc.grad((b) => beta(a, b).sum());
-        const betadbdb = tfc.grad((b) => betadb(b));
+        const a = tfc.tensor3d([1, 2, 3, 4], [4, 1, 1]);
+        const b = tfc.tensor3d([1, 2, 3, 4], [1, 4, 1]);
+        const x = tfc.tensor3d([0, 0.25, 0.5, 0.75, 1], [1, 1, 5]);
+        const betaincdx = tfc.grad((x) => betainc(a, b, x).sum());
+        const betaincdxx = tfc.grad((x) => betaincdx(x));
+
         expectArraysClose(
-             await betadada(a).array(),
-             [[5845/864, 5981/9000, 8831/54000, 557569/9261000]]
-        );
-        expectArraysClose(
-             await betadbdb(b).array(),
-             [[5845/864], [5981/9000], [8831/54000], [557569/9261000]]
+             await betaincdxx(x).array(),
+             [[[NaN, 3425/128, 0, -3425/128, NaN]]]
         );
     });
 });

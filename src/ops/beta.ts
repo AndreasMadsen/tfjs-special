@@ -4,7 +4,34 @@ import { compile } from '../compiler';
 import { runKernel, reduceGradient } from './_define_op';
 import { digamma } from './gamma';
 
-export function beta(a: tfc.Tensor, b: tfc.Tensor): tfc.Tensor {
+export function lbeta(a: tfc.Tensor, b: tfc.Tensor): tfc.Tensor {
+    const lgamKernel = compile('lgamf');
+    return runKernel(
+        function forwardFunc([a, b], save) {
+            save([a, b]);
+            return lgamKernel.runUnary(a)
+                .add(lgamKernel.runUnary(b))
+                .sub(lgamKernel.runUnary(a.add(b)));
+        },
+        function backwardPass(
+            dy, [a, b]: tfc.Tensor[]
+        ): tfc.Tensor[] {
+            const digammaApB = digamma(a.add(b));
+
+            return reduceGradient([
+                dy.mul(
+                    digamma(a).sub(digammaApB)
+                ),
+                dy.mul(
+                    digamma(b).sub(digammaApB)
+                )
+            ], [a.shape, b.shape]);
+        },
+        [a, b]
+    );
+}
+
+function beta(a: tfc.Tensor, b: tfc.Tensor): tfc.Tensor {
     const betaKernel = compile('betaf');
     return runKernel(
         function forwardFunc([a, b], save) {
@@ -14,12 +41,15 @@ export function beta(a: tfc.Tensor, b: tfc.Tensor): tfc.Tensor {
         function backwardPass(
             dy, [a, b]: tfc.Tensor[]
         ): tfc.Tensor[] {
+            const digammaApB = digamma(a.add(b));
+            const betaApB = beta(a, b);
+
             return reduceGradient([
                 dy.mul(
-                    (digamma(a).sub(digamma(a.add(b)))).mul(beta(a, b))
+                    digamma(a).sub(digammaApB).mul(betaApB)
                 ),
                 dy.mul(
-                    (digamma(b).sub(digamma(a.add(b)))).mul(beta(a, b))
+                    digamma(b).sub(digammaApB).mul(betaApB)
                 )
             ], [a.shape, b.shape]);
         },
