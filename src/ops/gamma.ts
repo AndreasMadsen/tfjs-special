@@ -98,3 +98,68 @@ function fast_polygamma_positive_scalar_order(
         [x]
     );
 }
+
+export function igamma(a: tfc.Tensor, x: tfc.Tensor): tfc.Tensor {
+    const igamKernel = compile('igamf');
+    return runKernel(
+        function forwardFunc([a, x], save) {
+            save([a, x]);
+            return igamKernel.run(a, x);
+        },
+        function backwardPass(
+            dy, [a, x]: tfc.Tensor[]
+        ): tfc.Tensor[] {
+            return reduceGradient([
+                null,
+                dy.mul(
+                    x.neg().exp()
+                        .mul(x.pow(a.sub(1)))
+                        .div(gamma(a))
+                )
+            ], [a.shape, x.shape]);
+        },
+        [a, x]
+    );
+}
+
+export function igammac(a: tfc.Tensor, x: tfc.Tensor): tfc.Tensor {
+    const igamcKernel = compile('igamcf');
+    return runKernel(
+        function forwardFunc([a, x], save) {
+            save([a, x]);
+            return igamcKernel.run(a, x);
+        },
+        function backwardPass(
+            dy, [a, x]: tfc.Tensor[]
+        ): tfc.Tensor[] {
+            return reduceGradient([
+                null,
+                dy.mul(
+                    x.neg().exp()
+                        .mul(x.pow(a.sub(1)))
+                        .div(gamma(a))
+                        .neg()
+                )
+            ], [a.shape, x.shape]);
+        },
+        [a, x]
+    );
+}
+
+function gamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
+    const gammaKernel = compile('gammaf');
+    return runKernel(
+        function forwardFunc([x], save) {
+            save([x]);
+            return gammaKernel.runUnary(x);
+        },
+        function backwardPass(
+            dy, [x]: Array<tfc.Tensor<R>>
+        ): Array<tfc.Tensor<R>> {
+            return [dy.mul(
+                gamma(x).mul(digamma(x))
+            )];
+        },
+        [x]
+    ) as tfc.Tensor<R>;
+}

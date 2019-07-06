@@ -1,14 +1,15 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 import { describeAllEnvs, expectArraysClose } from '../test_util';
-import { lgamma, digamma, polygamma } from './gamma';
+import { lgamma, digamma, polygamma, igamma, igammac } from './gamma';
 
 const EULER = 0.5772156649;
 const PISQD6 = Math.PI**2/6;
 const PIP4D15 = Math.PI**4/15;
-const PiP6D63 = Math.PI**6/63;
+const PIP6D63 = Math.PI**6/63;
 const ZETA3 = 1.202056903;
 const ZETA5 = 1.036927755;
+const exp = Math.exp;
 
 describeAllEnvs('lgamma', () => {
     it('gamma(x) is correct', async () => {
@@ -113,11 +114,105 @@ describeAllEnvs('polygamma', () => {
         expectArraysClose(
             await polygammadxx(x).array(),
             [
-                [-2*ZETA3 + PIP4D15 - 24*ZETA5 + 8*PiP6D63],
-                [-100 - 2*ZETA3 + PIP4D15 - 24*ZETA5 + 8*PiP6D63],
-                [-405/4 - 2*ZETA3 + PIP4D15 - 24*ZETA5 + 8*PiP6D63],
-                [-98479/972 - 2*ZETA3 + PIP4D15 - 24*ZETA5 + 8*PiP6D63]
+                [-2*ZETA3 + PIP4D15 - 24*ZETA5 + 8*PIP6D63],
+                [-100 - 2*ZETA3 + PIP4D15 - 24*ZETA5 + 8*PIP6D63],
+                [-405/4 - 2*ZETA3 + PIP4D15 - 24*ZETA5 + 8*PIP6D63],
+                [-98479/972 - 2*ZETA3 + PIP4D15 - 24*ZETA5 + 8*PIP6D63]
             ]
+        );
+    });
+});
+
+describeAllEnvs('igamma', () => {
+    it('igamma(a, x) is correct', async () => {
+        const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
+        const x = tfc.tensor2d([1, 2, 5, 10], [1, 4]);
+
+        expectArraysClose(
+            await igamma(a, x).array(),
+            [[1 - exp(-1), 1 - exp(-2),
+              1 - exp(-5), 1 - exp(-10)],
+             [1 - 2*exp(-1), 1 - 3*exp(-2),
+              1 - 6*exp(-5), 1 - 11*exp(-10)],
+             [1 - (5*exp(-1))/2, 1 - 5*exp(-2),
+              1 - (37*exp(-5))/2, 1 - 61*exp(-10)],
+             [1 - (8*exp(-1))/3, 1 - (19*exp(-2))/3,
+              1 - (118*exp(-5))/3, 1 - (683*exp(-10))/3]]
+        );
+    });
+
+    it('igamma\'(a, x) is correct', async () => {
+        const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
+        const x = tfc.tensor2d([1, 2, 5, 10], [1, 4]);
+        const igammad = tfc.grads((a, x) => igamma(a, x).sum());
+        const [igammada, igammadx] = igammad([a, x]);
+
+        expectArraysClose(
+            await igammada.array(),
+            [[0], [0], [0], [0]]
+        );
+        expectArraysClose(
+            await igammadx.array(),
+            [[(8*exp(-1))/3, (19*exp(-2))/3,
+              (118*exp(-5))/3, (683*exp(-10))/3]]
+        );
+    });
+
+    it('igamma\'\'(a, x) is correct', async () => {
+        const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
+        const x = tfc.tensor2d([1, 2, 5, 10], [1, 4]);
+        const igammadx = tfc.grad((x) => igamma(a, x).sum());
+        const igammadxx = tfc.grad((x) => igammadx(x));
+
+        expectArraysClose(
+             await igammadxx(x).array(),
+             [[-exp(-1)/6, -(4*exp(-2))/3,
+               -(125*exp(-5))/6, -(500*exp(-10))/3]]
+        );
+    });
+});
+
+describeAllEnvs('igammac', () => {
+    it('igammac(a, x) is correct', async () => {
+        const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
+        const x = tfc.tensor2d([1, 2, 5, 10], [1, 4]);
+
+        expectArraysClose(
+            await igammac(a, x).array(),
+            [[exp(-1), exp(-2), exp(-5), exp(-10)],
+             [2*exp(-1), 3*exp(-2), 6*exp(-5), 11*exp(-10)],
+             [(5*exp(-1))/2, 5*exp(-2), (37*exp(-5))/2, 61*exp(-10)],
+             [(8*exp(-1))/3, (19*exp(-2))/3, (118*exp(-5))/3, (683*exp(-10))/3]]
+        );
+    });
+
+    it('igammac\'(a, x) is correct', async () => {
+        const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
+        const x = tfc.tensor2d([1, 2, 5, 10], [1, 4]);
+        const igammacd = tfc.grads((a, x) => igammac(a, x).sum());
+        const [igammacda, igammacdx] = igammacd([a, x]);
+
+        expectArraysClose(
+            await igammacda.array(),
+            [[0], [0], [0], [0]]
+        );
+        expectArraysClose(
+            await igammacdx.array(),
+            [[-(8*exp(-1))/3, -(19*exp(-2))/3,
+              -(118*exp(-5))/3, -(683*exp(-10))/3]]
+        );
+    });
+
+    it('igammac\'\'(a, x) is correct', async () => {
+        const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
+        const x = tfc.tensor2d([1, 2, 5, 10], [1, 4]);
+        const igammacdx = tfc.grad((x) => igammac(a, x).sum());
+        const igammacdxx = tfc.grad((x) => igammacdx(x));
+
+        expectArraysClose(
+             await igammacdxx(x).array(),
+             [[exp(-1)/6, (4*exp(-2))/3,
+               (125*exp(-5))/6, (500*exp(-10))/3]]
         );
     });
 });
