@@ -1,2 +1,26 @@
-/node_modules
-/deps
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+node_modules/
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+
+# typescript output directory
+/dist
+
+# debug directroy
+/debug
+
