@@ -1,5 +1,5 @@
 
-import { Language } from '../defintions';
+import { Language } from '../src/defintions';
 
 export type TransformFunc = (<T extends Node, TT extends Node>(child: T, parent: TT) => T);
 

@@ -4,13 +4,13 @@ import {
     KernelFunction, KernelConstant, KernelVariable,
     KernelFunctionSignatureArgumentInterface,
     Language
-} from '../defintions';
+} from '../src/defintions';
 import {
     FileAST, Node,
     Decl, ArrayDecl, TypeDecl, FuncDecl,
     ID, InitList, FuncDef, InOutDecl
 } from './ast';
-import { Linker } from '../linker';
+import { Linker } from '../src/linker';
 
 function getValueFromExpression(node: Node) {
     let str = node.exportAsWebGL();

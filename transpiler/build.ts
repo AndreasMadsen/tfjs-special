@@ -2,14 +2,15 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { linker } from '../linker';
+import { linker } from '../src/linker';
 import { importAstFromSourceCode } from './import';
 import { ExportableScript } from './exportable';
 
-import '../special_kernels';
+import '../src/special_kernels';
 
-const KERNELDIR = path.resolve(__dirname, '..', 'kernels');
-const CEPHESDIR = path.resolve(__dirname, '..', '..', 'deps', 'cephes');
+const ROOTDIR = path.resolve(__dirname, '..');
+const KERNELDIR = path.resolve(ROOTDIR, 'src', 'kernels');
+const CEPHESDIR = path.resolve(ROOTDIR, 'deps', 'cephes');
 const EXPORTS = [
     'lgamf', 'psif', 'gammaf', 'igamf', 'igamcf',
     'i0f', 'i1f', 'i0ef', 'i1ef', 'ivf',
@@ -27,6 +28,13 @@ for (const filename of cephesFiles) {
     console.log(`transpiling ${filename}`);
 
     const basename = path.basename(filename, '.json');
+    // This contains goto statements that looks recursive
+    // (although they actually aren't). As the file isn't required anyway
+    // just skip it.
+    if (basename === 'jvf') {
+        continue;
+    }
+
     const source = fs.readFileSync(path.resolve(CEPHESDIR, filename), 'utf-8');
 
     const ast = importAstFromSourceCode(basename, source);
@@ -60,6 +68,6 @@ for (const [filename, exportable] of kernels) {
 //
 console.log('building index');
 fs.writeFileSync(
-    path.resolve(__dirname, '../kernels/index.ts'),
+    path.resolve(KERNELDIR, 'index.ts'),
     indexFileContent.join('\n') + '\n'
 );

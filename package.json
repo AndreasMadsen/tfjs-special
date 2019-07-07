@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "build-kernels": "ts-node src/transpiler/build.ts",
+    "build-kernels": "ts-node transpiler/build.ts",
     "test": "karma start",
     "lint": "tslint -p . -t verbose"
   },

@@ -24,14 +24,6 @@ import { whileToFor } from './transform/while-to-for';
 export function importAstFromSourceCode(
     basename: string, source: string
 ): FileAST {
-    if (basename === 'jvf') {
-        return new FileAST({
-            _nodetype: 'FileAST',
-            coord: 'import.ts',
-            ext: []
-        });
-    }
-
     let ast = importAstFromJson(JSON.parse(source));
 
     ast = upgradeFunctionDefs(ast);
