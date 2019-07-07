@@ -1,17 +1,25 @@
 {
-  "name": "tfjs-cephes",
+  "name": "tfjs-math-special",
   "version": "1.0.0",
-  "description": "",
+  "description": "TensorFlow.js version of the special functions from tf.math in TensorFlow",
+
   "main": "dist/index.js",
+  "jsdelivr": "dist/tf-core.min.js",
+  "unpkg": "dist/tf-core.min.js",
   "types": "dist/index.d.ts",
+  "jsnext:main": "dist/tf-core.esm.js",
+  "module": "dist/tf-core.esm.js",
+
   "scripts": {
-    "build": "tsc",
     "build-kernels": "ts-node transpiler/build.ts",
+    "build-dist": "tsc && rollup -c",
     "test": "karma start",
     "lint": "tslint -p . -t verbose"
   },
-  "author": "",
-  "license": "ISC",
+
+  "author": "Andreas Madsen",
+  "license": "BSD-3-Clause",
+
   "peerDependencies": {
     "@tensorflow/tfjs-core": "1.2.1"
   },
@@ -27,6 +35,10 @@
     "karma-chrome-launcher": "~2.2.0",
     "karma-jasmine": "~1.1.0",
     "karma-typescript": "~4.0.0",
+    "rollup": "~1.16.6",
+    "rollup-plugin-node-resolve": "~5.2.0",
+    "rollup-plugin-terser": "~5.1.1",
+    "rollup-plugin-typescript2": "~0.21.2",
     "ts-node": "^8.3.0",
     "tslint": "~5.11.0",
     "tslint-no-circular-imports": "~0.5.0",
