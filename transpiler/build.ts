@@ -22,6 +22,17 @@ const EXPORTS = [
 const cephesFiles = fs.readdirSync(CEPHESDIR)
     .filter((name) => path.extname(name) === '.json');
 
+const SOURCECODE_HEADER = `
+// This file is transpiled from deps/cephes. Changes should not be made
+// directly to this file. Instead, see the transpiler/build.ts for how
+// the file is produced. Run \`npm run build-kernels\` to produce this
+// file.
+`;
+
+function addSourceCodeHeader(souceCode: string) {
+    return SOURCECODE_HEADER + '\n' + souceCode;
+}
+
 // transpile all kernels
 const kernels = new Map<string, ExportableScript>();
 for (const filename of cephesFiles) {
@@ -61,13 +72,16 @@ for (const [filename, exportable] of kernels) {
         const outputFile = path.join(KERNELDIR, basename + '.ts');
 
         indexFileContent.push(`import './${basename}';`);
-        fs.writeFileSync(outputFile, exportable.exportAsScript());
+        fs.writeFileSync(
+            outputFile,
+            addSourceCodeHeader(exportable.exportAsScript())
+        );
     }
 }
 
-//
+// build src/kernels/index.ts which will import all kernels
 console.log('building index');
 fs.writeFileSync(
     path.resolve(KERNELDIR, 'index.ts'),
-    indexFileContent.join('\n') + '\n'
+    addSourceCodeHeader(indexFileContent.join('\n') + '\n')
 );
