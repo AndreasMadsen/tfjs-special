@@ -4,6 +4,8 @@ import { assertAndGetBroadcastShape } from '../broadcast';
 import '../kernels';
 import '../special_kernels';
 
+export { convertToTensor } from '@tensorflow/tfjs-core/dist/tensor_util_env';
+
 declare type SaveFunc<S extends tfc.Tensor[]> = (save: S) => void;
 
 export function runKernel<
@@ -14,8 +16,8 @@ export function runKernel<
     inputs: I
 ): T {
     const op = tfc.customGrad<T>(function f(...args) {
-        const inputs = args.slice(0, -1) as I;
-        const save = args[args.length - 1] as SaveFunc<S>;
+        const save = args.pop() as SaveFunc<S>;
+        const inputs = args as I;
         return {
             value: forwardFunc(inputs, save),
             gradFunc: backwardFunc

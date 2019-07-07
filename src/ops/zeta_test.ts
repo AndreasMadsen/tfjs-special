@@ -16,6 +16,15 @@ describeAllEnvs('zeta', () => {
         );
     });
 
+    it('zeta(z, q) supports TensorLike', async () => {
+        const x = [2, 3, 4, 5];
+        const q = [1, 2, 3, 4];
+        expectArraysClose(
+            await zeta(x, q).array(),
+            [1.644934068, 0.202056903, 0.019823234, 0.001562529]
+        );
+    });
+
     it('zeta\'(z, q) is correct', async () => {
         if (tfc.getBackend() !== 'webgl' ||
             tfc.ENV.getNumber('WEBGL_VERSION') !== 1) {

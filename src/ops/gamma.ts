@@ -1,9 +1,9 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 import { compile } from '../compiler';
-import { runKernel, reduceGradient } from './_define_op';
+import { runKernel, reduceGradient, convertToTensor } from './_define_op';
 
-export function lgamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
+export function lgamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     const lgamKernel = compile('lgamf');
     return runKernel(
         function forwardFunc([x], save) {
@@ -11,15 +11,17 @@ export function lgamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
             return lgamKernel.runUnary(x);
         },
         function backwardPass(
-            dy, [x]: Array<tfc.Tensor<R>>
-        ): Array<tfc.Tensor<R>> {
+            dy, [x]: T[]
+        ): T[] {
             return [dy.mul(digamma(x))];
         },
-        [x]
-    ) as tfc.Tensor<R>;
+        [
+            convertToTensor(x, 'x', 'lgamma')
+        ]
+    ) as T;
 }
 
-export function digamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
+export function digamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     const digammaKernel = compile('psif');
     return runKernel(
         function forwardFunc([x], save) {
@@ -27,19 +29,21 @@ export function digamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
             return digammaKernel.runUnary(x);
         },
         function backwardPass(
-            dy, [x]: Array<tfc.Tensor<R>>
-        ): Array<tfc.Tensor<R>> {
+            dy, [x]: T[]
+        ): T[] {
             return [dy.mul(fast_polygamma_positive_scalar_order(1, x))];
         },
-        [x]
-    ) as tfc.Tensor<R>;
+        [
+            convertToTensor(x, 'x', 'digamma')
+        ]
+    ) as T;
 }
 
 // The polygamma function can be expressed as:
 // psi^{(m)}(x) = (-1)^(m+1) * m! * zeta(m+1, x)
 // See: https://en.wikipedia.org/wiki/Polygamma_function
 export function polygamma(
-    m: tfc.Tensor, x: tfc.Tensor
+    m: tfc.Tensor | tfc.TensorLike, x: tfc.Tensor | tfc.TensorLike
 ): tfc.Tensor {
     const digammaKernel = compile('psif');
     const gammaKernel = compile('gammaf');
@@ -69,15 +73,18 @@ export function polygamma(
                 dy.mul(polygamma(m.add(1), x))
             ], [m.shape, x.shape]);
         },
-        [m, x]
+        [
+            convertToTensor(m, 'm', 'polygamma'),
+            convertToTensor(x, 'x', 'polygamma')
+        ]
     );
 }
 
 // Assumes number is a scalar above 0, this avoids computing both
 // psi and zeta.
-function fast_polygamma_positive_scalar_order(
-    order: number /* > 0 */, x: tfc.Tensor
-): tfc.Tensor {
+function fast_polygamma_positive_scalar_order<T extends tfc.Tensor>(
+    order: number /* > 0 */, x: T
+): T {
     const gammaKernel = compile('gammaf');
     const zetaKernel = compile('zetaf');
     return runKernel(
@@ -89,17 +96,19 @@ function fast_polygamma_positive_scalar_order(
                 .mul(zetaKernel.run(mp1, x));
         },
         function backwardPass(
-            dy, [x]: tfc.Tensor[]
-        ): tfc.Tensor[] {
+            dy, [x]: T[]
+        ): T[] {
             return [
-                dy.mul(polygamma(tfc.scalar(order + 1), x))
+                dy.mul(fast_polygamma_positive_scalar_order(order + 1, x))
             ];
         },
         [x]
-    );
+    ) as T;
 }
 
-export function igamma(a: tfc.Tensor, x: tfc.Tensor): tfc.Tensor {
+export function igamma(
+    a: tfc.Tensor | tfc.TensorLike, x: tfc.Tensor | tfc.TensorLike
+): tfc.Tensor {
     const igamKernel = compile('igamf');
     return runKernel(
         function forwardFunc([a, x], save) {
@@ -118,11 +127,16 @@ export function igamma(a: tfc.Tensor, x: tfc.Tensor): tfc.Tensor {
                 )
             ], [a.shape, x.shape]);
         },
-        [a, x]
+        [
+            convertToTensor(a, 'a', 'igamma'),
+            convertToTensor(x, 'x', 'igamma')
+        ]
     );
 }
 
-export function igammac(a: tfc.Tensor, x: tfc.Tensor): tfc.Tensor {
+export function igammac(
+    a: tfc.Tensor | tfc.TensorLike, x: tfc.Tensor | tfc.TensorLike
+): tfc.Tensor {
     const igamcKernel = compile('igamcf');
     return runKernel(
         function forwardFunc([a, x], save) {
@@ -142,11 +156,14 @@ export function igammac(a: tfc.Tensor, x: tfc.Tensor): tfc.Tensor {
                 )
             ], [a.shape, x.shape]);
         },
-        [a, x]
+        [
+            convertToTensor(a, 'a', 'igammac'),
+            convertToTensor(x, 'x', 'igammac')
+        ]
     );
 }
 
-function gamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
+function gamma<T extends tfc.Tensor>(x: T): T {
     const gammaKernel = compile('gammaf');
     return runKernel(
         function forwardFunc([x], save) {
@@ -154,12 +171,12 @@ function gamma<R extends tfc.Rank>(x: tfc.Tensor<R>): tfc.Tensor<R> {
             return gammaKernel.runUnary(x);
         },
         function backwardPass(
-            dy, [x]: Array<tfc.Tensor<R>>
-        ): Array<tfc.Tensor<R>> {
+            dy, [x]: T[]
+        ): T[] {
             return [dy.mul(
                 gamma(x).mul(digamma(x))
             )];
         },
         [x]
-    ) as tfc.Tensor<R>;
+    ) as T;
 }

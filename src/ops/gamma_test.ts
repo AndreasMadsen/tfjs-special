@@ -12,14 +12,23 @@ const ZETA5 = 1.036927755;
 const exp = Math.exp;
 
 describeAllEnvs('lgamma', () => {
-    it('gamma(x) is correct', async () => {
+    it('lgamma(x) is correct', async () => {
         const x = tfc.tensor1d([1,2,3,4]);
 
         expectArraysClose(
             await lgamma(x).data(),
             [0, 0, Math.log(2), Math.log(6)]);
     });
-    it('gamma\'(x) is correct', async () => {
+
+    it('lgamma(x) supports TensorLike', async () => {
+        const x = [1,2,3,4];
+
+        expectArraysClose(
+            await lgamma(x).data(),
+            [0, 0, Math.log(2), Math.log(6)]);
+    });
+
+    it('lgamma\'(x) is correct', async () => {
         const x = tfc.tensor1d([1,2,3,4]);
         const lgammadx = tfc.grad((x) => lgamma(x));
 
@@ -27,7 +36,8 @@ describeAllEnvs('lgamma', () => {
             await lgammadx(x).data(),
             [-EULER, 1 - EULER, 3/2 - EULER, 11/6 - EULER]);
     });
-    it('gamma\'\'(x) is correct', async () => {
+
+    it('lgamma\'\'(x) is correct', async () => {
         const x = tfc.tensor1d([1,2,3,4]);
         const lgammadx = tfc.grad((x) => lgamma(x));
         const lgammadxx = tfc.grad((x) => lgammadx(x));
@@ -36,7 +46,8 @@ describeAllEnvs('lgamma', () => {
             await lgammadxx(x).data(),
             [PISQD6, -1 + PISQD6, -5/4 + PISQD6, -49/36 + PISQD6]);
     });
-    it('gamma\'\'\'(x) is correct', async () => {
+
+    it('lgamma\'\'\'(x) is correct', async () => {
         const x = tfc.tensor1d([1,2,3,4]);
         const lgammadx = tfc.grad((x) => lgamma(x));
         const lgammadxx = tfc.grad((x) => lgammadx(x));
@@ -56,6 +67,15 @@ describeAllEnvs('digamma', () => {
             await digamma(x).data(),
             [-EULER, 1 - EULER, 3/2 - EULER, 11/6 - EULER]);
     });
+
+    it('digamma(x) supports TensorLike', async () => {
+        const x = tfc.tensor1d([1,2,3,4]);
+
+        expectArraysClose(
+            await digamma(x).data(),
+            [-EULER, 1 - EULER, 3/2 - EULER, 11/6 - EULER]);
+    });
+
     it('digamma\'(x) is correct', async () => {
         const x = tfc.tensor1d([1,2,3,4]);
         const digammadx = tfc.grad((x) => digamma(x));
@@ -64,6 +84,7 @@ describeAllEnvs('digamma', () => {
             await digammadx(x).data(),
             [PISQD6, -1 + PISQD6, -5/4 + PISQD6, -49/36 + PISQD6]);
     });
+
     it('digamma\'\'(x) is correct', async () => {
         const x = tfc.tensor1d([1,2,3,4]);
         const digammadx = tfc.grad((x) => digamma(x));
@@ -86,6 +107,15 @@ describeAllEnvs('polygamma', () => {
              [3/2 - EULER, -5/4 + PISQD6, 9/4 - 2*ZETA3, -51/8 + PIP4D15],
              [11/6 - EULER, -49/36 + PISQD6,
               251/108 - 2*ZETA3, -1393/216 + PIP4D15]]
+        );
+    });
+
+    it('polygamma(m, x) supports TensorLike', async () => {
+        const m = 2;
+        const x = [1, 2, 3, 4];
+        expectArraysClose(
+            await polygamma(m, x).array(),
+            [-2*ZETA3, 2 - 2*ZETA3, 9/4 - 2*ZETA3, 251/108 - 2*ZETA3]
         );
     });
 
@@ -141,6 +171,16 @@ describeAllEnvs('igamma', () => {
         );
     });
 
+    it('igamma(a, x) supports TensorLike', async () => {
+        const a = 1;
+        const x = [1, 2, 5, 10];
+
+        expectArraysClose(
+            await igamma(a, x).array(),
+            [1 - exp(-1), 1 - exp(-2), 1 - exp(-5), 1 - exp(-10)]
+        );
+    });
+
     it('igamma\'(a, x) is correct', async () => {
         const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
         const x = tfc.tensor2d([1, 2, 5, 10], [1, 4]);
@@ -183,6 +223,16 @@ describeAllEnvs('igammac', () => {
              [2*exp(-1), 3*exp(-2), 6*exp(-5), 11*exp(-10)],
              [(5*exp(-1))/2, 5*exp(-2), (37*exp(-5))/2, 61*exp(-10)],
              [(8*exp(-1))/3, (19*exp(-2))/3, (118*exp(-5))/3, (683*exp(-10))/3]]
+        );
+    });
+
+    it('igammac(a, x) supports TensorLike', async () => {
+        const a = 1;
+        const x = [1, 2, 5, 10];
+
+        expectArraysClose(
+            await igammac(a, x).array(),
+            [exp(-1), exp(-2), exp(-5), exp(-10)]
         );
     });
 

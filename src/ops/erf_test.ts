@@ -14,6 +14,18 @@ describeAllEnvs('erf', () => {
              0.8427007929, 0.9953222650,
              0.9999779095, 0.9999999846]);
     });
+
+    it('erf(x) supports TensorLike', async () => {
+        const x = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
+        expectArraysClose(
+            await erf(x).data(),
+            [-0.9999999846, -0.9999779095,
+             -0.9953222650, -0.8427007929,
+             0.,
+             0.8427007929, 0.9953222650,
+             0.9999779095, 0.9999999846]);
+    });
+
     it('erf\'(x) is correct', async () => {
         const x = tfc.tensor1d([-4, -3, -2, -1, 0, 1, 2, 3, 4]);
         const erfdx = tfc.grad((x) => erf(x));
@@ -25,6 +37,7 @@ describeAllEnvs('erf', () => {
              0.4151074974, 0.02066698536,
              0.0001392530519, 1.269823467e-7]);
     });
+
     it('erf\'\'(x) is correct', async () => {
         const x = tfc.tensor1d([-4, -3, -2, -1, 0, 1, 2, 3, 4]);
         const erfdx = tfc.grad((x) => erf(x));
@@ -50,6 +63,18 @@ describeAllEnvs('erfc', () => {
              0.1572992070, 0.004677734981,
              0.00002209049700, 1.541725790e-8]);
     });
+
+    it('erfc(x) supports TensorLike', async () => {
+        const x = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
+        expectArraysClose(
+            await erfc(x).data(),
+            [1.999999985, 1.999977910,
+             1.995322265, 1.842700793,
+             1.,
+             0.1572992070, 0.004677734981,
+             0.00002209049700, 1.541725790e-8]);
+    });
+
     it('erfc\'(x) is correct', async () => {
         const x = tfc.tensor1d([-4, -3, -2, -1, 0, 1, 2, 3, 4]);
         const erfcdx = tfc.grad((x) => erfc(x));
@@ -61,6 +86,7 @@ describeAllEnvs('erfc', () => {
              -0.4151074974, -0.02066698536,
              -0.0001392530519, -1.269823467e-7]);
     });
+
     it('erfc\'\'(x) is correct', async () => {
         const x = tfc.tensor1d([-4, -3, -2, -1, 0, 1, 2, 3, 4]);
         const erfcdx = tfc.grad((x) => erfc(x));

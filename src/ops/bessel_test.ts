@@ -14,6 +14,16 @@ describeAllEnvs('i0', () => {
         );
     });
 
+    it('i0(x) support TensorLike', async () => {
+        const x = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
+        expectArraysClose(
+            await i0(x).array(),
+           [11.30192195, 4.880792586, 2.279585302, 1.266065878,
+            1.,
+            1.266065878, 2.279585302, 4.880792586, 11.30192195]
+        );
+    });
+
     it('i0\'(x) is correct', async () => {
         const x = tfc.tensor1d([-4, -3, -2, -1, 0, 1, 2, 3, 4]);
         const i0dx = tfc.grad((x) => i0(x));
@@ -40,6 +50,16 @@ describeAllEnvs('i0', () => {
 describeAllEnvs('i1', () => {
     it('i1(x) is correct', async () => {
         const x = tfc.tensor1d([-4, -3, -2, -1, 0, 1, 2, 3, 4]);
+        expectArraysClose(
+            await i1(x).array(),
+            [-9.759465154, -3.953370217, -1.590636855, -0.5651591040,
+             0.,
+             0.5651591040, 1.590636855, 3.953370217, 9.759465154]
+        );
+    });
+
+    it('i1(x) supports TensorLike', async () => {
+        const x = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
         expectArraysClose(
             await i1(x).array(),
             [-9.759465154, -3.953370217, -1.590636855, -0.5651591040,
@@ -81,6 +101,16 @@ describeAllEnvs('i0e', () => {
         );
     });
 
+    it('i0e(x) supports TensorLike', async () => {
+        const x = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
+        expectArraysClose(
+            await i0e(x).array(),
+            [0.2070019212, 0.2430003542, 0.3085083224, 0.4657596077,
+             1.,
+             0.4657596077, 0.3085083224, 0.2430003542, 0.2070019212]
+        );
+    });
+
     it('i0e\'(x) is correct', async () => {
         const x = tfc.tensor1d([-4, -3, -2, -1, 1, 2, 3, 4]);
         const i0edx = tfc.grad((x) => i0e(x));
@@ -106,6 +136,16 @@ describeAllEnvs('i0e', () => {
 describeAllEnvs('i1e', () => {
     it('i1e(x) is correct', async () => {
         const x = tfc.tensor1d([-4, -3, -2, -1, 0, 1, 2, 3, 4]);
+        expectArraysClose(
+            await i1e(x).array(),
+            [-0.1787508395, -0.1968267133, -0.2152692892, -0.2079104154,
+             0.,
+             0.2079104154, 0.2152692892, 0.1968267133, 0.1787508395]
+        );
+    });
+
+    it('i1e(x) supports TensorLike', async () => {
+        const x = [-4, -3, -2, -1, 0, 1, 2, 3, 4];
         expectArraysClose(
             await i1e(x).array(),
             [-0.1787508395, -0.1968267133, -0.2152692892, -0.2079104154,

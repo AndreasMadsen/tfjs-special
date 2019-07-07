@@ -1,9 +1,11 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 import { compile } from '../compiler';
-import { runKernel, reduceGradient } from './_define_op';
+import { runKernel, reduceGradient, convertToTensor } from './_define_op';
 
-export function zeta(x: tfc.Tensor, q: tfc.Tensor): tfc.Tensor {
+export function zeta(
+    x: tfc.Tensor | tfc.TensorLike, q: tfc.Tensor | tfc.TensorLike
+): tfc.Tensor {
     const zetaKernel = compile('zetaf');
     return runKernel(
         function forwardFunc([x, q], save) {
@@ -20,6 +22,9 @@ export function zeta(x: tfc.Tensor, q: tfc.Tensor): tfc.Tensor {
                 )
             ], [x.shape, q.shape]);
         },
-        [x, q]
+        [
+            convertToTensor(x, 'x', 'zeta'),
+            convertToTensor(q, 'q', 'zeta')
+        ]
     );
 }

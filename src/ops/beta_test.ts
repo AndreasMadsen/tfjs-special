@@ -16,6 +16,15 @@ describeAllEnvs('beta', () => {
         );
     });
 
+    it('lbeta(a, b) supports TensorLike', async () => {
+        const a = [1, 2, 3, 4];
+        const b = [1, 2, 3, 4];
+        expectArraysClose(
+            await lbeta(a, b).array(),
+            [0, -Math.log(6), -Math.log(30), -Math.log(140)]
+        );
+    });
+
     it('lbeta\'(a, b) is correct', async () => {
         const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
         const b = tfc.tensor2d([1, 2, 3, 4], [1, 4]);
@@ -75,6 +84,17 @@ describeAllEnvs('betainc', () => {
                  [0, 77/2048, 11/32, 1701/2048, 1],
                  [0, 289/4096, 1/2, 3807/4096, 1]]
             ]
+        );
+    });
+
+    it('betainc(a, b, x) supports TensorLike', async () => {
+        const a = 2;
+        const b = 2;
+        const x = [0, 0.25, 0.5, 0.75, 1];
+
+        expectArraysClose(
+            await betainc(a, b, x).array(),
+            [0, 5/32, 1/2, 27/32, 1]
         );
     });
 
