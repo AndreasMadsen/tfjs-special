@@ -31,7 +31,7 @@ export function constComparisonInFor(ast: FileAST): FileAST {
 
                 return new Compound({
                     _nodetype: 'Compound',
-                    coord: 'transfrom/eliminate-goto.ts',
+                    coord: 'transfrom/const-comparison-in-for.ts',
                     block_items: [
                         child.init,
                         staticforLoop
