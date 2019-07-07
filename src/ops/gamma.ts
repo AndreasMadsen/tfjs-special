@@ -1,7 +1,7 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 import { compile } from '../compiler';
-import { runKernel, reduceGradient, convertToTensor } from './_define_op';
+import { runKernel, reduceGradient, convertToFloatTensor } from './_define_op';
 
 export function lgamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     const lgamKernel = compile('lgamf');
@@ -16,7 +16,7 @@ export function lgamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
             return [dy.mul(digamma(x))];
         },
         [
-            convertToTensor(x, 'x', 'lgamma')
+            convertToFloatTensor(x, 'x', 'lgamma')
         ]
     ) as T;
 }
@@ -34,7 +34,7 @@ export function digamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
             return [dy.mul(fast_polygamma_positive_scalar_order(1, x))];
         },
         [
-            convertToTensor(x, 'x', 'digamma')
+            convertToFloatTensor(x, 'x', 'digamma')
         ]
     ) as T;
 }
@@ -74,8 +74,8 @@ export function polygamma(
             ], [m.shape, x.shape]);
         },
         [
-            convertToTensor(m, 'm', 'polygamma'),
-            convertToTensor(x, 'x', 'polygamma')
+            convertToFloatTensor(m, 'm', 'polygamma'),
+            convertToFloatTensor(x, 'x', 'polygamma')
         ]
     );
 }
@@ -128,8 +128,8 @@ export function igamma(
             ], [a.shape, x.shape]);
         },
         [
-            convertToTensor(a, 'a', 'igamma'),
-            convertToTensor(x, 'x', 'igamma')
+            convertToFloatTensor(a, 'a', 'igamma'),
+            convertToFloatTensor(x, 'x', 'igamma')
         ]
     );
 }
@@ -157,8 +157,8 @@ export function igammac(
             ], [a.shape, x.shape]);
         },
         [
-            convertToTensor(a, 'a', 'igammac'),
-            convertToTensor(x, 'x', 'igammac')
+            convertToFloatTensor(a, 'a', 'igammac'),
+            convertToFloatTensor(x, 'x', 'igammac')
         ]
     );
 }

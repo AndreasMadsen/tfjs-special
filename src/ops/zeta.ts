@@ -1,7 +1,7 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 import { compile } from '../compiler';
-import { runKernel, reduceGradient, convertToTensor } from './_define_op';
+import { runKernel, reduceGradient, convertToFloatTensor } from './_define_op';
 
 export function zeta(
     x: tfc.Tensor | tfc.TensorLike, q: tfc.Tensor | tfc.TensorLike
@@ -23,8 +23,8 @@ export function zeta(
             ], [x.shape, q.shape]);
         },
         [
-            convertToTensor(x, 'x', 'zeta'),
-            convertToTensor(q, 'q', 'zeta')
+            convertToFloatTensor(x, 'x', 'zeta'),
+            convertToFloatTensor(q, 'q', 'zeta')
         ]
     );
 }

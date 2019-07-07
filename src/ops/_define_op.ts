@@ -4,8 +4,6 @@ import { assertAndGetBroadcastShape } from '../broadcast';
 import '../kernels';
 import '../special_kernels';
 
-export { convertToTensor } from '@tensorflow/tfjs-core/dist/tensor_util_env';
-
 declare type SaveFunc<S extends tfc.Tensor[]> = (save: S) => void;
 
 export function runKernel<
@@ -49,4 +47,52 @@ export function reduceGradient<
 
         return grad;
     }) as G;
+}
+
+// Simplified version of convertToTensor from
+// @tensorflow/tfjs-core/src/tensor_util_env.ts
+// Idealy convertToTensor would just be exported, but it isn't.
+export function convertToFloatTensor<T extends tfc.Tensor>(
+    x: T | tfc.TensorLike, argName: string, functionName: string
+): T {
+    const inferredDtype = x instanceof tfc.Tensor ?
+        x.dtype : tfc.util.inferDtype(x);
+    if (inferredDtype !== 'float32') {
+        throw new Error(
+            `Argument '${argName}' passed to '${functionName}' must be a ` +
+            `Tensor or TensorLike, with float32 as the dtype ` +
+            `but got dtype '${inferredDtype}'`);
+    }
+
+    if (x instanceof tfc.Tensor) {
+        return x;
+    }
+
+    return tfc.Tensor.make(
+        inferShape(x),
+        {
+            values: tfc.util.toTypedArray(
+                x, 'float32', tfc.ENV.getBool('DEBUG')
+            ) as Float32Array
+        },
+        'float32'
+    );
+}
+
+function inferShape(val: tfc.TensorLike): number[] {
+    if (tfc.util.isTypedArray(val)) {
+        return [val.length];
+    }
+    if (!Array.isArray(val)) {
+        return [];
+    }
+    const shape: number[] = [];
+
+    let firstElem: typeof val = val;
+    while (Array.isArray(firstElem) || tfc.util.isTypedArray(firstElem)) {
+        shape.push(firstElem.length);
+        firstElem = firstElem[0];
+    }
+
+    return shape;
 }

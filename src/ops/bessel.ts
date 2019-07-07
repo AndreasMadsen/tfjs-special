@@ -1,7 +1,7 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 import { compile } from '../compiler';
-import { runKernel, convertToTensor } from './_define_op';
+import { runKernel, convertToFloatTensor } from './_define_op';
 
 export function i0<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     const i0fKernel = compile('i0f');
@@ -19,7 +19,7 @@ export function i0<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
             )];
         },
         [
-            convertToTensor(x, 'x', 'i0')
+            convertToFloatTensor(x, 'x', 'i0')
         ]
     ) as T;
 }
@@ -40,7 +40,7 @@ export function i1<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
             )];
         },
         [
-            convertToTensor(x, 'x', 'i1')
+            convertToFloatTensor(x, 'x', 'i1')
         ]
     ) as T;
 }
@@ -89,7 +89,7 @@ export function i0e<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
             )];
         },
         [
-            convertToTensor(x, 'x', 'i0e')
+            convertToFloatTensor(x, 'x', 'i0e')
         ]
     ) as T;
 }
@@ -113,7 +113,7 @@ export function i1e<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
             )];
         },
         [
-            convertToTensor(x, 'x', 'i1e')
+            convertToFloatTensor(x, 'x', 'i1e')
         ]
     ) as T;
 }

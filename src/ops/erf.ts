@@ -1,7 +1,7 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 import { compile } from '../compiler';
-import { runKernel, convertToTensor } from './_define_op';
+import { runKernel, convertToFloatTensor } from './_define_op';
 
 export function erf<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     const erffKernel = compile('erff');
@@ -18,7 +18,7 @@ export function erf<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
             )];
         },
         [
-            convertToTensor(x, 'x', 'erf')
+            convertToFloatTensor(x, 'x', 'erf')
         ]
     ) as T;
 }
@@ -38,7 +38,7 @@ export function erfc<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
             )];
         },
         [
-            convertToTensor(x, 'x', 'erf')
+            convertToFloatTensor(x, 'x', 'erf')
         ]
     ) as T;
 }

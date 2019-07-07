@@ -1,7 +1,7 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
 import { compile } from '../compiler';
-import { runKernel, reduceGradient, convertToTensor } from './_define_op';
+import { runKernel, reduceGradient, convertToFloatTensor } from './_define_op';
 import { digamma } from './gamma';
 
 export function lbeta(
@@ -30,8 +30,8 @@ export function lbeta(
             ], [a.shape, b.shape]);
         },
         [
-            convertToTensor(a, 'a', 'lbeta'),
-            convertToTensor(b, 'b', 'lbeta')
+            convertToFloatTensor(a, 'a', 'lbeta'),
+            convertToFloatTensor(b, 'b', 'lbeta')
         ]
     );
 }
@@ -86,9 +86,9 @@ export function betainc(
             ], [a.shape, b.shape, x.shape]);
         },
         [
-            convertToTensor(a, 'a', 'betainc'),
-            convertToTensor(b, 'b', 'betainc'),
-            convertToTensor(x, 'x', 'betainc')
+            convertToFloatTensor(a, 'a', 'betainc'),
+            convertToFloatTensor(b, 'b', 'betainc'),
+            convertToFloatTensor(x, 'x', 'betainc')
         ]
     );
 }
