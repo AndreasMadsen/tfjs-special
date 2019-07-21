@@ -1,59 +1,54 @@
 
 import * as tfc from '@tensorflow/tfjs-core';
-import { describeAllEnvs, expectArraysClose } from '../test_util';
+import { describeAllEnvs, expectArraysClose, expectPromiseToFail } from '../test_util';
 import { lbeta, betainc } from './beta';
 
 describeAllEnvs('beta', () => {
-    it('lbeta(a, b) is correct', async () => {
-        const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
-        const b = tfc.tensor2d([1, 2, 3, 4], [1, 4]);
+    it('lbeta(x) is correct', async () => {
+        const x = tfc.tensor2d([[1, 1], [2, 2], [3, 3], [4, 4]]);
         expectArraysClose(
-            await lbeta(a, b).array(),
-            [[0,            -Math.log(2),  -Math.log(3),  -Math.log(4)],
-             [-Math.log(2), -Math.log(6),  -Math.log(12), -Math.log(20)],
-             [-Math.log(3), -Math.log(12), -Math.log(30), -Math.log(60)],
-             [-Math.log(4), -Math.log(20), -Math.log(60), -Math.log(140)]]
-        );
-    });
-
-    it('lbeta(a, b) supports TensorLike', async () => {
-        const a = [1, 2, 3, 4];
-        const b = [1, 2, 3, 4];
-        expectArraysClose(
-            await lbeta(a, b).array(),
+            await lbeta(x).array(),
             [0, -Math.log(6), -Math.log(30), -Math.log(140)]
         );
     });
 
-    it('lbeta\'(a, b) is correct', async () => {
-        const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
-        const b = tfc.tensor2d([1, 2, 3, 4], [1, 4]);
-        const betadx = tfc.grads((a, b) => lbeta(a, b).sum());
-        const [betada, betadb] = betadx([a, b]);
+    it('lbeta(x) supports TensorLike', async () => {
+        const x = [[1, 1], [2, 2], [3, 3], [4, 4]];
         expectArraysClose(
-            await betada.array(),
-            [[-77/12], [-37/10], [-53/20], [-218/105]]
-        );
-        expectArraysClose(
-            await betadb.array(),
-            [[-77/12, -37/10, -53/20, -218/105]]
+            await lbeta(x).array(),
+            [0, -Math.log(6), -Math.log(30), -Math.log(140)]
         );
     });
 
-    it('lbeta\'\'(a, b) is correct', async () => {
-        const a = tfc.tensor2d([1, 2, 3, 4], [4, 1]);
-        const b = tfc.tensor2d([1, 2, 3, 4], [1, 4]);
-        const lbetada = tfc.grad((a) => lbeta(a, b).sum());
-        const lbetadada = tfc.grad((a) => lbetada(a));
-        const lbetadb = tfc.grad((b) => lbeta(a, b).sum());
-        const lbetadbdb = tfc.grad((b) => lbetadb(b));
+    it('lbeta(x) throws for scalars', (done) => {
+        const x = tfc.scalar(1);
+        expectPromiseToFail(async () => lbeta(x).array(), done);
+    });
+
+    it('lbeta(x) returns ones for empty tensor', async () => {
+        const x = tfc.tensor3d(new Float32Array(), [3, 5, 0]);
         expectArraysClose(
-             await lbetadada(a).array(),
-             [[725/144], [899/600], [2663/3600], [19667/44100]]
+            await lbeta(x).array(),
+            await tfc.ones([3, 5]).array()
         );
+    });
+
+    it('lbeta\'(x) is correct', async () => {
+        const x = tfc.tensor2d([[1, 1], [2, 2], [3, 3], [4, 4]]);
+        const betadx = tfc.grad((x) => lbeta(x));
         expectArraysClose(
-             await lbetadbdb(b).array(),
-             [[725/144, 899/600, 2663/3600, 19667/44100]]
+            await betadx(x).array(),
+            [-1, -5/6, -47/60, -319/420]
+        );
+    });
+
+    it('lbeta\'\'(ax) is correct', async () => {
+        const x = tfc.tensor2d([[1, 1], [2, 2], [3, 3], [4, 4]]);
+        const betadx = tfc.grad((x) => lbeta(x));
+        const betadxx = tfc.grad((x) => betadx(x));
+        expectArraysClose(
+             await betadxx(x).array(),
+             [1, 13/36, 769/3600, 26581/176400]
         );
     });
 });
