@@ -26,11 +26,6 @@ describeAllEnvs('zeta', () => {
     });
 
     it('zeta\'(z, q) is correct', async () => {
-        if (tfc.getBackend() !== 'webgl' ||
-            tfc.ENV.getNumber('WEBGL_VERSION') !== 1) {
-            return;
-        }
-
         const x = tfc.tensor2d([2, 3, 4, 5], [4, 1]);
         const q = tfc.tensor2d([1, 2, 3, 4], [1, 4]);
         const zetad = tfc.grads((x, q) => zeta(x, q).sum());
