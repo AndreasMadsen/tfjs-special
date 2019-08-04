@@ -24,3 +24,8 @@ node_modules/
 # debug directroy
 /debug
 
+# documentation
+/docs/api.json
+/docs/api.html
+/docs/tf-math-special.min.js
+
