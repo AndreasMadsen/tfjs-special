@@ -68,6 +68,10 @@ export function convertToFloatTensor<T extends tfc.Tensor>(
         return x;
     }
 
+    if (!tfc.util.isTypedArray(x) && !Array.isArray(x)) {
+        x = [x] as number[];
+    }
+
     return tfc.Tensor.make(
         inferShape(x),
         {
@@ -88,7 +92,7 @@ function inferShape(val: tfc.TensorLike): number[] {
     }
     const shape: number[] = [];
 
-    let firstElem: typeof val = val;
+    let firstElem: tfc.TensorLike = val;
     while (Array.isArray(firstElem) || tfc.util.isTypedArray(firstElem)) {
         shape.push(firstElem.length);
         firstElem = firstElem[0];

@@ -38,17 +38,12 @@ describeAllEnvs('beta', () => {
         const betadx = tfc.grad((x) => lbeta(x));
         expectArraysClose(
             await betadx(x).array(),
-            [-1, -5/6, -47/60, -319/420]
-        );
-    });
-
-    it('lbeta\'\'(ax) is correct', async () => {
-        const x = tfc.tensor2d([[1, 1], [2, 2], [3, 3], [4, 4]]);
-        const betadx = tfc.grad((x) => lbeta(x));
-        const betadxx = tfc.grad((x) => betadx(x));
-        expectArraysClose(
-             await betadxx(x).array(),
-             [1, 13/36, 769/3600, 26581/176400]
+            [
+                [-1, -1],
+                [-5/6, -5/6],
+                [-47/60, -47/60],
+                [-319/420, -319/420]
+            ]
         );
     });
 });
