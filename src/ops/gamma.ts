@@ -3,6 +3,29 @@ import * as tfc from '@tensorflow/tfjs-core';
 import { compile } from '../compiler';
 import { runKernel, reduceGradient, convertToFloatTensor } from './_define_op';
 
+/**
+ * Computes the log of the $\Gamma(x)$ element-wise.
+ * Defined as:
+ *
+ * $$
+ * \begin{aligned}
+ * \mathrm{lgamma}(x) &= \ln(|\Gamma(x)|) \\
+ * \Gamma(x) &= \int_{0}^{\infty} x^{z-1} e^{-x}\,dx
+ * \end{aligned}
+ * $$
+ *
+ * ```js
+ * const x = tf.tensor1d([1, 2, 3, 4]);
+ *
+ * tfspecial.lgamma(x).print();
+ * ```
+ *
+ * @param x The input tensor.
+ *
+ * @public
+ * @category Gamma function
+ * @order 1
+ */
 export function lgamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     const lgamKernel = compile('lgamf');
     return runKernel(
@@ -21,6 +44,26 @@ export function lgamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     ) as T;
 }
 
+/**
+ * First order derivative of $\ln(|\Gamma(x)|)$ element-wise.
+ * Defined as:
+ *
+ * $$
+ * \mathrm{digamma}(x) = \psi(x) = \frac{d}{dx}\ln(|\Gamma(x)|)
+ * $$
+ *
+ * ```js
+ * const x = tf.tensor1d([1, 2, 3, 4]);
+ *
+ * tfspecial.digamma(x).print();
+ * ```
+ *
+ * @param x The input tensor.
+ *
+ * @public
+ * @category Gamma function
+ * @order 2
+ */
 export function digamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     const digammaKernel = compile('psif');
     return runKernel(
@@ -39,9 +82,30 @@ export function digamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     ) as T;
 }
 
-// The polygamma function can be expressed as:
-// psi^{(m)}(x) = (-1)^(m+1) * m! * zeta(m+1, x)
-// See: https://en.wikipedia.org/wiki/Polygamma_function
+/**
+ * `m + 1` order derivative of $\ln(|\Gamma(x)|)$ element-wise.
+ * Defined as:
+ *
+ * $$
+ * \mathrm{polygamma}(m, x) = \psi^{(m)}(x)
+ *  = \frac{d^{m+1}}{dx^{m+1}}\ln(|\Gamma(x)|)
+ * $$
+ *
+ * ```js
+ * const m = tf.tensor2d([0, 1, 2, 3], [1, 4]);
+ * const x = tf.tensor2d([1, 2, 3, 4], [4, 1]);
+ *
+ * tfspecial.polygamma(m, x).print();
+ * ```
+ *
+ * @param m The derivative order of $\psi(x)$. A Tensor, ofnon-negative
+ *          integer values. Supports broadcasting.
+ * @param x The input tensor to $\psi(x)$. Supports broadcasting.
+ *
+ * @public
+ * @category Gamma function
+ * @order 3
+ */
 export function polygamma(
     m: tfc.Tensor | tfc.TensorLike, x: tfc.Tensor | tfc.TensorLike
 ): tfc.Tensor {
@@ -54,6 +118,9 @@ export function polygamma(
             const mequal0 = digammaKernel.runUnary(x)
                 .mul(tfc.onesLike(m));
 
+            // The polygamma function can be expressed as:
+            // psi^{(m)}(x) = (-1)^(m+1) * m! * zeta(m+1, x)
+            // See: https://en.wikipedia.org/wiki/Polygamma_function
             const mp1 = m.add(1);
             const mabove0 = tfc.pow(-1, mp1)
                 .mul(gammaKernel.runUnary(mp1))
@@ -106,6 +173,31 @@ function fast_polygamma_positive_scalar_order<T extends tfc.Tensor>(
     ) as T;
 }
 
+/**
+ * The lower regularized incomplete Gamma function.
+ * Defined as:
+ *
+ * $$
+ * \begin{aligned}
+ * \mathrm{igamma}(a, x) &= \frac{\gamma(a, x)}{\Gamma(a)} \\
+ * \gamma(a, x) &= \int_{0}^{x} t^{s-1} e^{-t}\,dt
+ * \end{aligned}
+ * $$
+ *
+ * ```js
+ * const a = tf.tensor2d([1, 2, 3, 4], [4, 1]);
+ * const x = tf.tensor2d([1, 2, 5, 10], [1, 4]);
+ *
+ * tfspecial.igamma(a, x).print();
+ * ```
+ *
+ * @param a The Gamma term tensor. Supports broadcasting.
+ * @param x The incomplete integral limit. Supports broadcasting.
+ *
+ * @public
+ * @category Gamma function
+ * @order 4
+ */
 export function igamma(
     a: tfc.Tensor | tfc.TensorLike, x: tfc.Tensor | tfc.TensorLike
 ): tfc.Tensor {
@@ -134,6 +226,31 @@ export function igamma(
     );
 }
 
+/**
+ * The upper regularized incomplete Gamma function.
+ * Defined as:
+ *
+ * $$
+ * \begin{aligned}
+ * \mathrm{igammac}(a, x) &= \frac{\Gamma(a, x)}{\Gamma(a)} \\
+ * \Gamma(a, x) &= \int_{x}^{\infty} t^{s-1} e^{-t}\,dt
+ * \end{aligned}
+ * $$
+ *
+ * ```js
+ * const a = tf.tensor2d([1, 2, 3, 4], [4, 1]);
+ * const x = tf.tensor2d([1, 2, 5, 10], [1, 4]);
+ *
+ * tfspecial.igammac(x).print();
+ * ```
+ *
+ * @param a The Gamma term tensor. Supports broadcasting.
+ * @param x The incomplete integral limit. Supports broadcasting.
+ *
+ * @public
+ * @category Gamma function
+ * @order 4
+ */
 export function igammac(
     a: tfc.Tensor | tfc.TensorLike, x: tfc.Tensor | tfc.TensorLike
 ): tfc.Tensor {
