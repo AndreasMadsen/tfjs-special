@@ -57,6 +57,6 @@ handlebars.registerHelper('description', function render(comment, options) {
 const template = handlebars.compile(source);
 
 fs.writeFileSync(
-    path.resolve(__dirname, '..', 'docs', 'api.html'),
+    path.resolve(__dirname, '..', 'docs', 'index.html'),
     template(docs)
 );
