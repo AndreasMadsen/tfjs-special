@@ -25,7 +25,9 @@ function config({plugins = [], output = {}}) {
         output: {
             banner: LICENSE,
             sourcemap: true,
-            globals: {'@tensorflow/tfjs-core': 'tf'},
+            globals: {
+                '@tensorflow/tfjs-core': 'tf'
+            },
             ...output
         },
         external: ['@tensorflow/tfjs-core']
@@ -37,9 +39,10 @@ module.exports = function (cmdOptions) {
 
     // tf-core.js
     bundles.push(config({
+        plugins: [],
         output: {
             format: 'umd',
-            name: 'tf',
+            name: 'tfspecial',
             extend: true,
             file: 'dist/tf-math-special.js',
         }
@@ -52,7 +55,7 @@ module.exports = function (cmdOptions) {
         })],
         output: {
             format: 'umd',
-            name: 'tf',
+            name: 'tfspecial',
             extend: true,
             file: 'dist/tf-math-special.min.js',
         }
