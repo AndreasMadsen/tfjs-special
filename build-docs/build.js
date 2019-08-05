@@ -32,7 +32,10 @@ docs.children = docs.children
     });
 docs.children[0].flags.isFirst = true;
 
-const source = fs.readFileSync(path.resolve(__dirname, 'api.hbs'), 'utf8');
+handlebars.registerPartial(
+    'menu',
+    fs.readFileSync(path.resolve(__dirname, 'menu.hbs'), 'utf8')
+);
 
 handlebars.registerHelper('category', function render(comment, options) {
     const tags = getTags(comment);
@@ -87,9 +90,20 @@ handlebars.registerHelper('description', function render(comment, options) {
     return text;
 });
 
-const template = handlebars.compile(source);
+const api = handlebars.compile(
+    fs.readFileSync(path.resolve(__dirname, 'api.hbs'), 'utf8')
+);
+
+const overview = handlebars.compile(
+    fs.readFileSync(path.resolve(__dirname, 'overview.hbs'), 'utf8')
+);
 
 fs.writeFileSync(
     path.resolve(__dirname, '..', 'docs', 'api.html'),
-    template(docs)
+    api(docs)
+);
+
+fs.writeFileSync(
+    path.resolve(__dirname, '..', 'docs', 'index.html'),
+    overview(docs)
 );

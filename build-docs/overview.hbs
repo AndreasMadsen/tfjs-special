@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" class="page-overview">
+<title>TensorFlow.js Special Math</title>
+<meta charset="utf8">
+
+<link ref="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+<link rel="stylesheet" href="./style.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/languages/javascript.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.8/styles/github.min.css">
+
+{{> menu}}
+
+<section id="overview">
+<iframe src="https://ghbtns.com/github-btn.html?user=AndreasMadsen&repo=tfjs-special&type=star&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+<iframe src="https://ghbtns.com/github-btn.html?user=AndreasMadsen&repo=tfjs-special&type=fork&count=true" frameborder="0" scrolling="0" width="100px" height="20px"></iframe>
+<h1>TensorFlow.js Special Math</h1>
+<hr>
+<p>
+    <strong>TensorFlow.js Special Math</strong> implements all the special math functions from TensorFlow, those
+    are the Gamma, Beta, Bessel, and Error functions, as well as all the variations that TensorFlow provides. All the functions
+    are:
+</p>
+<ul>
+    <li>implemented in both WebGL and JavaScript.</li>
+    <li>have defined gradients and supports <code>tf.grad()</code>.</li>
+    <li>are TypeScript compatible with TensorFlow.js.</li>
+    <li>transpiled from <a href="https://www.netlib.org/cephes/">cephes</a>, the same library used by SciPy.</li>
+</ul>
+
+<h3>Example</h3>
+<pre><code class="language-js">const x = tf.tensor1d([1, 2, 3, 4]);
+
+const gamma = (tensor) => tfspecial.lgamma(tensor).exp();
+const gammadx = tf.grad(gamma);
+gammadx(x).print();
+</code></pre>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tensorflow/1.2.3/tf.min.js"></script>
+<script src="tf-math-special.min.js"></script>
+<script src="api.js"></script>
+</html>

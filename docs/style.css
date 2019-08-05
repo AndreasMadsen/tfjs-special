@@ -1,0 +1,175 @@
+
+body {
+    margin: 0;
+    font-size: 12pt;
+    font-family: sans-serif;
+    display: grid;
+    grid-template-columns: 180px auto 1fr;
+    grid-template-rows: auto auto;
+    grid-gap: 10px 40px;
+}
+
+.page-api body {
+    grid-template-areas:
+    "menu menu menu"
+    "toc api .";
+}
+
+.page-overview body {
+    grid-template-areas:
+    "menu menu menu"
+    ". overview .";
+}
+
+@media screen and (max-width: 800px) {
+    .page-api body {
+        grid-template-areas:
+            "menu menu menu"
+            "api api api";
+    }
+    .page-overview body {
+        grid-template-areas:
+            "menu menu menu"
+            "overview overview overview";
+    }
+    #toc {
+        display: none;
+    }
+}
+
+#menu {
+    grid-area: menu;
+    margin-top: 0px;
+    background: #F5F6F7;
+    border-bottom: 3px solid #425066;
+    display: flex;
+    justify-content: center;
+}
+
+#menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+}
+#menu ul li {
+    float: left;
+}
+#menu a {
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    color: #425066;
+    padding: 10px;
+    border-bottom: 2px solid transparent;
+}
+#menu a:hover {
+    border-bottom: 2px solid #425066;
+}
+
+#overview {
+    grid-area: overview;
+
+    background: #FAFAFA;
+    border-radius: 8px;
+    padding: 32px;
+    max-width: 700px;
+}
+
+#overview h1 {
+    margin: 0 0 10px 0;
+    float: left;
+}
+
+#overview iframe {
+    margin: 5px 0 0 0;
+    float: right;
+}
+
+#overview hr {
+    clear: both;
+}
+
+#toc {
+    grid-area: toc;
+    position: relative;
+}
+
+#toc .content {
+    position: sticky;
+    top: 20px;
+    padding: 0 30px;
+}
+
+#toc h3 {
+    margin: 0;
+    padding: 10px 0;
+    display: inline;
+}
+
+#toc .content > ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#toc .content > ul ul {
+    padding-left: 30px;
+    margin-bottom: 10px;
+}
+
+#toc a {
+    color: #0277bd;
+}
+
+#api {
+    grid-area: api;
+}
+
+#api .api-function {
+    background: #FAFAFA;
+    border-radius: 8px;
+    padding: 32px;
+    margin-top: 64px;
+    max-width: 700px;
+}
+
+#api .api-function:first-of-type {
+    margin-top: 0;
+}
+
+#api .api-function h2 {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#api .api-function h2 a {
+    color: #0277bd;
+}
+
+#api .api-function .api-parameter-name {
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#api .api-function .api-parameter-type {
+    color: #616161;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+pre code {
+    white-space: pre-wrap;
+}
+
+pre code {
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+
+pre.api-code-output {
+    position: relative;
+    min-height: 22px;
+}
+
+pre.api-code-output button {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
