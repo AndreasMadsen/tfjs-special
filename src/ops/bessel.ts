@@ -14,7 +14,7 @@ import { runKernel, convertToFloatTensor } from './_define_op';
  * $$
  *
  * ```js
- * const x = tf.tensor2d([0, 1, 2, 3, 4]);
+ * const x = tf.tensor1d([0, 1, 2, 3, 4]);
  *
  * tfspecial.i0(x).print();
  * ```
@@ -57,7 +57,7 @@ export function i0<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
  * $$
  *
  * ```js
- * const x = tf.tensor2d([0, 1, 2, 3, 4]);
+ * const x = tf.tensor1d([0, 1, 2, 3, 4]);
  *
  * tfspecial.i1(x).print();
  * ```
@@ -126,7 +126,7 @@ function iv<T extends tfc.Tensor>(
  * $$
  *
  * ```js
- * const x = tf.tensor2d([0, 1, 2, 3, 4]);
+ * const x = tf.tensor1d([0, 1, 2, 3, 4]);
  *
  * tfspecial.i0e(x).print();
  * ```
@@ -171,7 +171,7 @@ export function i0e<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
  * $$
  *
  * ```js
- * const x = tf.tensor2d([0, 1, 2, 3, 4]);
+ * const x = tf.tensor1d([0, 1, 2, 3, 4]);
  *
  * tfspecial.i0e(x).print();
  * ```
