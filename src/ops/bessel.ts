@@ -3,6 +3,28 @@ import * as tfc from '@tensorflow/tfjs-core';
 import { compile } from '../compiler';
 import { runKernel, convertToFloatTensor } from './_define_op';
 
+/**
+ * Computes the modified Bessel function of order zero.
+ * Defined as:
+ *
+ * $$
+ * \mathrm{i0}(x) = J_0(i x) =
+ *   \sum_{m=0}^\infty
+ *     \frac{1}{m! \Gamma(m+1)} \left(\frac{x}{2}\right)^{2m}
+ * $$
+ *
+ * ```js
+ * const x = tf.tensor2d([0, 1, 2, 3, 4]);
+ *
+ * tfspecial.i0(x).print();
+ * ```
+ *
+ * @param x The input tensor.
+ *
+ * @public
+ * @category Bessel
+ * @order 1
+ */
 export function i0<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     const i0fKernel = compile('i0f');
     return runKernel(
@@ -24,6 +46,28 @@ export function i0<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     ) as T;
 }
 
+/**
+ * Computes the modified Bessel function of order one.
+ * Defined as:
+ *
+ * $$
+ * \mathrm{i1}(x) = J_1(i x) =
+ *   \sum_{m=0}^\infty
+ *     \frac{1}{m! \Gamma(m+2)} \left(\frac{x}{2}\right)^{2m+1}
+ * $$
+ *
+ * ```js
+ * const x = tf.tensor2d([0, 1, 2, 3, 4]);
+ *
+ * tfspecial.i1(x).print();
+ * ```
+ *
+ * @param x The input tensor.
+ *
+ * @public
+ * @category Bessel
+ * @order 2
+ */
 export function i1<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     const i1fKernel = compile('i1f');
     return runKernel(
@@ -71,6 +115,28 @@ function iv<T extends tfc.Tensor>(
     ) as T;
 }
 
+/**
+ * Computes the modified Bessel function of order zero, exponentially scaled.
+ * Defined as:
+ *
+ * $$
+ * \mathrm{i0e}(x) = \mathrm{e}^{-|x|} J_0(i x) =
+ *   \mathrm{e}^{-|x|} \sum_{m=0}^\infty
+ *     \frac{1}{m! \Gamma(m+1)} \left(\frac{x}{2}\right)^{2m}
+ * $$
+ *
+ * ```js
+ * const x = tf.tensor2d([0, 1, 2, 3, 4]);
+ *
+ * tfspecial.i0e(x).print();
+ * ```
+ *
+ * @param x The input tensor.
+ *
+ * @public
+ * @category Bessel
+ * @order 3
+ */
 export function i0e<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     const i0efKernel = compile('i0ef');
     return runKernel(
@@ -94,6 +160,28 @@ export function i0e<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     ) as T;
 }
 
+/**
+ * Computes the modified Bessel function of order one, exponentially scaled.
+ * Defined as:
+ *
+ * $$
+ * \mathrm{i1e}(x) = \mathrm{e}^{-|x|} J_1(i x) =
+ *   \mathrm{e}^{-|x|} \sum_{m=0}^\infty
+ *     \frac{1}{m! \Gamma(m+2)} \left(\frac{x}{2}\right)^{2m+1}
+ * $$
+ *
+ * ```js
+ * const x = tf.tensor2d([0, 1, 2, 3, 4]);
+ *
+ * tfspecial.i0e(x).print();
+ * ```
+ *
+ * @param x The input tensor.
+ *
+ * @public
+ * @category Bessel
+ * @order 4
+ */
 export function i1e<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
     const i1efKernel = compile('i1ef');
     return runKernel(

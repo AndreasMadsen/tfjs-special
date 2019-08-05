@@ -20,7 +20,7 @@ import { runKernel, convertToFloatTensor } from './_define_op';
  * @param x The input tensor.
  *
  * @public
- * @category Error function
+ * @category Error
  * @order 1
  */
 export function erf<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
@@ -60,7 +60,7 @@ export function erf<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
  * @param x The input tensor.
  *
  * @public
- * @category Error function
+ * @category Error
  * @order 2
  */
 export function erfc<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {

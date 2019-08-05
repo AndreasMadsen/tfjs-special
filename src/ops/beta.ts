@@ -25,7 +25,7 @@ import { lgamma, digamma } from './gamma';
  * @param x The input tensor.
  *
  * @public
- * @category Beta function
+ * @category Beta
  * @order 1
  */
 export function lbeta(x: tfc.Tensor | tfc.TensorLike): tfc.Tensor {
@@ -97,7 +97,7 @@ function beta(a: tfc.Tensor, b: tfc.Tensor): tfc.Tensor {
  * @param x The incomplete integral limit. Supports broadcasting.
  *
  * @public
- * @category Beta function
+ * @category Beta
  * @order 2
  */
 export function betainc(

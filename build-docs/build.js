@@ -1,14 +1,47 @@
 
-import * as fs from 'fs';
-import * as path from 'path';
-import * as handlebars from 'handlebars';
-import * as marked from 'marked';
-import * as katex from 'katex';
+const fs = require('fs');
+const path = require('path');
+const handlebars = require('handlebars');
+const marked = require('marked');
+const katex = require('katex');
+
+function getTags(comment) {
+    const tags = new Map(
+        comment.tags.map(({tag, text}) => [tag, text])
+    );
+
+    return {
+        category: tags.get('category').trim(),
+        order:  parseInt(tags.get('order'), 10)
+    };
+}
 
 const docs = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, '..', 'docs', 'api.json'), 'utf8')
 );
+docs.children = docs.children
+    .filter((child) => child.flags.isPublic)
+    .sort(function order(a, b) {
+        const aTags = getTags(a.signatures[0].comment);
+        const bTags = getTags(b.signatures[0].comment);
+
+        if (aTags.category !== bTags.category) {
+            return aTags.category.localeCompare(bTags.category, 'en');
+        }
+        return aTags.order - bTags.order;
+    });
+docs.children[0].flags.isFirst = true;
+
 const source = fs.readFileSync(path.resolve(__dirname, 'api.hbs'), 'utf8');
+
+handlebars.registerHelper('category', function render(comment, options) {
+    const tags = getTags(comment);
+    if (tags.order === 1) {
+        return options.fn({
+            categoryName: tags.category
+        });
+    }
+});
 
 handlebars.registerHelper('description', function render(comment, options) {
     // Create code description
@@ -57,6 +90,6 @@ handlebars.registerHelper('description', function render(comment, options) {
 const template = handlebars.compile(source);
 
 fs.writeFileSync(
-    path.resolve(__dirname, '..', 'docs', 'index.html'),
+    path.resolve(__dirname, '..', 'docs', 'api.html'),
     template(docs)
 );

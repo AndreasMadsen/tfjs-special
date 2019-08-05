@@ -13,7 +13,7 @@
     "build:kernels": "ts-node transpiler/build.ts",
     "build:dist": "tsc && rollup -c",
     "build:docs:json": "typedoc src/index.ts --exclude **/*_test.ts --target ES6 --mode file --json docs/api.json",
-    "build:docs:html": "ts-node build-docs/build.ts",
+    "build:docs:html": "node build-docs/build.js",
     "build:docs:dist": "cp dist/tf-math-special.min.js docs/tf-math-special.min.js",
     "build:docs": "npm run build:docs:json && npm run build:docs:html && npm run build:docs:dist",
     "build": "npm run build:kernels && npm run build:dist && npm run build:docs",

@@ -23,7 +23,7 @@ import { runKernel, reduceGradient, convertToFloatTensor } from './_define_op';
  * @param x The input tensor.
  *
  * @public
- * @category Gamma function
+ * @category Gamma
  * @order 1
  */
 export function lgamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
@@ -61,7 +61,7 @@ export function lgamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
  * @param x The input tensor.
  *
  * @public
- * @category Gamma function
+ * @category Gamma
  * @order 2
  */
 export function digamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
@@ -103,7 +103,7 @@ export function digamma<T extends tfc.Tensor>(x: T | tfc.TensorLike): T {
  * @param x The input tensor to $\psi(x)$. Supports broadcasting.
  *
  * @public
- * @category Gamma function
+ * @category Gamma
  * @order 3
  */
 export function polygamma(
@@ -195,7 +195,7 @@ function fast_polygamma_positive_scalar_order<T extends tfc.Tensor>(
  * @param x The incomplete integral limit. Supports broadcasting.
  *
  * @public
- * @category Gamma function
+ * @category Gamma
  * @order 4
  */
 export function igamma(
@@ -248,8 +248,8 @@ export function igamma(
  * @param x The incomplete integral limit. Supports broadcasting.
  *
  * @public
- * @category Gamma function
- * @order 4
+ * @category Gamma
+ * @order 5
  */
 export function igammac(
     a: tfc.Tensor | tfc.TensorLike, x: tfc.Tensor | tfc.TensorLike

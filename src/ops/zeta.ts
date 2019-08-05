@@ -22,7 +22,7 @@ import { runKernel, reduceGradient, convertToFloatTensor } from './_define_op';
  * @param q Input tensor, must be a positive integer. Supports broadcasting.
  *
  * @public
- * @category Zeta function
+ * @category Zeta
  * @order 1
  */
 export function zeta(

@@ -2,6 +2,46 @@
 body {
     font-size: 12pt;
     font-family: sans-serif;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    grid-template-rows: 1;
+    grid-template-areas: "toc api .";
+    grid-gap: 40px;
+}
+
+#toc {
+    grid-area: toc;
+    position: relative;
+}
+
+@media screen and (max-width: 800px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-areas: "api";
+    }
+    #toc {
+        display: none;
+    }
+}
+
+#toc > ul {
+    position: sticky;
+    top: 20px;
+    margin-top: 64px;
+    list-style-type: none;
+}
+
+#toc > ul ul {
+    padding-left: 30px;
+    margin-bottom: 10px;
+}
+
+#toc a {
+    color: #0277bd;
+}
+
+#api {
+    grid-area: api;
 }
 
 #api .api-function {
@@ -22,6 +62,10 @@ body {
 
 #api .api-function h2 a {
     color: #0277bd;
+}
+
+#api .api-function pre code {
+    white-space: pre-wrap;
 }
 
 #api .api-function pre code {
