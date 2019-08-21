@@ -44,7 +44,7 @@ module.exports = function (cmdOptions) {
             format: 'umd',
             name: 'tfspecial',
             extend: true,
-            file: 'dist/tf-math-special.js',
+            file: 'dist/tfjs-special.js',
         }
     }));
 
@@ -57,7 +57,7 @@ module.exports = function (cmdOptions) {
             format: 'umd',
             name: 'tfspecial',
             extend: true,
-            file: 'dist/tf-math-special.min.js',
+            file: 'dist/tfjs-special.min.js',
         }
     }));
 
@@ -68,7 +68,7 @@ module.exports = function (cmdOptions) {
         })],
         output: {
             format: 'es',
-            file: 'dist/tf-math-special.esm.js',
+            file: 'dist/tfjs-special.esm.js',
         }
     }));
 

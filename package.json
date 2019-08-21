@@ -1,26 +1,30 @@
 {
   "name": "tfjs-special",
   "version": "1.0.0",
-  "description": "TensorFlow.js version of the special functions from tf.math in TensorFlow",
+  "description": "Implements Beta, Gamma, Zeta, and Bessel functions for TensorFlow.js",
   "main": "dist/index.js",
-  "jsdelivr": "dist/tf-core.min.js",
-  "unpkg": "dist/tf-core.min.js",
+  "jsdelivr": "dist/tfjs-special.min.js",
+  "unpkg": "dist/tfjs-special.min.js",
   "types": "dist/index.d.ts",
-  "jsnext:main": "dist/tf-core.esm.js",
-  "module": "dist/tf-core.esm.js",
+  "jsnext:main": "dist/tfjs-special.esm.js",
+  "module": "dist/tfjs-special.esm.js",
   "scripts": {
     "update:cephes": "bash scripts/update_cephes_deps.sh",
     "build:kernels": "ts-node transpiler/build.ts",
     "build:dist": "tsc && rollup -c",
     "build:docs:json": "typedoc src/index.ts --exclude **/*_test.ts --target ES6 --mode file --json docs/api.json",
     "build:docs:html": "node build-docs/build.js",
-    "build:docs:dist": "cp dist/tf-math-special.min.js docs/tf-math-special.min.js",
+    "build:docs:dist": "cp dist/tfjs-special.min.js docs/tfjs-special.min.js",
     "build:docs": "npm run build:docs:json && npm run build:docs:html && npm run build:docs:dist",
     "build": "npm run build:kernels && npm run build:dist && npm run build:docs",
     "test": "karma start",
     "lint": "tslint -p . -t verbose"
   },
   "author": "Andreas Madsen",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AndreasMadsen/tfjs-special.git"
+  },
   "license": "BSD-3-Clause",
   "peerDependencies": {
     "@tensorflow/tfjs-core": "1.2.1"
