@@ -27,21 +27,21 @@ gammadx(x).print();
 ## Documentation
 
 * Bessel
- - [`i0`](https://andreasmadsen.github.io/tfjs-special/api.html#api-i0)
- - [`i1`](https://andreasmadsen.github.io/tfjs-special/api.html#api-i1)
- - [`i0e`](https://andreasmadsen.github.io/tfjs-special/api.html#api-i0e)
- - [`i1e`](https://andreasmadsen.github.io/tfjs-special/api.html#api-i1e)
+  - [`i0`](https://andreasmadsen.github.io/tfjs-special/api.html#api-i0)
+  - [`i1`](https://andreasmadsen.github.io/tfjs-special/api.html#api-i1)
+  - [`i0e`](https://andreasmadsen.github.io/tfjs-special/api.html#api-i0e)
+  - [`i1e`](https://andreasmadsen.github.io/tfjs-special/api.html#api-i1e)
 * Beta
- - [`lbeta`](https://andreasmadsen.github.io/tfjs-special/api.html#api-lbeta)
- - [`betainc`](https://andreasmadsen.github.io/tfjs-special/api.html#api-betainc)
+  - [`lbeta`](https://andreasmadsen.github.io/tfjs-special/api.html#api-lbeta)
+  - [`betainc`](https://andreasmadsen.github.io/tfjs-special/api.html#api-betainc)
 * Error
- - [`erf`](https://andreasmadsen.github.io/tfjs-special/api.html#api-erf)
- - [`erfc`](https://andreasmadsen.github.io/tfjs-special/api.html#api-erfc)
+  - [`erf`](https://andreasmadsen.github.io/tfjs-special/api.html#api-erf)
+  - [`erfc`](https://andreasmadsen.github.io/tfjs-special/api.html#api-erfc)
 * Gamma
- - [`lgamma`](https://andreasmadsen.github.io/tfjs-special/api.html#api-lgamma)
- - [`digamma`](https://andreasmadsen.github.io/tfjs-special/api.html#api-digamma)
- - [`polygamma`](https://andreasmadsen.github.io/tfjs-special/api.html#api-polygamma)
- - [`igamma`](https://andreasmadsen.github.io/tfjs-special/api.html#api-igamma)
- - [`igammac`](https://andreasmadsen.github.io/tfjs-special/api.html#api-igammac)
+  - [`lgamma`](https://andreasmadsen.github.io/tfjs-special/api.html#api-lgamma)
+  - [`digamma`](https://andreasmadsen.github.io/tfjs-special/api.html#api-digamma)
+  - [`polygamma`](https://andreasmadsen.github.io/tfjs-special/api.html#api-polygamma)
+  - [`igamma`](https://andreasmadsen.github.io/tfjs-special/api.html#api-igamma)
+  - [`igammac`](https://andreasmadsen.github.io/tfjs-special/api.html#api-igammac)
 * Zeta
- - [`zeta`](https://andreasmadsen.github.io/tfjs-special/api.html#api-zeta)
+  - [`zeta`](https://andreasmadsen.github.io/tfjs-special/api.html#api-zeta)
