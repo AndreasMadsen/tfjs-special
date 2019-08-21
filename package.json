@@ -1,5 +1,5 @@
 {
-  "name": "tfjs-math-special",
+  "name": "tfjs-special",
   "version": "1.0.0",
   "description": "TensorFlow.js version of the special functions from tf.math in TensorFlow",
   "main": "dist/index.js",
