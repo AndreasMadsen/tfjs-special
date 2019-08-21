@@ -1,0 +1,1260 @@
+{
+    "_nodetype": "FileAST",
+    "coord": null,
+    "ext": [
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/mconf.h:175",
+            "funcspec": [],
+            "init": null,
+            "name": "merror",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/mconf.h:175",
+                "declname": "merror",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/mconf.h:175",
+                    "names": [
+                        "int"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/betaf.c:59",
+            "funcspec": [],
+            "init": null,
+            "name": "MAXLOGF",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/betaf.c:59",
+                "declname": "MAXLOGF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/betaf.c:59",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/betaf.c:59",
+            "funcspec": [],
+            "init": null,
+            "name": "MAXNUMF",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/betaf.c:59",
+                "declname": "MAXNUMF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/betaf.c:59",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/betaf.c:60",
+            "funcspec": [],
+            "init": null,
+            "name": "sgngamf",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/betaf.c:60",
+                "declname": "sgngamf",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/betaf.c:60",
+                    "names": [
+                        "int"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/betaf.c:63",
+            "funcspec": [],
+            "init": null,
+            "name": "gammaf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/betaf.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/betaf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/betaf.c:63",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/betaf.c:63",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/betaf.c:63",
+                    "declname": "gammaf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/betaf.c:63",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/betaf.c:63",
+            "funcspec": [],
+            "init": null,
+            "name": "lgamf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/betaf.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/betaf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/betaf.c:63",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/betaf.c:63",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/betaf.c:63",
+                    "declname": "lgamf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/betaf.c:63",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/betaf.c:63",
+            "funcspec": [],
+            "init": null,
+            "name": "expf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/betaf.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/betaf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/betaf.c:63",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/betaf.c:63",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/betaf.c:63",
+                    "declname": "expf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/betaf.c:63",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/betaf.c:63",
+            "funcspec": [],
+            "init": null,
+            "name": "floorf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/betaf.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/betaf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/betaf.c:63",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/betaf.c:63",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/betaf.c:63",
+                    "declname": "floorf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/betaf.c:63",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "FuncDef",
+            "body": {
+                "_nodetype": "Compound",
+                "block_items": [
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/betaf.c:75",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "a",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/betaf.c:75",
+                            "declname": "a",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/betaf.c:75",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/betaf.c:75",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "b",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/betaf.c:75",
+                            "declname": "b",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/betaf.c:75",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/betaf.c:75",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "y",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/betaf.c:75",
+                            "declname": "y",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/betaf.c:75",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/betaf.c:76",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "sign",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/betaf.c:76",
+                            "declname": "sign",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/betaf.c:76",
+                                "names": [
+                                    "int"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/betaf.c:78",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/betaf.c:78",
+                            "name": "sign"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/betaf.c:78",
+                            "type": "int",
+                            "value": "1"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/betaf.c:79",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/betaf.c:79",
+                            "name": "a"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/betaf.c:79",
+                            "name": "aa"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/betaf.c:80",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/betaf.c:80",
+                            "name": "b"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/betaf.c:80",
+                            "name": "bb"
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/betaf.c:81",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/betaf.c:81",
+                                "name": "a"
+                            },
+                            "op": "<=",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/betaf.c:81",
+                                "type": "float",
+                                "value": "0.0"
+                            }
+                        },
+                        "coord": "deps/cephes/betaf.c:81",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "If",
+                                    "cond": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/betaf.c:83",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:83",
+                                            "name": "a"
+                                        },
+                                        "op": "==",
+                                        "right": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/betaf.c:83",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/betaf.c:83",
+                                                        "name": "a"
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/betaf.c:83",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/betaf.c:83",
+                                                "name": "floorf"
+                                            }
+                                        }
+                                    },
+                                    "coord": "deps/cephes/betaf.c:83",
+                                    "iffalse": null,
+                                    "iftrue": {
+                                        "_nodetype": "Goto",
+                                        "coord": "deps/cephes/betaf.c:84",
+                                        "name": "over"
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/betaf.c:82"
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/betaf.c:86",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/betaf.c:86",
+                                "name": "b"
+                            },
+                            "op": "<=",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/betaf.c:86",
+                                "type": "float",
+                                "value": "0.0"
+                            }
+                        },
+                        "coord": "deps/cephes/betaf.c:86",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "If",
+                                    "cond": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/betaf.c:88",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:88",
+                                            "name": "b"
+                                        },
+                                        "op": "==",
+                                        "right": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/betaf.c:88",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/betaf.c:88",
+                                                        "name": "b"
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/betaf.c:88",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/betaf.c:88",
+                                                "name": "floorf"
+                                            }
+                                        }
+                                    },
+                                    "coord": "deps/cephes/betaf.c:88",
+                                    "iffalse": null,
+                                    "iftrue": {
+                                        "_nodetype": "Goto",
+                                        "coord": "deps/cephes/betaf.c:89",
+                                        "name": "over"
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/betaf.c:87"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/betaf.c:93",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/betaf.c:93",
+                            "name": "y"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/betaf.c:93",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/betaf.c:93",
+                                "name": "a"
+                            },
+                            "op": "+",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/betaf.c:93",
+                                "name": "b"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/betaf.c:94",
+                            "left": {
+                                "_nodetype": "TernaryOp",
+                                "cond": {
+                                    "_nodetype": "BinaryOp",
+                                    "coord": "deps/cephes/betaf.c:94",
+                                    "left": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:94",
+                                        "name": "y"
+                                    },
+                                    "op": "<",
+                                    "right": {
+                                        "_nodetype": "Constant",
+                                        "coord": "deps/cephes/betaf.c:94",
+                                        "type": "int",
+                                        "value": "0"
+                                    }
+                                },
+                                "coord": "deps/cephes/betaf.c:94",
+                                "iffalse": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/betaf.c:94",
+                                    "name": "y"
+                                },
+                                "iftrue": {
+                                    "_nodetype": "UnaryOp",
+                                    "coord": "deps/cephes/betaf.c:94",
+                                    "expr": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:94",
+                                        "name": "y"
+                                    },
+                                    "op": "-"
+                                }
+                            },
+                            "op": ">",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/betaf.c:94",
+                                "type": "float",
+                                "value": "34.84425627277176174"
+                            }
+                        },
+                        "coord": "deps/cephes/betaf.c:94",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/betaf.c:96",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:96",
+                                        "name": "y"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "FuncCall",
+                                        "args": {
+                                            "_nodetype": "ExprList",
+                                            "coord": "deps/cephes/betaf.c:96",
+                                            "exprs": [
+                                                {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/betaf.c:96",
+                                                    "name": "y"
+                                                }
+                                            ]
+                                        },
+                                        "coord": "deps/cephes/betaf.c:96",
+                                        "name": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:96",
+                                            "name": "lgamf"
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/betaf.c:97",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:97",
+                                        "name": "sign"
+                                    },
+                                    "op": "*=",
+                                    "rvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:97",
+                                        "name": "sgngamf"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/betaf.c:98",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:98",
+                                        "name": "y"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/betaf.c:98",
+                                        "left": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/betaf.c:98",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/betaf.c:98",
+                                                        "name": "b"
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/betaf.c:98",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/betaf.c:98",
+                                                "name": "lgamf"
+                                            }
+                                        },
+                                        "op": "-",
+                                        "right": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:98",
+                                            "name": "y"
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/betaf.c:99",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:99",
+                                        "name": "sign"
+                                    },
+                                    "op": "*=",
+                                    "rvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:99",
+                                        "name": "sgngamf"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/betaf.c:100",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:100",
+                                        "name": "y"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/betaf.c:100",
+                                        "left": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/betaf.c:100",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/betaf.c:100",
+                                                        "name": "a"
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/betaf.c:100",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/betaf.c:100",
+                                                "name": "lgamf"
+                                            }
+                                        },
+                                        "op": "+",
+                                        "right": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:100",
+                                            "name": "y"
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/betaf.c:101",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:101",
+                                        "name": "sign"
+                                    },
+                                    "op": "*=",
+                                    "rvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:101",
+                                        "name": "sgngamf"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "If",
+                                    "cond": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/betaf.c:102",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:102",
+                                            "name": "y"
+                                        },
+                                        "op": ">",
+                                        "right": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:102",
+                                            "name": "MAXLOGF"
+                                        }
+                                    },
+                                    "coord": "deps/cephes/betaf.c:102",
+                                    "iffalse": null,
+                                    "iftrue": {
+                                        "_nodetype": "Compound",
+                                        "block_items": [
+                                            {
+                                                "_nodetype": "Label",
+                                                "coord": "deps/cephes/betaf.c:104",
+                                                "name": "over",
+                                                "stmt": {
+                                                    "_nodetype": "FuncCall",
+                                                    "args": {
+                                                        "_nodetype": "ExprList",
+                                                        "coord": "deps/cephes/betaf.c:105",
+                                                        "exprs": [
+                                                            {
+                                                                "_nodetype": "Constant",
+                                                                "coord": "deps/cephes/betaf.c:105",
+                                                                "type": "string",
+                                                                "value": "\"betaf\""
+                                                            },
+                                                            {
+                                                                "_nodetype": "Constant",
+                                                                "coord": "deps/cephes/betaf.c:105",
+                                                                "type": "int",
+                                                                "value": "3"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "coord": "deps/cephes/betaf.c:105",
+                                                    "name": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/betaf.c:105",
+                                                        "name": "mtherr"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "_nodetype": "Return",
+                                                "coord": "deps/cephes/betaf.c:106",
+                                                "expr": {
+                                                    "_nodetype": "BinaryOp",
+                                                    "coord": "deps/cephes/betaf.c:106",
+                                                    "left": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/betaf.c:106",
+                                                        "name": "sign"
+                                                    },
+                                                    "op": "*",
+                                                    "right": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/betaf.c:106",
+                                                        "name": "MAXNUMF"
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "coord": "deps/cephes/betaf.c:103"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Return",
+                                    "coord": "deps/cephes/betaf.c:108",
+                                    "expr": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/betaf.c:108",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:108",
+                                            "name": "sign"
+                                        },
+                                        "op": "*",
+                                        "right": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/betaf.c:108",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/betaf.c:108",
+                                                        "name": "y"
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/betaf.c:108",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/betaf.c:108",
+                                                "name": "expf"
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/betaf.c:95"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/betaf.c:111",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/betaf.c:111",
+                            "name": "y"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "FuncCall",
+                            "args": {
+                                "_nodetype": "ExprList",
+                                "coord": "deps/cephes/betaf.c:111",
+                                "exprs": [
+                                    {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:111",
+                                        "name": "y"
+                                    }
+                                ]
+                            },
+                            "coord": "deps/cephes/betaf.c:111",
+                            "name": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/betaf.c:111",
+                                "name": "gammaf"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/betaf.c:112",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/betaf.c:112",
+                                "name": "y"
+                            },
+                            "op": "==",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/betaf.c:112",
+                                "type": "float",
+                                "value": "0.0"
+                            }
+                        },
+                        "coord": "deps/cephes/betaf.c:112",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Goto",
+                            "coord": "deps/cephes/betaf.c:113",
+                            "name": "over"
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/betaf.c:115",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/betaf.c:115",
+                                "name": "a"
+                            },
+                            "op": ">",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/betaf.c:115",
+                                "name": "b"
+                            }
+                        },
+                        "coord": "deps/cephes/betaf.c:115",
+                        "iffalse": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/betaf.c:122",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:122",
+                                        "name": "y"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/betaf.c:122",
+                                        "left": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/betaf.c:122",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/betaf.c:122",
+                                                        "name": "b"
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/betaf.c:122",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/betaf.c:122",
+                                                "name": "gammaf"
+                                            }
+                                        },
+                                        "op": "/",
+                                        "right": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:122",
+                                            "name": "y"
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/betaf.c:123",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:123",
+                                        "name": "y"
+                                    },
+                                    "op": "*=",
+                                    "rvalue": {
+                                        "_nodetype": "FuncCall",
+                                        "args": {
+                                            "_nodetype": "ExprList",
+                                            "coord": "deps/cephes/betaf.c:123",
+                                            "exprs": [
+                                                {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/betaf.c:123",
+                                                    "name": "a"
+                                                }
+                                            ]
+                                        },
+                                        "coord": "deps/cephes/betaf.c:123",
+                                        "name": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:123",
+                                            "name": "gammaf"
+                                        }
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/betaf.c:121"
+                        },
+                        "iftrue": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/betaf.c:117",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:117",
+                                        "name": "y"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/betaf.c:117",
+                                        "left": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/betaf.c:117",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/betaf.c:117",
+                                                        "name": "a"
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/betaf.c:117",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/betaf.c:117",
+                                                "name": "gammaf"
+                                            }
+                                        },
+                                        "op": "/",
+                                        "right": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:117",
+                                            "name": "y"
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/betaf.c:118",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/betaf.c:118",
+                                        "name": "y"
+                                    },
+                                    "op": "*=",
+                                    "rvalue": {
+                                        "_nodetype": "FuncCall",
+                                        "args": {
+                                            "_nodetype": "ExprList",
+                                            "coord": "deps/cephes/betaf.c:118",
+                                            "exprs": [
+                                                {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/betaf.c:118",
+                                                    "name": "b"
+                                                }
+                                            ]
+                                        },
+                                        "coord": "deps/cephes/betaf.c:118",
+                                        "name": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/betaf.c:118",
+                                            "name": "gammaf"
+                                        }
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/betaf.c:116"
+                        }
+                    },
+                    {
+                        "_nodetype": "Return",
+                        "coord": "deps/cephes/betaf.c:126",
+                        "expr": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/betaf.c:126",
+                            "name": "y"
+                        }
+                    }
+                ],
+                "coord": "deps/cephes/betaf.c:74"
+            },
+            "coord": "deps/cephes/betaf.c:69",
+            "decl": {
+                "_nodetype": "Decl",
+                "bitsize": null,
+                "coord": "deps/cephes/betaf.c:69",
+                "funcspec": [],
+                "init": null,
+                "name": "betaf",
+                "quals": [],
+                "storage": [],
+                "type": {
+                    "_nodetype": "FuncDecl",
+                    "args": {
+                        "_nodetype": "ParamList",
+                        "coord": "deps/cephes/betaf.c:69",
+                        "params": [
+                            {
+                                "_nodetype": "Decl",
+                                "bitsize": null,
+                                "coord": "deps/cephes/betaf.c:69",
+                                "funcspec": [],
+                                "init": null,
+                                "name": "aa",
+                                "quals": [],
+                                "storage": [],
+                                "type": {
+                                    "_nodetype": "TypeDecl",
+                                    "coord": "deps/cephes/betaf.c:69",
+                                    "declname": "aa",
+                                    "quals": [],
+                                    "type": {
+                                        "_nodetype": "IdentifierType",
+                                        "coord": "deps/cephes/betaf.c:69",
+                                        "names": [
+                                            "float"
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "_nodetype": "Decl",
+                                "bitsize": null,
+                                "coord": "deps/cephes/betaf.c:69",
+                                "funcspec": [],
+                                "init": null,
+                                "name": "bb",
+                                "quals": [],
+                                "storage": [],
+                                "type": {
+                                    "_nodetype": "TypeDecl",
+                                    "coord": "deps/cephes/betaf.c:69",
+                                    "declname": "bb",
+                                    "quals": [],
+                                    "type": {
+                                        "_nodetype": "IdentifierType",
+                                        "coord": "deps/cephes/betaf.c:69",
+                                        "names": [
+                                            "float"
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "coord": "deps/cephes/betaf.c:69",
+                    "type": {
+                        "_nodetype": "TypeDecl",
+                        "coord": "deps/cephes/betaf.c:69",
+                        "declname": "betaf",
+                        "quals": [],
+                        "type": {
+                            "_nodetype": "IdentifierType",
+                            "coord": "deps/cephes/betaf.c:69",
+                            "names": [
+                                "float"
+                            ]
+                        }
+                    }
+                }
+            },
+            "param_decls": null
+        }
+    ]
+}

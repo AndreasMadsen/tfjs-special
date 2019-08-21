@@ -1,0 +1,1624 @@
+{
+    "_nodetype": "FileAST",
+    "coord": null,
+    "ext": [
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/mconf.h:175",
+            "funcspec": [],
+            "init": null,
+            "name": "merror",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/mconf.h:175",
+                "declname": "merror",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/mconf.h:175",
+                    "names": [
+                        "int"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/rgammaf.c:49",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "InitList",
+                "coord": "deps/cephes/rgammaf.c:50",
+                "exprs": [
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/rgammaf.c:50",
+                        "type": "float",
+                        "value": "1.08965386454418662084E-9"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/rgammaf.c:51",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/rgammaf.c:51",
+                            "type": "float",
+                            "value": "3.33964630686836942556E-8"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/rgammaf.c:52",
+                        "type": "float",
+                        "value": "2.68975996440595483619E-7"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/rgammaf.c:53",
+                        "type": "float",
+                        "value": "2.96001177518801696639E-6"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/rgammaf.c:54",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/rgammaf.c:54",
+                            "type": "float",
+                            "value": "8.04814124978471142852E-5"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/rgammaf.c:55",
+                        "type": "float",
+                        "value": "4.16609138709688864714E-4"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/rgammaf.c:56",
+                        "type": "float",
+                        "value": "5.06579864028608725080E-3"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/rgammaf.c:57",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/rgammaf.c:57",
+                            "type": "float",
+                            "value": "6.41925436109158228810E-2"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/rgammaf.c:58",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/rgammaf.c:58",
+                            "type": "float",
+                            "value": "4.98558728684003594785E-3"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/rgammaf.c:59",
+                        "type": "float",
+                        "value": "1.27546015610523951063E-1"
+                    }
+                ]
+            },
+            "name": "R",
+            "quals": [],
+            "storage": [
+                "static"
+            ],
+            "type": {
+                "_nodetype": "ArrayDecl",
+                "coord": "deps/cephes/rgammaf.c:49",
+                "dim": null,
+                "dim_quals": [],
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/rgammaf.c:49",
+                    "declname": "R",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/rgammaf.c:49",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/rgammaf.c:63",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/rgammaf.c:63",
+                "type": "string",
+                "value": "\"rgammaf\""
+            },
+            "name": "name",
+            "quals": [],
+            "storage": [
+                "static"
+            ],
+            "type": {
+                "_nodetype": "ArrayDecl",
+                "coord": "deps/cephes/rgammaf.c:63",
+                "dim": null,
+                "dim_quals": [],
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/rgammaf.c:63",
+                    "declname": "name",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/rgammaf.c:63",
+                        "names": [
+                            "char"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/rgammaf.c:65",
+            "funcspec": [],
+            "init": null,
+            "name": "PIF",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/rgammaf.c:65",
+                "declname": "PIF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/rgammaf.c:65",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/rgammaf.c:65",
+            "funcspec": [],
+            "init": null,
+            "name": "MAXLOGF",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/rgammaf.c:65",
+                "declname": "MAXLOGF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/rgammaf.c:65",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/rgammaf.c:65",
+            "funcspec": [],
+            "init": null,
+            "name": "MAXNUMF",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/rgammaf.c:65",
+                "declname": "MAXNUMF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/rgammaf.c:65",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/rgammaf.c:70",
+            "funcspec": [],
+            "init": null,
+            "name": "chbevlf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/rgammaf.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/rgammaf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/rgammaf.c:70",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/rgammaf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "PtrDecl",
+                                "coord": "deps/cephes/rgammaf.c:70",
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "TypeDecl",
+                                    "coord": null,
+                                    "declname": null,
+                                    "quals": [],
+                                    "type": {
+                                        "_nodetype": "IdentifierType",
+                                        "coord": "deps/cephes/rgammaf.c:70",
+                                        "names": [
+                                            "float"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/rgammaf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/rgammaf.c:70",
+                                    "names": [
+                                        "int"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/rgammaf.c:70",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/rgammaf.c:70",
+                    "declname": "chbevlf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/rgammaf.c:70",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/rgammaf.c:71",
+            "funcspec": [],
+            "init": null,
+            "name": "expf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/rgammaf.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/rgammaf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/rgammaf.c:71",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/rgammaf.c:71",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/rgammaf.c:71",
+                    "declname": "expf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/rgammaf.c:71",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/rgammaf.c:71",
+            "funcspec": [],
+            "init": null,
+            "name": "logf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/rgammaf.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/rgammaf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/rgammaf.c:71",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/rgammaf.c:71",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/rgammaf.c:71",
+                    "declname": "logf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/rgammaf.c:71",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/rgammaf.c:71",
+            "funcspec": [],
+            "init": null,
+            "name": "sinf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/rgammaf.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/rgammaf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/rgammaf.c:71",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/rgammaf.c:71",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/rgammaf.c:71",
+                    "declname": "sinf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/rgammaf.c:71",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/rgammaf.c:71",
+            "funcspec": [],
+            "init": null,
+            "name": "lgamf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/rgammaf.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/rgammaf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/rgammaf.c:71",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/rgammaf.c:71",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/rgammaf.c:71",
+                    "declname": "lgamf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/rgammaf.c:71",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "FuncDef",
+            "body": {
+                "_nodetype": "Compound",
+                "block_items": [
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/rgammaf.c:81",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "x",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/rgammaf.c:81",
+                            "declname": "x",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/rgammaf.c:81",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/rgammaf.c:81",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "w",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/rgammaf.c:81",
+                            "declname": "w",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/rgammaf.c:81",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/rgammaf.c:81",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "y",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/rgammaf.c:81",
+                            "declname": "y",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/rgammaf.c:81",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/rgammaf.c:81",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "z",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/rgammaf.c:81",
+                            "declname": "z",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/rgammaf.c:81",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/rgammaf.c:82",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "sign",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/rgammaf.c:82",
+                            "declname": "sign",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/rgammaf.c:82",
+                                "names": [
+                                    "int"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/rgammaf.c:84",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/rgammaf.c:84",
+                            "name": "x"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/rgammaf.c:84",
+                            "name": "xx"
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/rgammaf.c:85",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/rgammaf.c:85",
+                                "name": "x"
+                            },
+                            "op": ">",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/rgammaf.c:85",
+                                "type": "float",
+                                "value": "34.84425627277176174"
+                            }
+                        },
+                        "coord": "deps/cephes/rgammaf.c:85",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "FuncCall",
+                                    "args": {
+                                        "_nodetype": "ExprList",
+                                        "coord": "deps/cephes/rgammaf.c:87",
+                                        "exprs": [
+                                            {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/rgammaf.c:87",
+                                                "name": "name"
+                                            },
+                                            {
+                                                "_nodetype": "Constant",
+                                                "coord": "deps/cephes/rgammaf.c:87",
+                                                "type": "int",
+                                                "value": "4"
+                                            }
+                                        ]
+                                    },
+                                    "coord": "deps/cephes/rgammaf.c:87",
+                                    "name": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/rgammaf.c:87",
+                                        "name": "mtherr"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Return",
+                                    "coord": "deps/cephes/rgammaf.c:88",
+                                    "expr": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/rgammaf.c:88",
+                                        "left": {
+                                            "_nodetype": "Constant",
+                                            "coord": "deps/cephes/rgammaf.c:88",
+                                            "type": "float",
+                                            "value": "1.0"
+                                        },
+                                        "op": "/",
+                                        "right": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/rgammaf.c:88",
+                                            "name": "MAXNUMF"
+                                        }
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/rgammaf.c:86"
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/rgammaf.c:90",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/rgammaf.c:90",
+                                "name": "x"
+                            },
+                            "op": "<",
+                            "right": {
+                                "_nodetype": "UnaryOp",
+                                "coord": "deps/cephes/rgammaf.c:90",
+                                "expr": {
+                                    "_nodetype": "Constant",
+                                    "coord": "deps/cephes/rgammaf.c:90",
+                                    "type": "float",
+                                    "value": "34.034"
+                                },
+                                "op": "-"
+                            }
+                        },
+                        "coord": "deps/cephes/rgammaf.c:90",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/rgammaf.c:92",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/rgammaf.c:92",
+                                        "name": "w"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "UnaryOp",
+                                        "coord": "deps/cephes/rgammaf.c:92",
+                                        "expr": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/rgammaf.c:92",
+                                            "name": "x"
+                                        },
+                                        "op": "-"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/rgammaf.c:93",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/rgammaf.c:93",
+                                        "name": "z"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "FuncCall",
+                                        "args": {
+                                            "_nodetype": "ExprList",
+                                            "coord": "deps/cephes/rgammaf.c:93",
+                                            "exprs": [
+                                                {
+                                                    "_nodetype": "BinaryOp",
+                                                    "coord": "deps/cephes/rgammaf.c:93",
+                                                    "left": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/rgammaf.c:93",
+                                                        "name": "PIF"
+                                                    },
+                                                    "op": "*",
+                                                    "right": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/rgammaf.c:93",
+                                                        "name": "w"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "coord": "deps/cephes/rgammaf.c:93",
+                                        "name": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/rgammaf.c:93",
+                                            "name": "sinf"
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "If",
+                                    "cond": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/rgammaf.c:94",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/rgammaf.c:94",
+                                            "name": "z"
+                                        },
+                                        "op": "==",
+                                        "right": {
+                                            "_nodetype": "Constant",
+                                            "coord": "deps/cephes/rgammaf.c:94",
+                                            "type": "float",
+                                            "value": "0.0"
+                                        }
+                                    },
+                                    "coord": "deps/cephes/rgammaf.c:94",
+                                    "iffalse": null,
+                                    "iftrue": {
+                                        "_nodetype": "Return",
+                                        "coord": "deps/cephes/rgammaf.c:95",
+                                        "expr": {
+                                            "_nodetype": "Constant",
+                                            "coord": "deps/cephes/rgammaf.c:95",
+                                            "type": "float",
+                                            "value": "0.0"
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "If",
+                                    "cond": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/rgammaf.c:96",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/rgammaf.c:96",
+                                            "name": "z"
+                                        },
+                                        "op": "<",
+                                        "right": {
+                                            "_nodetype": "Constant",
+                                            "coord": "deps/cephes/rgammaf.c:96",
+                                            "type": "float",
+                                            "value": "0.0"
+                                        }
+                                    },
+                                    "coord": "deps/cephes/rgammaf.c:96",
+                                    "iffalse": {
+                                        "_nodetype": "Assignment",
+                                        "coord": "deps/cephes/rgammaf.c:102",
+                                        "lvalue": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/rgammaf.c:102",
+                                            "name": "sign"
+                                        },
+                                        "op": "=",
+                                        "rvalue": {
+                                            "_nodetype": "UnaryOp",
+                                            "coord": "deps/cephes/rgammaf.c:102",
+                                            "expr": {
+                                                "_nodetype": "Constant",
+                                                "coord": "deps/cephes/rgammaf.c:102",
+                                                "type": "int",
+                                                "value": "1"
+                                            },
+                                            "op": "-"
+                                        }
+                                    },
+                                    "iftrue": {
+                                        "_nodetype": "Compound",
+                                        "block_items": [
+                                            {
+                                                "_nodetype": "Assignment",
+                                                "coord": "deps/cephes/rgammaf.c:98",
+                                                "lvalue": {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/rgammaf.c:98",
+                                                    "name": "sign"
+                                                },
+                                                "op": "=",
+                                                "rvalue": {
+                                                    "_nodetype": "Constant",
+                                                    "coord": "deps/cephes/rgammaf.c:98",
+                                                    "type": "int",
+                                                    "value": "1"
+                                                }
+                                            },
+                                            {
+                                                "_nodetype": "Assignment",
+                                                "coord": "deps/cephes/rgammaf.c:99",
+                                                "lvalue": {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/rgammaf.c:99",
+                                                    "name": "z"
+                                                },
+                                                "op": "=",
+                                                "rvalue": {
+                                                    "_nodetype": "UnaryOp",
+                                                    "coord": "deps/cephes/rgammaf.c:99",
+                                                    "expr": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/rgammaf.c:99",
+                                                        "name": "z"
+                                                    },
+                                                    "op": "-"
+                                                }
+                                            }
+                                        ],
+                                        "coord": "deps/cephes/rgammaf.c:97"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/rgammaf.c:104",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/rgammaf.c:104",
+                                        "name": "y"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/rgammaf.c:104",
+                                        "left": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/rgammaf.c:104",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "BinaryOp",
+                                                        "coord": "deps/cephes/rgammaf.c:104",
+                                                        "left": {
+                                                            "_nodetype": "BinaryOp",
+                                                            "coord": "deps/cephes/rgammaf.c:104",
+                                                            "left": {
+                                                                "_nodetype": "ID",
+                                                                "coord": "deps/cephes/rgammaf.c:104",
+                                                                "name": "w"
+                                                            },
+                                                            "op": "*",
+                                                            "right": {
+                                                                "_nodetype": "ID",
+                                                                "coord": "deps/cephes/rgammaf.c:104",
+                                                                "name": "z"
+                                                            }
+                                                        },
+                                                        "op": "/",
+                                                        "right": {
+                                                            "_nodetype": "ID",
+                                                            "coord": "deps/cephes/rgammaf.c:104",
+                                                            "name": "PIF"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/rgammaf.c:104",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/rgammaf.c:104",
+                                                "name": "logf"
+                                            }
+                                        },
+                                        "op": "+",
+                                        "right": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/rgammaf.c:104",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/rgammaf.c:104",
+                                                        "name": "w"
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/rgammaf.c:104",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/rgammaf.c:104",
+                                                "name": "lgamf"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "If",
+                                    "cond": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/rgammaf.c:105",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/rgammaf.c:105",
+                                            "name": "y"
+                                        },
+                                        "op": "<",
+                                        "right": {
+                                            "_nodetype": "UnaryOp",
+                                            "coord": "deps/cephes/rgammaf.c:105",
+                                            "expr": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/rgammaf.c:105",
+                                                "name": "MAXLOGF"
+                                            },
+                                            "op": "-"
+                                        }
+                                    },
+                                    "coord": "deps/cephes/rgammaf.c:105",
+                                    "iffalse": null,
+                                    "iftrue": {
+                                        "_nodetype": "Compound",
+                                        "block_items": [
+                                            {
+                                                "_nodetype": "FuncCall",
+                                                "args": {
+                                                    "_nodetype": "ExprList",
+                                                    "coord": "deps/cephes/rgammaf.c:107",
+                                                    "exprs": [
+                                                        {
+                                                            "_nodetype": "ID",
+                                                            "coord": "deps/cephes/rgammaf.c:107",
+                                                            "name": "name"
+                                                        },
+                                                        {
+                                                            "_nodetype": "Constant",
+                                                            "coord": "deps/cephes/rgammaf.c:107",
+                                                            "type": "int",
+                                                            "value": "4"
+                                                        }
+                                                    ]
+                                                },
+                                                "coord": "deps/cephes/rgammaf.c:107",
+                                                "name": {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/rgammaf.c:107",
+                                                    "name": "mtherr"
+                                                }
+                                            },
+                                            {
+                                                "_nodetype": "Return",
+                                                "coord": "deps/cephes/rgammaf.c:108",
+                                                "expr": {
+                                                    "_nodetype": "BinaryOp",
+                                                    "coord": "deps/cephes/rgammaf.c:108",
+                                                    "left": {
+                                                        "_nodetype": "BinaryOp",
+                                                        "coord": "deps/cephes/rgammaf.c:108",
+                                                        "left": {
+                                                            "_nodetype": "ID",
+                                                            "coord": "deps/cephes/rgammaf.c:108",
+                                                            "name": "sign"
+                                                        },
+                                                        "op": "*",
+                                                        "right": {
+                                                            "_nodetype": "Constant",
+                                                            "coord": "deps/cephes/rgammaf.c:108",
+                                                            "type": "float",
+                                                            "value": "1.0"
+                                                        }
+                                                    },
+                                                    "op": "/",
+                                                    "right": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/rgammaf.c:108",
+                                                        "name": "MAXNUMF"
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "coord": "deps/cephes/rgammaf.c:106"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "If",
+                                    "cond": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/rgammaf.c:110",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/rgammaf.c:110",
+                                            "name": "y"
+                                        },
+                                        "op": ">",
+                                        "right": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/rgammaf.c:110",
+                                            "name": "MAXLOGF"
+                                        }
+                                    },
+                                    "coord": "deps/cephes/rgammaf.c:110",
+                                    "iffalse": null,
+                                    "iftrue": {
+                                        "_nodetype": "Compound",
+                                        "block_items": [
+                                            {
+                                                "_nodetype": "FuncCall",
+                                                "args": {
+                                                    "_nodetype": "ExprList",
+                                                    "coord": "deps/cephes/rgammaf.c:112",
+                                                    "exprs": [
+                                                        {
+                                                            "_nodetype": "ID",
+                                                            "coord": "deps/cephes/rgammaf.c:112",
+                                                            "name": "name"
+                                                        },
+                                                        {
+                                                            "_nodetype": "Constant",
+                                                            "coord": "deps/cephes/rgammaf.c:112",
+                                                            "type": "int",
+                                                            "value": "3"
+                                                        }
+                                                    ]
+                                                },
+                                                "coord": "deps/cephes/rgammaf.c:112",
+                                                "name": {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/rgammaf.c:112",
+                                                    "name": "mtherr"
+                                                }
+                                            },
+                                            {
+                                                "_nodetype": "Return",
+                                                "coord": "deps/cephes/rgammaf.c:113",
+                                                "expr": {
+                                                    "_nodetype": "BinaryOp",
+                                                    "coord": "deps/cephes/rgammaf.c:113",
+                                                    "left": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/rgammaf.c:113",
+                                                        "name": "sign"
+                                                    },
+                                                    "op": "*",
+                                                    "right": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/rgammaf.c:113",
+                                                        "name": "MAXNUMF"
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "coord": "deps/cephes/rgammaf.c:111"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Return",
+                                    "coord": "deps/cephes/rgammaf.c:115",
+                                    "expr": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/rgammaf.c:115",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/rgammaf.c:115",
+                                            "name": "sign"
+                                        },
+                                        "op": "*",
+                                        "right": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/rgammaf.c:115",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/rgammaf.c:115",
+                                                        "name": "y"
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/rgammaf.c:115",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/rgammaf.c:115",
+                                                "name": "expf"
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/rgammaf.c:91"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/rgammaf.c:117",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/rgammaf.c:117",
+                            "name": "z"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/rgammaf.c:117",
+                            "type": "float",
+                            "value": "1.0"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/rgammaf.c:118",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/rgammaf.c:118",
+                            "name": "w"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/rgammaf.c:118",
+                            "name": "x"
+                        }
+                    },
+                    {
+                        "_nodetype": "While",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/rgammaf.c:120",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/rgammaf.c:120",
+                                "name": "w"
+                            },
+                            "op": ">",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/rgammaf.c:120",
+                                "type": "float",
+                                "value": "1.0"
+                            }
+                        },
+                        "coord": "deps/cephes/rgammaf.c:120",
+                        "stmt": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/rgammaf.c:122",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/rgammaf.c:122",
+                                        "name": "w"
+                                    },
+                                    "op": "-=",
+                                    "rvalue": {
+                                        "_nodetype": "Constant",
+                                        "coord": "deps/cephes/rgammaf.c:122",
+                                        "type": "float",
+                                        "value": "1.0"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/rgammaf.c:123",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/rgammaf.c:123",
+                                        "name": "z"
+                                    },
+                                    "op": "*=",
+                                    "rvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/rgammaf.c:123",
+                                        "name": "w"
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/rgammaf.c:121"
+                        }
+                    },
+                    {
+                        "_nodetype": "While",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/rgammaf.c:125",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/rgammaf.c:125",
+                                "name": "w"
+                            },
+                            "op": "<",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/rgammaf.c:125",
+                                "type": "float",
+                                "value": "0.0"
+                            }
+                        },
+                        "coord": "deps/cephes/rgammaf.c:125",
+                        "stmt": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/rgammaf.c:127",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/rgammaf.c:127",
+                                        "name": "z"
+                                    },
+                                    "op": "/=",
+                                    "rvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/rgammaf.c:127",
+                                        "name": "w"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/rgammaf.c:128",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/rgammaf.c:128",
+                                        "name": "w"
+                                    },
+                                    "op": "+=",
+                                    "rvalue": {
+                                        "_nodetype": "Constant",
+                                        "coord": "deps/cephes/rgammaf.c:128",
+                                        "type": "float",
+                                        "value": "1.0"
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/rgammaf.c:126"
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/rgammaf.c:130",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/rgammaf.c:130",
+                                "name": "w"
+                            },
+                            "op": "==",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/rgammaf.c:130",
+                                "type": "float",
+                                "value": "0.0"
+                            }
+                        },
+                        "coord": "deps/cephes/rgammaf.c:130",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Return",
+                            "coord": "deps/cephes/rgammaf.c:131",
+                            "expr": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/rgammaf.c:131",
+                                "type": "float",
+                                "value": "0.0"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/rgammaf.c:132",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/rgammaf.c:132",
+                                "name": "w"
+                            },
+                            "op": "==",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/rgammaf.c:132",
+                                "type": "float",
+                                "value": "1.0"
+                            }
+                        },
+                        "coord": "deps/cephes/rgammaf.c:132",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Return",
+                            "coord": "deps/cephes/rgammaf.c:133",
+                            "expr": {
+                                "_nodetype": "BinaryOp",
+                                "coord": "deps/cephes/rgammaf.c:133",
+                                "left": {
+                                    "_nodetype": "Constant",
+                                    "coord": "deps/cephes/rgammaf.c:133",
+                                    "type": "float",
+                                    "value": "1.0"
+                                },
+                                "op": "/",
+                                "right": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/rgammaf.c:133",
+                                    "name": "z"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/rgammaf.c:135",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/rgammaf.c:135",
+                            "name": "y"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/rgammaf.c:135",
+                            "left": {
+                                "_nodetype": "BinaryOp",
+                                "coord": "deps/cephes/rgammaf.c:135",
+                                "left": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/rgammaf.c:135",
+                                    "name": "w"
+                                },
+                                "op": "*",
+                                "right": {
+                                    "_nodetype": "BinaryOp",
+                                    "coord": "deps/cephes/rgammaf.c:135",
+                                    "left": {
+                                        "_nodetype": "Constant",
+                                        "coord": "deps/cephes/rgammaf.c:135",
+                                        "type": "float",
+                                        "value": "1.0"
+                                    },
+                                    "op": "+",
+                                    "right": {
+                                        "_nodetype": "FuncCall",
+                                        "args": {
+                                            "_nodetype": "ExprList",
+                                            "coord": "deps/cephes/rgammaf.c:135",
+                                            "exprs": [
+                                                {
+                                                    "_nodetype": "BinaryOp",
+                                                    "coord": "deps/cephes/rgammaf.c:135",
+                                                    "left": {
+                                                        "_nodetype": "BinaryOp",
+                                                        "coord": "deps/cephes/rgammaf.c:135",
+                                                        "left": {
+                                                            "_nodetype": "Constant",
+                                                            "coord": "deps/cephes/rgammaf.c:135",
+                                                            "type": "float",
+                                                            "value": "4.0"
+                                                        },
+                                                        "op": "*",
+                                                        "right": {
+                                                            "_nodetype": "ID",
+                                                            "coord": "deps/cephes/rgammaf.c:135",
+                                                            "name": "w"
+                                                        }
+                                                    },
+                                                    "op": "-",
+                                                    "right": {
+                                                        "_nodetype": "Constant",
+                                                        "coord": "deps/cephes/rgammaf.c:135",
+                                                        "type": "float",
+                                                        "value": "2.0"
+                                                    }
+                                                },
+                                                {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/rgammaf.c:135",
+                                                    "name": "R"
+                                                },
+                                                {
+                                                    "_nodetype": "Constant",
+                                                    "coord": "deps/cephes/rgammaf.c:135",
+                                                    "type": "int",
+                                                    "value": "10"
+                                                }
+                                            ]
+                                        },
+                                        "coord": "deps/cephes/rgammaf.c:135",
+                                        "name": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/rgammaf.c:135",
+                                            "name": "chbevlf"
+                                        }
+                                    }
+                                }
+                            },
+                            "op": "/",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/rgammaf.c:135",
+                                "name": "z"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Return",
+                        "coord": "deps/cephes/rgammaf.c:136",
+                        "expr": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/rgammaf.c:136",
+                            "name": "y"
+                        }
+                    }
+                ],
+                "coord": "deps/cephes/rgammaf.c:80"
+            },
+            "coord": "deps/cephes/rgammaf.c:73",
+            "decl": {
+                "_nodetype": "Decl",
+                "bitsize": null,
+                "coord": "deps/cephes/rgammaf.c:73",
+                "funcspec": [],
+                "init": null,
+                "name": "rgammaf",
+                "quals": [],
+                "storage": [],
+                "type": {
+                    "_nodetype": "FuncDecl",
+                    "args": {
+                        "_nodetype": "ParamList",
+                        "coord": "deps/cephes/rgammaf.c:73",
+                        "params": [
+                            {
+                                "_nodetype": "Decl",
+                                "bitsize": null,
+                                "coord": "deps/cephes/rgammaf.c:73",
+                                "funcspec": [],
+                                "init": null,
+                                "name": "xx",
+                                "quals": [],
+                                "storage": [],
+                                "type": {
+                                    "_nodetype": "TypeDecl",
+                                    "coord": "deps/cephes/rgammaf.c:73",
+                                    "declname": "xx",
+                                    "quals": [],
+                                    "type": {
+                                        "_nodetype": "IdentifierType",
+                                        "coord": "deps/cephes/rgammaf.c:73",
+                                        "names": [
+                                            "float"
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "coord": "deps/cephes/rgammaf.c:73",
+                    "type": {
+                        "_nodetype": "TypeDecl",
+                        "coord": "deps/cephes/rgammaf.c:73",
+                        "declname": "rgammaf",
+                        "quals": [],
+                        "type": {
+                            "_nodetype": "IdentifierType",
+                            "coord": "deps/cephes/rgammaf.c:73",
+                            "names": [
+                                "float"
+                            ]
+                        }
+                    }
+                }
+            },
+            "param_decls": null
+        }
+    ]
+}

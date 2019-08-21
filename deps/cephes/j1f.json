@@ -1,0 +1,2282 @@
+{
+    "_nodetype": "FileAST",
+    "coord": null,
+    "ext": [
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/mconf.h:175",
+            "funcspec": [],
+            "init": null,
+            "name": "merror",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/mconf.h:175",
+                "declname": "merror",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/mconf.h:175",
+                    "names": [
+                        "int"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:104",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "InitList",
+                "coord": "deps/cephes/j1f.c:105",
+                "exprs": [
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/j1f.c:105",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/j1f.c:105",
+                            "type": "float",
+                            "value": "4.878788132172128E-009f"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:106",
+                        "type": "float",
+                        "value": "6.009061827883699E-007f"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/j1f.c:107",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/j1f.c:107",
+                            "type": "float",
+                            "value": "4.541343896997497E-005f"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:108",
+                        "type": "float",
+                        "value": "1.937383947804541E-003f"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/j1f.c:109",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/j1f.c:109",
+                            "type": "float",
+                            "value": "3.405537384615824E-002f"
+                        },
+                        "op": "-"
+                    }
+                ]
+            },
+            "name": "JP",
+            "quals": [],
+            "storage": [
+                "static"
+            ],
+            "type": {
+                "_nodetype": "ArrayDecl",
+                "coord": "deps/cephes/j1f.c:104",
+                "dim": {
+                    "_nodetype": "Constant",
+                    "coord": "deps/cephes/j1f.c:104",
+                    "type": "int",
+                    "value": "5"
+                },
+                "dim_quals": [],
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/j1f.c:104",
+                    "declname": "JP",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/j1f.c:104",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:112",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "InitList",
+                "coord": "deps/cephes/j1f.c:113",
+                "exprs": [
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:113",
+                        "type": "float",
+                        "value": "8.061978323326852E-009f"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/j1f.c:114",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/j1f.c:114",
+                            "type": "float",
+                            "value": "9.496460629917016E-007f"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:115",
+                        "type": "float",
+                        "value": "6.719543806674249E-005f"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/j1f.c:116",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/j1f.c:116",
+                            "type": "float",
+                            "value": "2.641785726447862E-003f"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:117",
+                        "type": "float",
+                        "value": "4.202369946500099E-002f"
+                    }
+                ]
+            },
+            "name": "YP",
+            "quals": [],
+            "storage": [
+                "static"
+            ],
+            "type": {
+                "_nodetype": "ArrayDecl",
+                "coord": "deps/cephes/j1f.c:112",
+                "dim": {
+                    "_nodetype": "Constant",
+                    "coord": "deps/cephes/j1f.c:112",
+                    "type": "int",
+                    "value": "5"
+                },
+                "dim_quals": [],
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/j1f.c:112",
+                    "declname": "YP",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/j1f.c:112",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:120",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "InitList",
+                "coord": "deps/cephes/j1f.c:121",
+                "exprs": [
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:121",
+                        "type": "float",
+                        "value": "6.913942741265801E-002f"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/j1f.c:122",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/j1f.c:122",
+                            "type": "float",
+                            "value": "2.284801500053359E-001f"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:123",
+                        "type": "float",
+                        "value": "3.138238455499697E-001f"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/j1f.c:124",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/j1f.c:124",
+                            "type": "float",
+                            "value": "2.102302420403875E-001f"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:125",
+                        "type": "float",
+                        "value": "5.435364690523026E-003f"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:126",
+                        "type": "float",
+                        "value": "1.493389585089498E-001f"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:127",
+                        "type": "float",
+                        "value": "4.976029650847191E-006f"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:128",
+                        "type": "float",
+                        "value": "7.978845453073848E-001f"
+                    }
+                ]
+            },
+            "name": "MO1",
+            "quals": [],
+            "storage": [
+                "static"
+            ],
+            "type": {
+                "_nodetype": "ArrayDecl",
+                "coord": "deps/cephes/j1f.c:120",
+                "dim": {
+                    "_nodetype": "Constant",
+                    "coord": "deps/cephes/j1f.c:120",
+                    "type": "int",
+                    "value": "8"
+                },
+                "dim_quals": [],
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/j1f.c:120",
+                    "declname": "MO1",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/j1f.c:120",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:131",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "InitList",
+                "coord": "deps/cephes/j1f.c:132",
+                "exprs": [
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/j1f.c:132",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/j1f.c:132",
+                            "type": "float",
+                            "value": "4.497014141919556E+001f"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:133",
+                        "type": "float",
+                        "value": "5.073465654089319E+001f"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/j1f.c:134",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/j1f.c:134",
+                            "type": "float",
+                            "value": "2.485774108720340E+001f"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:135",
+                        "type": "float",
+                        "value": "7.222973196770240E+000f"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/j1f.c:136",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/j1f.c:136",
+                            "type": "float",
+                            "value": "1.544842782180211E+000f"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:137",
+                        "type": "float",
+                        "value": "3.503787691653334E-001f"
+                    },
+                    {
+                        "_nodetype": "UnaryOp",
+                        "coord": "deps/cephes/j1f.c:138",
+                        "expr": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/j1f.c:138",
+                            "type": "float",
+                            "value": "1.637986776941202E-001f"
+                        },
+                        "op": "-"
+                    },
+                    {
+                        "_nodetype": "Constant",
+                        "coord": "deps/cephes/j1f.c:139",
+                        "type": "float",
+                        "value": "3.749989509080821E-001f"
+                    }
+                ]
+            },
+            "name": "PH1",
+            "quals": [],
+            "storage": [
+                "static"
+            ],
+            "type": {
+                "_nodetype": "ArrayDecl",
+                "coord": "deps/cephes/j1f.c:131",
+                "dim": {
+                    "_nodetype": "Constant",
+                    "coord": "deps/cephes/j1f.c:131",
+                    "type": "int",
+                    "value": "8"
+                },
+                "dim_quals": [],
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/j1f.c:131",
+                    "declname": "PH1",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/j1f.c:131",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:142",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/j1f.c:142",
+                "type": "float",
+                "value": "4.66539330185668857532f"
+            },
+            "name": "YO1",
+            "quals": [],
+            "storage": [
+                "static"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/j1f.c:142",
+                "declname": "YO1",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/j1f.c:142",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:143",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/j1f.c:143",
+                "type": "float",
+                "value": "1.46819706421238932572E1f"
+            },
+            "name": "Z1",
+            "quals": [],
+            "storage": [
+                "static"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/j1f.c:143",
+                "declname": "Z1",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/j1f.c:143",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:145",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/j1f.c:145",
+                "type": "float",
+                "value": "2.35619449019234492885f"
+            },
+            "name": "THPIO4F",
+            "quals": [],
+            "storage": [
+                "static"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/j1f.c:145",
+                "declname": "THPIO4F",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/j1f.c:145",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:146",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/j1f.c:146",
+                "type": "float",
+                "value": "0.636619772367581343075535f"
+            },
+            "name": "TWOOPI",
+            "quals": [],
+            "storage": [
+                "static"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/j1f.c:146",
+                "declname": "TWOOPI",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/j1f.c:146",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:147",
+            "funcspec": [],
+            "init": null,
+            "name": "PIO4",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/j1f.c:147",
+                "declname": "PIO4",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/j1f.c:147",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:151",
+            "funcspec": [],
+            "init": null,
+            "name": "polevlf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/j1f.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/j1f.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/j1f.c:151",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/j1f.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "PtrDecl",
+                                "coord": "deps/cephes/j1f.c:151",
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "TypeDecl",
+                                    "coord": null,
+                                    "declname": null,
+                                    "quals": [],
+                                    "type": {
+                                        "_nodetype": "IdentifierType",
+                                        "coord": "deps/cephes/j1f.c:151",
+                                        "names": [
+                                            "float"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/j1f.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/j1f.c:151",
+                                    "names": [
+                                        "int"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/j1f.c:151",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/j1f.c:151",
+                    "declname": "polevlf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/j1f.c:151",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:152",
+            "funcspec": [],
+            "init": null,
+            "name": "logf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/j1f.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/j1f.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/j1f.c:152",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/j1f.c:152",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/j1f.c:152",
+                    "declname": "logf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/j1f.c:152",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:152",
+            "funcspec": [],
+            "init": null,
+            "name": "sinf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/j1f.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/j1f.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/j1f.c:152",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/j1f.c:152",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/j1f.c:152",
+                    "declname": "sinf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/j1f.c:152",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:152",
+            "funcspec": [],
+            "init": null,
+            "name": "cosf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/j1f.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/j1f.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/j1f.c:152",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/j1f.c:152",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/j1f.c:152",
+                    "declname": "cosf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/j1f.c:152",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:152",
+            "funcspec": [],
+            "init": null,
+            "name": "sqrtf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/j1f.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/j1f.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/j1f.c:152",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/j1f.c:152",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/j1f.c:152",
+                    "declname": "sqrtf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/j1f.c:152",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "FuncDef",
+            "body": {
+                "_nodetype": "Compound",
+                "block_items": [
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:162",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "x",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:162",
+                            "declname": "x",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:162",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:162",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "w",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:162",
+                            "declname": "w",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:162",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:162",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "z",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:162",
+                            "declname": "z",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:162",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:162",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "p",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:162",
+                            "declname": "p",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:162",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:162",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "q",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:162",
+                            "declname": "q",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:162",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:162",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "xn",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:162",
+                            "declname": "xn",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:162",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:165",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:165",
+                            "name": "x"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:165",
+                            "name": "xx"
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:166",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:166",
+                                "name": "x"
+                            },
+                            "op": "<",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/j1f.c:166",
+                                "type": "int",
+                                "value": "0"
+                            }
+                        },
+                        "coord": "deps/cephes/j1f.c:166",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Assignment",
+                            "coord": "deps/cephes/j1f.c:167",
+                            "lvalue": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:167",
+                                "name": "x"
+                            },
+                            "op": "=",
+                            "rvalue": {
+                                "_nodetype": "UnaryOp",
+                                "coord": "deps/cephes/j1f.c:167",
+                                "expr": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/j1f.c:167",
+                                    "name": "xx"
+                                },
+                                "op": "-"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:169",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:169",
+                                "name": "x"
+                            },
+                            "op": "<=",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/j1f.c:169",
+                                "type": "float",
+                                "value": "2.0f"
+                            }
+                        },
+                        "coord": "deps/cephes/j1f.c:169",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/j1f.c:171",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/j1f.c:171",
+                                        "name": "z"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/j1f.c:171",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/j1f.c:171",
+                                            "name": "x"
+                                        },
+                                        "op": "*",
+                                        "right": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/j1f.c:171",
+                                            "name": "x"
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/j1f.c:172",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/j1f.c:172",
+                                        "name": "p"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/j1f.c:172",
+                                        "left": {
+                                            "_nodetype": "BinaryOp",
+                                            "coord": "deps/cephes/j1f.c:172",
+                                            "left": {
+                                                "_nodetype": "BinaryOp",
+                                                "coord": "deps/cephes/j1f.c:172",
+                                                "left": {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/j1f.c:172",
+                                                    "name": "z"
+                                                },
+                                                "op": "-",
+                                                "right": {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/j1f.c:172",
+                                                    "name": "Z1"
+                                                }
+                                            },
+                                            "op": "*",
+                                            "right": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:172",
+                                                "name": "x"
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/j1f.c:172",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/j1f.c:172",
+                                                        "name": "z"
+                                                    },
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/j1f.c:172",
+                                                        "name": "JP"
+                                                    },
+                                                    {
+                                                        "_nodetype": "Constant",
+                                                        "coord": "deps/cephes/j1f.c:172",
+                                                        "type": "int",
+                                                        "value": "4"
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/j1f.c:172",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:172",
+                                                "name": "polevlf"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Return",
+                                    "coord": "deps/cephes/j1f.c:173",
+                                    "expr": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/j1f.c:173",
+                                        "name": "p"
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/j1f.c:170"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:176",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:176",
+                            "name": "q"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:176",
+                            "left": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/j1f.c:176",
+                                "type": "float",
+                                "value": "1.0f"
+                            },
+                            "op": "/",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:176",
+                                "name": "x"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:177",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:177",
+                            "name": "w"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "FuncCall",
+                            "args": {
+                                "_nodetype": "ExprList",
+                                "coord": "deps/cephes/j1f.c:177",
+                                "exprs": [
+                                    {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/j1f.c:177",
+                                        "name": "q"
+                                    }
+                                ]
+                            },
+                            "coord": "deps/cephes/j1f.c:177",
+                            "name": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:177",
+                                "name": "sqrtf"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:179",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:179",
+                            "name": "p"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:179",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:179",
+                                "name": "w"
+                            },
+                            "op": "*",
+                            "right": {
+                                "_nodetype": "FuncCall",
+                                "args": {
+                                    "_nodetype": "ExprList",
+                                    "coord": "deps/cephes/j1f.c:179",
+                                    "exprs": [
+                                        {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/j1f.c:179",
+                                            "name": "q"
+                                        },
+                                        {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/j1f.c:179",
+                                            "name": "MO1"
+                                        },
+                                        {
+                                            "_nodetype": "Constant",
+                                            "coord": "deps/cephes/j1f.c:179",
+                                            "type": "int",
+                                            "value": "7"
+                                        }
+                                    ]
+                                },
+                                "coord": "deps/cephes/j1f.c:179",
+                                "name": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/j1f.c:179",
+                                    "name": "polevlf"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:180",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:180",
+                            "name": "w"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:180",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:180",
+                                "name": "q"
+                            },
+                            "op": "*",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:180",
+                                "name": "q"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:181",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:181",
+                            "name": "xn"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:181",
+                            "left": {
+                                "_nodetype": "BinaryOp",
+                                "coord": "deps/cephes/j1f.c:181",
+                                "left": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/j1f.c:181",
+                                    "name": "q"
+                                },
+                                "op": "*",
+                                "right": {
+                                    "_nodetype": "FuncCall",
+                                    "args": {
+                                        "_nodetype": "ExprList",
+                                        "coord": "deps/cephes/j1f.c:181",
+                                        "exprs": [
+                                            {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:181",
+                                                "name": "w"
+                                            },
+                                            {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:181",
+                                                "name": "PH1"
+                                            },
+                                            {
+                                                "_nodetype": "Constant",
+                                                "coord": "deps/cephes/j1f.c:181",
+                                                "type": "int",
+                                                "value": "7"
+                                            }
+                                        ]
+                                    },
+                                    "coord": "deps/cephes/j1f.c:181",
+                                    "name": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/j1f.c:181",
+                                        "name": "polevlf"
+                                    }
+                                }
+                            },
+                            "op": "-",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:181",
+                                "name": "THPIO4F"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:182",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:182",
+                            "name": "p"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:182",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:182",
+                                "name": "p"
+                            },
+                            "op": "*",
+                            "right": {
+                                "_nodetype": "FuncCall",
+                                "args": {
+                                    "_nodetype": "ExprList",
+                                    "coord": "deps/cephes/j1f.c:182",
+                                    "exprs": [
+                                        {
+                                            "_nodetype": "BinaryOp",
+                                            "coord": "deps/cephes/j1f.c:182",
+                                            "left": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:182",
+                                                "name": "xn"
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:182",
+                                                "name": "x"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "coord": "deps/cephes/j1f.c:182",
+                                "name": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/j1f.c:182",
+                                    "name": "cosf"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Return",
+                        "coord": "deps/cephes/j1f.c:183",
+                        "expr": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:183",
+                            "name": "p"
+                        }
+                    }
+                ],
+                "coord": "deps/cephes/j1f.c:161"
+            },
+            "coord": "deps/cephes/j1f.c:154",
+            "decl": {
+                "_nodetype": "Decl",
+                "bitsize": null,
+                "coord": "deps/cephes/j1f.c:154",
+                "funcspec": [],
+                "init": null,
+                "name": "j1f",
+                "quals": [],
+                "storage": [],
+                "type": {
+                    "_nodetype": "FuncDecl",
+                    "args": {
+                        "_nodetype": "ParamList",
+                        "coord": "deps/cephes/j1f.c:154",
+                        "params": [
+                            {
+                                "_nodetype": "Decl",
+                                "bitsize": null,
+                                "coord": "deps/cephes/j1f.c:154",
+                                "funcspec": [],
+                                "init": null,
+                                "name": "xx",
+                                "quals": [],
+                                "storage": [],
+                                "type": {
+                                    "_nodetype": "TypeDecl",
+                                    "coord": "deps/cephes/j1f.c:154",
+                                    "declname": "xx",
+                                    "quals": [],
+                                    "type": {
+                                        "_nodetype": "IdentifierType",
+                                        "coord": "deps/cephes/j1f.c:154",
+                                        "names": [
+                                            "float"
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "coord": "deps/cephes/j1f.c:154",
+                    "type": {
+                        "_nodetype": "TypeDecl",
+                        "coord": "deps/cephes/j1f.c:154",
+                        "declname": "j1f",
+                        "quals": [],
+                        "type": {
+                            "_nodetype": "IdentifierType",
+                            "coord": "deps/cephes/j1f.c:154",
+                            "names": [
+                                "float"
+                            ]
+                        }
+                    }
+                }
+            },
+            "param_decls": null
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/j1f.c:189",
+            "funcspec": [],
+            "init": null,
+            "name": "MAXNUMF",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/j1f.c:189",
+                "declname": "MAXNUMF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/j1f.c:189",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "FuncDef",
+            "body": {
+                "_nodetype": "Compound",
+                "block_items": [
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:198",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "x",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:198",
+                            "declname": "x",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:198",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:198",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "w",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:198",
+                            "declname": "w",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:198",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:198",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "z",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:198",
+                            "declname": "z",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:198",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:198",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "p",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:198",
+                            "declname": "p",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:198",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:198",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "q",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:198",
+                            "declname": "q",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:198",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/j1f.c:198",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "xn",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/j1f.c:198",
+                            "declname": "xn",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/j1f.c:198",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:201",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:201",
+                            "name": "x"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:201",
+                            "name": "xx"
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:202",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:202",
+                                "name": "x"
+                            },
+                            "op": "<=",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/j1f.c:202",
+                                "type": "float",
+                                "value": "2.0f"
+                            }
+                        },
+                        "coord": "deps/cephes/j1f.c:202",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "If",
+                                    "cond": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/j1f.c:204",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/j1f.c:204",
+                                            "name": "x"
+                                        },
+                                        "op": "<=",
+                                        "right": {
+                                            "_nodetype": "Constant",
+                                            "coord": "deps/cephes/j1f.c:204",
+                                            "type": "float",
+                                            "value": "0.0f"
+                                        }
+                                    },
+                                    "coord": "deps/cephes/j1f.c:204",
+                                    "iffalse": null,
+                                    "iftrue": {
+                                        "_nodetype": "Compound",
+                                        "block_items": [
+                                            {
+                                                "_nodetype": "FuncCall",
+                                                "args": {
+                                                    "_nodetype": "ExprList",
+                                                    "coord": "deps/cephes/j1f.c:206",
+                                                    "exprs": [
+                                                        {
+                                                            "_nodetype": "Constant",
+                                                            "coord": "deps/cephes/j1f.c:206",
+                                                            "type": "string",
+                                                            "value": "\"y1f\""
+                                                        },
+                                                        {
+                                                            "_nodetype": "Constant",
+                                                            "coord": "deps/cephes/j1f.c:206",
+                                                            "type": "int",
+                                                            "value": "1"
+                                                        }
+                                                    ]
+                                                },
+                                                "coord": "deps/cephes/j1f.c:206",
+                                                "name": {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/j1f.c:206",
+                                                    "name": "mtherr"
+                                                }
+                                            },
+                                            {
+                                                "_nodetype": "Return",
+                                                "coord": "deps/cephes/j1f.c:207",
+                                                "expr": {
+                                                    "_nodetype": "UnaryOp",
+                                                    "coord": "deps/cephes/j1f.c:207",
+                                                    "expr": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/j1f.c:207",
+                                                        "name": "MAXNUMF"
+                                                    },
+                                                    "op": "-"
+                                                }
+                                            }
+                                        ],
+                                        "coord": "deps/cephes/j1f.c:205"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/j1f.c:209",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/j1f.c:209",
+                                        "name": "z"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/j1f.c:209",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/j1f.c:209",
+                                            "name": "x"
+                                        },
+                                        "op": "*",
+                                        "right": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/j1f.c:209",
+                                            "name": "x"
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/j1f.c:210",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/j1f.c:210",
+                                        "name": "w"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/j1f.c:210",
+                                        "left": {
+                                            "_nodetype": "BinaryOp",
+                                            "coord": "deps/cephes/j1f.c:210",
+                                            "left": {
+                                                "_nodetype": "BinaryOp",
+                                                "coord": "deps/cephes/j1f.c:210",
+                                                "left": {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/j1f.c:210",
+                                                    "name": "z"
+                                                },
+                                                "op": "-",
+                                                "right": {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/j1f.c:210",
+                                                    "name": "YO1"
+                                                }
+                                            },
+                                            "op": "*",
+                                            "right": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:210",
+                                                "name": "x"
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": {
+                                            "_nodetype": "FuncCall",
+                                            "args": {
+                                                "_nodetype": "ExprList",
+                                                "coord": "deps/cephes/j1f.c:210",
+                                                "exprs": [
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/j1f.c:210",
+                                                        "name": "z"
+                                                    },
+                                                    {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/j1f.c:210",
+                                                        "name": "YP"
+                                                    },
+                                                    {
+                                                        "_nodetype": "Constant",
+                                                        "coord": "deps/cephes/j1f.c:210",
+                                                        "type": "int",
+                                                        "value": "4"
+                                                    }
+                                                ]
+                                            },
+                                            "coord": "deps/cephes/j1f.c:210",
+                                            "name": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:210",
+                                                "name": "polevlf"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/j1f.c:211",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/j1f.c:211",
+                                        "name": "w"
+                                    },
+                                    "op": "+=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/j1f.c:211",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/j1f.c:211",
+                                            "name": "TWOOPI"
+                                        },
+                                        "op": "*",
+                                        "right": {
+                                            "_nodetype": "BinaryOp",
+                                            "coord": "deps/cephes/j1f.c:211",
+                                            "left": {
+                                                "_nodetype": "BinaryOp",
+                                                "coord": "deps/cephes/j1f.c:211",
+                                                "left": {
+                                                    "_nodetype": "FuncCall",
+                                                    "args": {
+                                                        "_nodetype": "ExprList",
+                                                        "coord": "deps/cephes/j1f.c:211",
+                                                        "exprs": [
+                                                            {
+                                                                "_nodetype": "ID",
+                                                                "coord": "deps/cephes/j1f.c:211",
+                                                                "name": "x"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "coord": "deps/cephes/j1f.c:211",
+                                                    "name": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/j1f.c:211",
+                                                        "name": "j1f"
+                                                    }
+                                                },
+                                                "op": "*",
+                                                "right": {
+                                                    "_nodetype": "FuncCall",
+                                                    "args": {
+                                                        "_nodetype": "ExprList",
+                                                        "coord": "deps/cephes/j1f.c:211",
+                                                        "exprs": [
+                                                            {
+                                                                "_nodetype": "ID",
+                                                                "coord": "deps/cephes/j1f.c:211",
+                                                                "name": "x"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "coord": "deps/cephes/j1f.c:211",
+                                                    "name": {
+                                                        "_nodetype": "ID",
+                                                        "coord": "deps/cephes/j1f.c:211",
+                                                        "name": "logf"
+                                                    }
+                                                }
+                                            },
+                                            "op": "-",
+                                            "right": {
+                                                "_nodetype": "BinaryOp",
+                                                "coord": "deps/cephes/j1f.c:211",
+                                                "left": {
+                                                    "_nodetype": "Constant",
+                                                    "coord": "deps/cephes/j1f.c:211",
+                                                    "type": "float",
+                                                    "value": "1.0f"
+                                                },
+                                                "op": "/",
+                                                "right": {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/j1f.c:211",
+                                                    "name": "x"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Return",
+                                    "coord": "deps/cephes/j1f.c:212",
+                                    "expr": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/j1f.c:212",
+                                        "name": "w"
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/j1f.c:203"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:215",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:215",
+                            "name": "q"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:215",
+                            "left": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/j1f.c:215",
+                                "type": "float",
+                                "value": "1.0f"
+                            },
+                            "op": "/",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:215",
+                                "name": "x"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:216",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:216",
+                            "name": "w"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "FuncCall",
+                            "args": {
+                                "_nodetype": "ExprList",
+                                "coord": "deps/cephes/j1f.c:216",
+                                "exprs": [
+                                    {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/j1f.c:216",
+                                        "name": "q"
+                                    }
+                                ]
+                            },
+                            "coord": "deps/cephes/j1f.c:216",
+                            "name": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:216",
+                                "name": "sqrtf"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:218",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:218",
+                            "name": "p"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:218",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:218",
+                                "name": "w"
+                            },
+                            "op": "*",
+                            "right": {
+                                "_nodetype": "FuncCall",
+                                "args": {
+                                    "_nodetype": "ExprList",
+                                    "coord": "deps/cephes/j1f.c:218",
+                                    "exprs": [
+                                        {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/j1f.c:218",
+                                            "name": "q"
+                                        },
+                                        {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/j1f.c:218",
+                                            "name": "MO1"
+                                        },
+                                        {
+                                            "_nodetype": "Constant",
+                                            "coord": "deps/cephes/j1f.c:218",
+                                            "type": "int",
+                                            "value": "7"
+                                        }
+                                    ]
+                                },
+                                "coord": "deps/cephes/j1f.c:218",
+                                "name": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/j1f.c:218",
+                                    "name": "polevlf"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:219",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:219",
+                            "name": "w"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:219",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:219",
+                                "name": "q"
+                            },
+                            "op": "*",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:219",
+                                "name": "q"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:220",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:220",
+                            "name": "xn"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:220",
+                            "left": {
+                                "_nodetype": "BinaryOp",
+                                "coord": "deps/cephes/j1f.c:220",
+                                "left": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/j1f.c:220",
+                                    "name": "q"
+                                },
+                                "op": "*",
+                                "right": {
+                                    "_nodetype": "FuncCall",
+                                    "args": {
+                                        "_nodetype": "ExprList",
+                                        "coord": "deps/cephes/j1f.c:220",
+                                        "exprs": [
+                                            {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:220",
+                                                "name": "w"
+                                            },
+                                            {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:220",
+                                                "name": "PH1"
+                                            },
+                                            {
+                                                "_nodetype": "Constant",
+                                                "coord": "deps/cephes/j1f.c:220",
+                                                "type": "int",
+                                                "value": "7"
+                                            }
+                                        ]
+                                    },
+                                    "coord": "deps/cephes/j1f.c:220",
+                                    "name": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/j1f.c:220",
+                                        "name": "polevlf"
+                                    }
+                                }
+                            },
+                            "op": "-",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:220",
+                                "name": "THPIO4F"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/j1f.c:221",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:221",
+                            "name": "p"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/j1f.c:221",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/j1f.c:221",
+                                "name": "p"
+                            },
+                            "op": "*",
+                            "right": {
+                                "_nodetype": "FuncCall",
+                                "args": {
+                                    "_nodetype": "ExprList",
+                                    "coord": "deps/cephes/j1f.c:221",
+                                    "exprs": [
+                                        {
+                                            "_nodetype": "BinaryOp",
+                                            "coord": "deps/cephes/j1f.c:221",
+                                            "left": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:221",
+                                                "name": "xn"
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/j1f.c:221",
+                                                "name": "x"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "coord": "deps/cephes/j1f.c:221",
+                                "name": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/j1f.c:221",
+                                    "name": "sinf"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Return",
+                        "coord": "deps/cephes/j1f.c:222",
+                        "expr": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/j1f.c:222",
+                            "name": "p"
+                        }
+                    }
+                ],
+                "coord": "deps/cephes/j1f.c:197"
+            },
+            "coord": "deps/cephes/j1f.c:192",
+            "decl": {
+                "_nodetype": "Decl",
+                "bitsize": null,
+                "coord": "deps/cephes/j1f.c:192",
+                "funcspec": [],
+                "init": null,
+                "name": "y1f",
+                "quals": [],
+                "storage": [],
+                "type": {
+                    "_nodetype": "FuncDecl",
+                    "args": {
+                        "_nodetype": "ParamList",
+                        "coord": "deps/cephes/j1f.c:192",
+                        "params": [
+                            {
+                                "_nodetype": "Decl",
+                                "bitsize": null,
+                                "coord": "deps/cephes/j1f.c:192",
+                                "funcspec": [],
+                                "init": null,
+                                "name": "xx",
+                                "quals": [],
+                                "storage": [],
+                                "type": {
+                                    "_nodetype": "TypeDecl",
+                                    "coord": "deps/cephes/j1f.c:192",
+                                    "declname": "xx",
+                                    "quals": [],
+                                    "type": {
+                                        "_nodetype": "IdentifierType",
+                                        "coord": "deps/cephes/j1f.c:192",
+                                        "names": [
+                                            "float"
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "coord": "deps/cephes/j1f.c:192",
+                    "type": {
+                        "_nodetype": "TypeDecl",
+                        "coord": "deps/cephes/j1f.c:192",
+                        "declname": "y1f",
+                        "quals": [],
+                        "type": {
+                            "_nodetype": "IdentifierType",
+                            "coord": "deps/cephes/j1f.c:192",
+                            "names": [
+                                "float"
+                            ]
+                        }
+                    }
+                }
+            },
+            "param_decls": null
+        }
+    ]
+}

@@ -1,0 +1,291 @@
+{
+    "_nodetype": "FileAST",
+    "coord": null,
+    "ext": [
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/constf.c:9",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/constf.c:9",
+                "type": "float",
+                "value": "3.4028234663852885981170418348451692544e38"
+            },
+            "name": "MAXNUMF",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/constf.c:9",
+                "declname": "MAXNUMF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/constf.c:9",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/constf.c:10",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/constf.c:10",
+                "type": "float",
+                "value": "88.72283905206835"
+            },
+            "name": "MAXLOGF",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/constf.c:10",
+                "declname": "MAXLOGF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/constf.c:10",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/constf.c:11",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "UnaryOp",
+                "coord": "deps/cephes/constf.c:11",
+                "expr": {
+                    "_nodetype": "Constant",
+                    "coord": "deps/cephes/constf.c:11",
+                    "type": "float",
+                    "value": "103.278929903431851103"
+                },
+                "op": "-"
+            },
+            "name": "MINLOGF",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/constf.c:11",
+                "declname": "MINLOGF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/constf.c:11",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/constf.c:14",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/constf.c:14",
+                "type": "float",
+                "value": "1.44269504088896341"
+            },
+            "name": "LOG2EF",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/constf.c:14",
+                "declname": "LOG2EF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/constf.c:14",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/constf.c:15",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/constf.c:15",
+                "type": "float",
+                "value": "0.693147180559945309"
+            },
+            "name": "LOGE2F",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/constf.c:15",
+                "declname": "LOGE2F",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/constf.c:15",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/constf.c:16",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/constf.c:16",
+                "type": "float",
+                "value": "0.707106781186547524"
+            },
+            "name": "SQRTHF",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/constf.c:16",
+                "declname": "SQRTHF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/constf.c:16",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/constf.c:17",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/constf.c:17",
+                "type": "float",
+                "value": "3.141592653589793238"
+            },
+            "name": "PIF",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/constf.c:17",
+                "declname": "PIF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/constf.c:17",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/constf.c:18",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/constf.c:18",
+                "type": "float",
+                "value": "1.5707963267948966192"
+            },
+            "name": "PIO2F",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/constf.c:18",
+                "declname": "PIO2F",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/constf.c:18",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/constf.c:19",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/constf.c:19",
+                "type": "float",
+                "value": "0.7853981633974483096"
+            },
+            "name": "PIO4F",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/constf.c:19",
+                "declname": "PIO4F",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/constf.c:19",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/constf.c:20",
+            "funcspec": [],
+            "init": {
+                "_nodetype": "Constant",
+                "coord": "deps/cephes/constf.c:20",
+                "type": "float",
+                "value": "5.9604644775390625E-8"
+            },
+            "name": "MACHEPF",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/constf.c:20",
+                "declname": "MACHEPF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/constf.c:20",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        }
+    ]
+}

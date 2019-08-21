@@ -1,0 +1,1023 @@
+{
+    "_nodetype": "FileAST",
+    "coord": null,
+    "ext": [
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/mconf.h:175",
+            "funcspec": [],
+            "init": null,
+            "name": "merror",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/mconf.h:175",
+                "declname": "merror",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/mconf.h:175",
+                    "names": [
+                        "int"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/logf.c:58",
+            "funcspec": [],
+            "init": null,
+            "name": "MINLOGF",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/logf.c:58",
+                "declname": "MINLOGF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/logf.c:58",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/logf.c:58",
+            "funcspec": [],
+            "init": null,
+            "name": "SQRTHF",
+            "quals": [],
+            "storage": [
+                "extern"
+            ],
+            "type": {
+                "_nodetype": "TypeDecl",
+                "coord": "deps/cephes/logf.c:58",
+                "declname": "SQRTHF",
+                "quals": [],
+                "type": {
+                    "_nodetype": "IdentifierType",
+                    "coord": "deps/cephes/logf.c:58",
+                    "names": [
+                        "float"
+                    ]
+                }
+            }
+        },
+        {
+            "_nodetype": "Decl",
+            "bitsize": null,
+            "coord": "deps/cephes/logf.c:62",
+            "funcspec": [],
+            "init": null,
+            "name": "frexpf",
+            "quals": [],
+            "storage": [],
+            "type": {
+                "_nodetype": "FuncDecl",
+                "args": {
+                    "_nodetype": "ParamList",
+                    "coord": "deps/cephes/logf.c:0",
+                    "params": [
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/logf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "TypeDecl",
+                                "coord": null,
+                                "declname": null,
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "IdentifierType",
+                                    "coord": "deps/cephes/logf.c:62",
+                                    "names": [
+                                        "float"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "_nodetype": "Typename",
+                            "coord": "deps/cephes/logf.c:0",
+                            "name": null,
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "PtrDecl",
+                                "coord": "deps/cephes/logf.c:62",
+                                "quals": [],
+                                "type": {
+                                    "_nodetype": "TypeDecl",
+                                    "coord": null,
+                                    "declname": null,
+                                    "quals": [],
+                                    "type": {
+                                        "_nodetype": "IdentifierType",
+                                        "coord": "deps/cephes/logf.c:62",
+                                        "names": [
+                                            "int"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                "coord": "deps/cephes/logf.c:62",
+                "type": {
+                    "_nodetype": "TypeDecl",
+                    "coord": "deps/cephes/logf.c:62",
+                    "declname": "frexpf",
+                    "quals": [],
+                    "type": {
+                        "_nodetype": "IdentifierType",
+                        "coord": "deps/cephes/logf.c:62",
+                        "names": [
+                            "float"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "_nodetype": "FuncDef",
+            "body": {
+                "_nodetype": "Compound",
+                "block_items": [
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/logf.c:72",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "y",
+                        "quals": [],
+                        "storage": [
+                            "register"
+                        ],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/logf.c:72",
+                            "declname": "y",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/logf.c:72",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/logf.c:73",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "x",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/logf.c:73",
+                            "declname": "x",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/logf.c:73",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/logf.c:73",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "z",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/logf.c:73",
+                            "declname": "z",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/logf.c:73",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/logf.c:73",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "fe",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/logf.c:73",
+                            "declname": "fe",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/logf.c:73",
+                                "names": [
+                                    "float"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Decl",
+                        "bitsize": null,
+                        "coord": "deps/cephes/logf.c:74",
+                        "funcspec": [],
+                        "init": null,
+                        "name": "e",
+                        "quals": [],
+                        "storage": [],
+                        "type": {
+                            "_nodetype": "TypeDecl",
+                            "coord": "deps/cephes/logf.c:74",
+                            "declname": "e",
+                            "quals": [],
+                            "type": {
+                                "_nodetype": "IdentifierType",
+                                "coord": "deps/cephes/logf.c:74",
+                                "names": [
+                                    "int"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/logf.c:76",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/logf.c:76",
+                            "name": "x"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/logf.c:76",
+                            "name": "xx"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/logf.c:77",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/logf.c:77",
+                            "name": "fe"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "Constant",
+                            "coord": "deps/cephes/logf.c:77",
+                            "type": "float",
+                            "value": "0.0"
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/logf.c:79",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/logf.c:79",
+                                "name": "x"
+                            },
+                            "op": "<=",
+                            "right": {
+                                "_nodetype": "Constant",
+                                "coord": "deps/cephes/logf.c:79",
+                                "type": "float",
+                                "value": "0.0"
+                            }
+                        },
+                        "coord": "deps/cephes/logf.c:79",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "If",
+                                    "cond": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/logf.c:81",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/logf.c:81",
+                                            "name": "x"
+                                        },
+                                        "op": "==",
+                                        "right": {
+                                            "_nodetype": "Constant",
+                                            "coord": "deps/cephes/logf.c:81",
+                                            "type": "float",
+                                            "value": "0.0"
+                                        }
+                                    },
+                                    "coord": "deps/cephes/logf.c:81",
+                                    "iffalse": {
+                                        "_nodetype": "FuncCall",
+                                        "args": {
+                                            "_nodetype": "ExprList",
+                                            "coord": "deps/cephes/logf.c:84",
+                                            "exprs": [
+                                                {
+                                                    "_nodetype": "Constant",
+                                                    "coord": "deps/cephes/logf.c:84",
+                                                    "type": "string",
+                                                    "value": "\"logf\""
+                                                },
+                                                {
+                                                    "_nodetype": "Constant",
+                                                    "coord": "deps/cephes/logf.c:84",
+                                                    "type": "int",
+                                                    "value": "1"
+                                                }
+                                            ]
+                                        },
+                                        "coord": "deps/cephes/logf.c:84",
+                                        "name": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/logf.c:84",
+                                            "name": "mtherr"
+                                        }
+                                    },
+                                    "iftrue": {
+                                        "_nodetype": "FuncCall",
+                                        "args": {
+                                            "_nodetype": "ExprList",
+                                            "coord": "deps/cephes/logf.c:82",
+                                            "exprs": [
+                                                {
+                                                    "_nodetype": "Constant",
+                                                    "coord": "deps/cephes/logf.c:82",
+                                                    "type": "string",
+                                                    "value": "\"logf\""
+                                                },
+                                                {
+                                                    "_nodetype": "Constant",
+                                                    "coord": "deps/cephes/logf.c:82",
+                                                    "type": "int",
+                                                    "value": "2"
+                                                }
+                                            ]
+                                        },
+                                        "coord": "deps/cephes/logf.c:82",
+                                        "name": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/logf.c:82",
+                                            "name": "mtherr"
+                                        }
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Return",
+                                    "coord": "deps/cephes/logf.c:85",
+                                    "expr": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/logf.c:85",
+                                        "name": "MINLOGF"
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/logf.c:80"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/logf.c:88",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/logf.c:88",
+                            "name": "x"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "FuncCall",
+                            "args": {
+                                "_nodetype": "ExprList",
+                                "coord": "deps/cephes/logf.c:88",
+                                "exprs": [
+                                    {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/logf.c:88",
+                                        "name": "x"
+                                    },
+                                    {
+                                        "_nodetype": "UnaryOp",
+                                        "coord": "deps/cephes/logf.c:88",
+                                        "expr": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/logf.c:88",
+                                            "name": "e"
+                                        },
+                                        "op": "&"
+                                    }
+                                ]
+                            },
+                            "coord": "deps/cephes/logf.c:88",
+                            "name": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/logf.c:88",
+                                "name": "frexpf"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/logf.c:89",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/logf.c:89",
+                                "name": "x"
+                            },
+                            "op": "<",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/logf.c:89",
+                                "name": "SQRTHF"
+                            }
+                        },
+                        "coord": "deps/cephes/logf.c:89",
+                        "iffalse": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/logf.c:96",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/logf.c:96",
+                                        "name": "x"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/logf.c:96",
+                                        "left": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/logf.c:96",
+                                            "name": "x"
+                                        },
+                                        "op": "-",
+                                        "right": {
+                                            "_nodetype": "Constant",
+                                            "coord": "deps/cephes/logf.c:96",
+                                            "type": "float",
+                                            "value": "1.0"
+                                        }
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/logf.c:95"
+                        },
+                        "iftrue": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/logf.c:91",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/logf.c:91",
+                                        "name": "e"
+                                    },
+                                    "op": "-=",
+                                    "rvalue": {
+                                        "_nodetype": "Constant",
+                                        "coord": "deps/cephes/logf.c:91",
+                                        "type": "int",
+                                        "value": "1"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/logf.c:92",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/logf.c:92",
+                                        "name": "x"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/logf.c:92",
+                                        "left": {
+                                            "_nodetype": "BinaryOp",
+                                            "coord": "deps/cephes/logf.c:92",
+                                            "left": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/logf.c:92",
+                                                "name": "x"
+                                            },
+                                            "op": "+",
+                                            "right": {
+                                                "_nodetype": "ID",
+                                                "coord": "deps/cephes/logf.c:92",
+                                                "name": "x"
+                                            }
+                                        },
+                                        "op": "-",
+                                        "right": {
+                                            "_nodetype": "Constant",
+                                            "coord": "deps/cephes/logf.c:92",
+                                            "type": "float",
+                                            "value": "1.0"
+                                        }
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/logf.c:90"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/logf.c:98",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/logf.c:98",
+                            "name": "z"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/logf.c:98",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/logf.c:98",
+                                "name": "x"
+                            },
+                            "op": "*",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/logf.c:98",
+                                "name": "x"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/logf.c:111",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/logf.c:111",
+                            "name": "y"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/logf.c:112",
+                            "left": {
+                                "_nodetype": "BinaryOp",
+                                "coord": "deps/cephes/logf.c:112",
+                                "left": {
+                                    "_nodetype": "BinaryOp",
+                                    "coord": "deps/cephes/logf.c:112",
+                                    "left": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/logf.c:112",
+                                        "left": {
+                                            "_nodetype": "BinaryOp",
+                                            "coord": "deps/cephes/logf.c:112",
+                                            "left": {
+                                                "_nodetype": "BinaryOp",
+                                                "coord": "deps/cephes/logf.c:112",
+                                                "left": {
+                                                    "_nodetype": "BinaryOp",
+                                                    "coord": "deps/cephes/logf.c:112",
+                                                    "left": {
+                                                        "_nodetype": "BinaryOp",
+                                                        "coord": "deps/cephes/logf.c:112",
+                                                        "left": {
+                                                            "_nodetype": "BinaryOp",
+                                                            "coord": "deps/cephes/logf.c:112",
+                                                            "left": {
+                                                                "_nodetype": "BinaryOp",
+                                                                "coord": "deps/cephes/logf.c:112",
+                                                                "left": {
+                                                                    "_nodetype": "BinaryOp",
+                                                                    "coord": "deps/cephes/logf.c:112",
+                                                                    "left": {
+                                                                        "_nodetype": "BinaryOp",
+                                                                        "coord": "deps/cephes/logf.c:112",
+                                                                        "left": {
+                                                                            "_nodetype": "BinaryOp",
+                                                                            "coord": "deps/cephes/logf.c:112",
+                                                                            "left": {
+                                                                                "_nodetype": "BinaryOp",
+                                                                                "coord": "deps/cephes/logf.c:112",
+                                                                                "left": {
+                                                                                    "_nodetype": "BinaryOp",
+                                                                                    "coord": "deps/cephes/logf.c:112",
+                                                                                    "left": {
+                                                                                        "_nodetype": "BinaryOp",
+                                                                                        "coord": "deps/cephes/logf.c:112",
+                                                                                        "left": {
+                                                                                            "_nodetype": "BinaryOp",
+                                                                                            "coord": "deps/cephes/logf.c:112",
+                                                                                            "left": {
+                                                                                                "_nodetype": "BinaryOp",
+                                                                                                "coord": "deps/cephes/logf.c:112",
+                                                                                                "left": {
+                                                                                                    "_nodetype": "Constant",
+                                                                                                    "coord": "deps/cephes/logf.c:112",
+                                                                                                    "type": "float",
+                                                                                                    "value": "7.0376836292E-2"
+                                                                                                },
+                                                                                                "op": "*",
+                                                                                                "right": {
+                                                                                                    "_nodetype": "ID",
+                                                                                                    "coord": "deps/cephes/logf.c:112",
+                                                                                                    "name": "x"
+                                                                                                }
+                                                                                            },
+                                                                                            "op": "-",
+                                                                                            "right": {
+                                                                                                "_nodetype": "Constant",
+                                                                                                "coord": "deps/cephes/logf.c:113",
+                                                                                                "type": "float",
+                                                                                                "value": "1.1514610310E-1"
+                                                                                            }
+                                                                                        },
+                                                                                        "op": "*",
+                                                                                        "right": {
+                                                                                            "_nodetype": "ID",
+                                                                                            "coord": "deps/cephes/logf.c:113",
+                                                                                            "name": "x"
+                                                                                        }
+                                                                                    },
+                                                                                    "op": "+",
+                                                                                    "right": {
+                                                                                        "_nodetype": "Constant",
+                                                                                        "coord": "deps/cephes/logf.c:114",
+                                                                                        "type": "float",
+                                                                                        "value": "1.1676998740E-1"
+                                                                                    }
+                                                                                },
+                                                                                "op": "*",
+                                                                                "right": {
+                                                                                    "_nodetype": "ID",
+                                                                                    "coord": "deps/cephes/logf.c:114",
+                                                                                    "name": "x"
+                                                                                }
+                                                                            },
+                                                                            "op": "-",
+                                                                            "right": {
+                                                                                "_nodetype": "Constant",
+                                                                                "coord": "deps/cephes/logf.c:115",
+                                                                                "type": "float",
+                                                                                "value": "1.2420140846E-1"
+                                                                            }
+                                                                        },
+                                                                        "op": "*",
+                                                                        "right": {
+                                                                            "_nodetype": "ID",
+                                                                            "coord": "deps/cephes/logf.c:115",
+                                                                            "name": "x"
+                                                                        }
+                                                                    },
+                                                                    "op": "+",
+                                                                    "right": {
+                                                                        "_nodetype": "Constant",
+                                                                        "coord": "deps/cephes/logf.c:116",
+                                                                        "type": "float",
+                                                                        "value": "1.4249322787E-1"
+                                                                    }
+                                                                },
+                                                                "op": "*",
+                                                                "right": {
+                                                                    "_nodetype": "ID",
+                                                                    "coord": "deps/cephes/logf.c:116",
+                                                                    "name": "x"
+                                                                }
+                                                            },
+                                                            "op": "-",
+                                                            "right": {
+                                                                "_nodetype": "Constant",
+                                                                "coord": "deps/cephes/logf.c:117",
+                                                                "type": "float",
+                                                                "value": "1.6668057665E-1"
+                                                            }
+                                                        },
+                                                        "op": "*",
+                                                        "right": {
+                                                            "_nodetype": "ID",
+                                                            "coord": "deps/cephes/logf.c:117",
+                                                            "name": "x"
+                                                        }
+                                                    },
+                                                    "op": "+",
+                                                    "right": {
+                                                        "_nodetype": "Constant",
+                                                        "coord": "deps/cephes/logf.c:118",
+                                                        "type": "float",
+                                                        "value": "2.0000714765E-1"
+                                                    }
+                                                },
+                                                "op": "*",
+                                                "right": {
+                                                    "_nodetype": "ID",
+                                                    "coord": "deps/cephes/logf.c:118",
+                                                    "name": "x"
+                                                }
+                                            },
+                                            "op": "-",
+                                            "right": {
+                                                "_nodetype": "Constant",
+                                                "coord": "deps/cephes/logf.c:119",
+                                                "type": "float",
+                                                "value": "2.4999993993E-1"
+                                            }
+                                        },
+                                        "op": "*",
+                                        "right": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/logf.c:119",
+                                            "name": "x"
+                                        }
+                                    },
+                                    "op": "+",
+                                    "right": {
+                                        "_nodetype": "Constant",
+                                        "coord": "deps/cephes/logf.c:120",
+                                        "type": "float",
+                                        "value": "3.3333331174E-1"
+                                    }
+                                },
+                                "op": "*",
+                                "right": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/logf.c:120",
+                                    "name": "x"
+                                }
+                            },
+                            "op": "*",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/logf.c:120",
+                                "name": "z"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/logf.c:122",
+                            "name": "e"
+                        },
+                        "coord": "deps/cephes/logf.c:122",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Compound",
+                            "block_items": [
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/logf.c:124",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/logf.c:124",
+                                        "name": "fe"
+                                    },
+                                    "op": "=",
+                                    "rvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/logf.c:124",
+                                        "name": "e"
+                                    }
+                                },
+                                {
+                                    "_nodetype": "Assignment",
+                                    "coord": "deps/cephes/logf.c:125",
+                                    "lvalue": {
+                                        "_nodetype": "ID",
+                                        "coord": "deps/cephes/logf.c:125",
+                                        "name": "y"
+                                    },
+                                    "op": "+=",
+                                    "rvalue": {
+                                        "_nodetype": "BinaryOp",
+                                        "coord": "deps/cephes/logf.c:125",
+                                        "left": {
+                                            "_nodetype": "UnaryOp",
+                                            "coord": "deps/cephes/logf.c:125",
+                                            "expr": {
+                                                "_nodetype": "Constant",
+                                                "coord": "deps/cephes/logf.c:125",
+                                                "type": "float",
+                                                "value": "2.12194440e-4"
+                                            },
+                                            "op": "-"
+                                        },
+                                        "op": "*",
+                                        "right": {
+                                            "_nodetype": "ID",
+                                            "coord": "deps/cephes/logf.c:125",
+                                            "name": "fe"
+                                        }
+                                    }
+                                }
+                            ],
+                            "coord": "deps/cephes/logf.c:123"
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/logf.c:128",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/logf.c:128",
+                            "name": "y"
+                        },
+                        "op": "+=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/logf.c:128",
+                            "left": {
+                                "_nodetype": "UnaryOp",
+                                "coord": "deps/cephes/logf.c:128",
+                                "expr": {
+                                    "_nodetype": "Constant",
+                                    "coord": "deps/cephes/logf.c:128",
+                                    "type": "float",
+                                    "value": "0.5"
+                                },
+                                "op": "-"
+                            },
+                            "op": "*",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/logf.c:128",
+                                "name": "z"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Assignment",
+                        "coord": "deps/cephes/logf.c:129",
+                        "lvalue": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/logf.c:129",
+                            "name": "z"
+                        },
+                        "op": "=",
+                        "rvalue": {
+                            "_nodetype": "BinaryOp",
+                            "coord": "deps/cephes/logf.c:129",
+                            "left": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/logf.c:129",
+                                "name": "x"
+                            },
+                            "op": "+",
+                            "right": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/logf.c:129",
+                                "name": "y"
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "If",
+                        "cond": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/logf.c:131",
+                            "name": "e"
+                        },
+                        "coord": "deps/cephes/logf.c:131",
+                        "iffalse": null,
+                        "iftrue": {
+                            "_nodetype": "Assignment",
+                            "coord": "deps/cephes/logf.c:132",
+                            "lvalue": {
+                                "_nodetype": "ID",
+                                "coord": "deps/cephes/logf.c:132",
+                                "name": "z"
+                            },
+                            "op": "+=",
+                            "rvalue": {
+                                "_nodetype": "BinaryOp",
+                                "coord": "deps/cephes/logf.c:132",
+                                "left": {
+                                    "_nodetype": "Constant",
+                                    "coord": "deps/cephes/logf.c:132",
+                                    "type": "float",
+                                    "value": "0.693359375"
+                                },
+                                "op": "*",
+                                "right": {
+                                    "_nodetype": "ID",
+                                    "coord": "deps/cephes/logf.c:132",
+                                    "name": "fe"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "_nodetype": "Return",
+                        "coord": "deps/cephes/logf.c:134",
+                        "expr": {
+                            "_nodetype": "ID",
+                            "coord": "deps/cephes/logf.c:134",
+                            "name": "z"
+                        }
+                    }
+                ],
+                "coord": "deps/cephes/logf.c:71"
+            },
+            "coord": "deps/cephes/logf.c:64",
+            "decl": {
+                "_nodetype": "Decl",
+                "bitsize": null,
+                "coord": "deps/cephes/logf.c:64",
+                "funcspec": [],
+                "init": null,
+                "name": "logf",
+                "quals": [],
+                "storage": [],
+                "type": {
+                    "_nodetype": "FuncDecl",
+                    "args": {
+                        "_nodetype": "ParamList",
+                        "coord": "deps/cephes/logf.c:64",
+                        "params": [
+                            {
+                                "_nodetype": "Decl",
+                                "bitsize": null,
+                                "coord": "deps/cephes/logf.c:64",
+                                "funcspec": [],
+                                "init": null,
+                                "name": "xx",
+                                "quals": [],
+                                "storage": [],
+                                "type": {
+                                    "_nodetype": "TypeDecl",
+                                    "coord": "deps/cephes/logf.c:64",
+                                    "declname": "xx",
+                                    "quals": [],
+                                    "type": {
+                                        "_nodetype": "IdentifierType",
+                                        "coord": "deps/cephes/logf.c:64",
+                                        "names": [
+                                            "float"
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "coord": "deps/cephes/logf.c:64",
+                    "type": {
+                        "_nodetype": "TypeDecl",
+                        "coord": "deps/cephes/logf.c:64",
+                        "declname": "logf",
+                        "quals": [],
+                        "type": {
+                            "_nodetype": "IdentifierType",
+                            "coord": "deps/cephes/logf.c:64",
+                            "names": [
+                                "float"
+                            ]
+                        }
+                    }
+                }
+            },
+            "param_decls": null
+        }
+    ]
+}
