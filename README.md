@@ -24,6 +24,12 @@ const gammadx = tfc.grad(gamma);
 gammadx(x).print();
 ```
 
+## Install
+
+```
+npm install tfjs-special
+```
+
 ## Documentation
 
 * Bessel
